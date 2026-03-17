@@ -5,8 +5,7 @@ import {
   Globe, Type, User, Image, Share2, Smartphone, Video,
   Palette, Square, Pipette, Upload, ShieldCheck, Download,
 } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -49,10 +48,8 @@ export default function Generator() {
   const ecLevel = errorLevel.charAt(0) as "L" | "M" | "Q" | "H";
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      <div className="pt-24 pb-16">
-        <div className="container">
+    <DashboardLayout>
+      <div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -268,10 +265,8 @@ export default function Generator() {
                 </div>
               </div>
             </motion.div>
-          </div>
         </div>
       </div>
-      <Footer />
-    </div>
+    </DashboardLayout>
   );
 }
