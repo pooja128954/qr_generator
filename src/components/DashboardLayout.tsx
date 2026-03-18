@@ -1,40 +1,94 @@
-import { Link, useLocation } from "react-router-dom";
-import { QrCode, BarChart3, User } from "lucide-react";
-import Header from "@/components/Header";
+import { useLocation, Link } from "react-router-dom";
+import { QrCode, BarChart3, User, LogOut, Menu } from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { NavLink } from "@/components/NavLink";
 
 const sidebarLinks = [
   { label: "Profile", to: "/dashboard/profile", icon: User },
-  { label: "QR Code Generator", to: "/generator", icon: QrCode },
+  { label: "QR Generator", to: "/dashboard/qr-generator", icon: QrCode },
   { label: "Analytics", to: "/dashboard/analytics", icon: BarChart3 },
 ];
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+function AppSidebar() {
+  const { state } = useSidebar();
+  const collapsed = state === "collapsed";
   const location = useLocation();
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      <div className="flex pt-16">
-        <aside className="hidden lg:flex flex-col w-[260px] border-r border-border p-6 min-h-[calc(100vh-4rem)] bg-card">
-          <nav className="space-y-1 flex-1">
-            {sidebarLinks.map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === l.to
-                    ? "bg-accent text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                }`}
-              >
-                <l.icon className="w-4 h-4" />
-                {l.label}
-              </Link>
-            ))}
-          </nav>
-        </aside>
-        <main className="flex-1 p-6 lg:p-10">{children}</main>
+    <Sidebar collapsible="icon" className="border-r border-border">
+      <div className="h-16 flex items-center gap-2 px-4 border-b border-border shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+          <QrCode className="w-5 h-5 text-primary-foreground" />
+        </div>
+        {!collapsed && (
+          <span className="font-semibold text-lg tracking-tight">ScanovaX</span>
+        )}
       </div>
-    </div>
+
+      <SidebarContent className="pt-4">
+        <SidebarGroup>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarLinks.map((item) => (
+                <SidebarMenuItem key={item.to}>
+                  <SidebarMenuButton asChild>
+                    <NavLink
+                      to={item.to}
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+                      activeClassName="bg-accent text-foreground"
+                    >
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      {!collapsed && <span>{item.label}</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      <div className="mt-auto border-t border-border p-3">
+        <Link
+          to="/"
+          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+        >
+          <LogOut className="h-4 w-4 shrink-0" />
+          {!collapsed && <span>Logout</span>}
+        </Link>
+      </div>
+    </Sidebar>
+  );
+}
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AppSidebar />
+        <div className="flex-1 flex flex-col">
+          <header className="h-16 flex items-center border-b border-border px-4 shrink-0 bg-background/80 backdrop-blur-sm">
+            <SidebarTrigger className="mr-4">
+              <Menu className="w-5 h-5" />
+            </SidebarTrigger>
+            <span className="text-sm text-muted-foreground">Dashboard</span>
+          </header>
+          <main className="flex-1 p-6 lg:p-10 overflow-auto">{children}</main>
+        </div>
+      </div>
+    </SidebarProvider>
   );
 }

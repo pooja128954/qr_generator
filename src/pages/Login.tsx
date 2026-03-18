@@ -55,7 +55,7 @@ export default function Login() {
                 />
               </div>
             </div>
-            <Link to="/generator">
+            <Link to="/dashboard/qr-generator">
               <button
                 type="button"
                 className="w-full bg-foreground text-background py-3 rounded-lg font-medium hover:opacity-90 btn-press mt-2"
