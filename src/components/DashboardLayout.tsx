@@ -3,10 +3,9 @@ import { QrCode, BarChart3, FolderOpen, User } from "lucide-react";
 import Header from "@/components/Header";
 
 const sidebarLinks = [
-  { label: "QR Code Generator", to: "/generator", icon: QrCode },
-  { label: "Created QR Codes", to: "/dashboard/codes", icon: FolderOpen },
-  { label: "Analytics", to: "/dashboard/analytics", icon: BarChart3 },
   { label: "Profile", to: "/dashboard/profile", icon: User },
+  { label: "QR Code Generator", to: "/generator", icon: QrCode },
+  { label: "Analytics", to: "/dashboard/analytics", icon: BarChart3 },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
