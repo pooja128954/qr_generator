@@ -88,7 +88,8 @@ export default function Generator() {
 
   const [logoFile, setLogoFile] = useState<string | undefined>(undefined);
 
-  const qrValue = `${window.location.origin}/q/${editId || trackingIdRef.current}${inputValue ? `?v=${encodeURIComponent(inputValue.slice(0, 10))}` : ''}`;
+  // Use the full inputValue in a preview param so the QR code visually changes for every character
+  const qrValue = `${window.location.origin}/q/${editId || trackingIdRef.current}${inputValue ? `?preview=${encodeURIComponent(inputValue)}` : ''}`;
   
   // Content for the QR code if it were static (optional, but we use redirect now)
   const qrContent = inputValue;
@@ -253,6 +254,8 @@ export default function Generator() {
         toast.success("Logo saved!", { id: toastId });
       } catch (error: any) {
         toast.error("Logo save failed: " + error.message, { id: toastId });
+        // IMPORTANT: Prevent saving blob URLs to the database
+        finalLogoUrl = null as any;
       }
     }
 
@@ -265,7 +268,7 @@ export default function Generator() {
       ec_level: ecLevel,
       frame: selectedFrame,
       shape: selectedShape,
-      logo_url: finalLogoUrl || null,
+      logo_url: finalLogoUrl?.startsWith("http") ? finalLogoUrl : null,
     };
 
     if (editId) {
@@ -633,9 +636,16 @@ export default function Generator() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4, ease }}
+                  className="mb-4"
                 >
                   <div ref={qrRef} className="flex justify-center min-h-[200px] min-w-[200px]" />
                 </motion.div>
+                <div className="w-full text-center">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Target Content</p>
+                  <p className="text-xs font-mono text-foreground/70 truncate px-4">
+                    {activeType === "vcard" ? `${vcard.firstName} ${vcard.lastName}` : (inputValue || "Empty")}
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-2.5">
