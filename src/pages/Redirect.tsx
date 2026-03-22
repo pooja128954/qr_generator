@@ -38,46 +38,51 @@ export default function Redirect() {
         }
 
         // 2. Gather Analytics
-        const userAgent = navigator.userAgent;
-        const deviceType = /Mobi|Android|iPhone/i.test(userAgent) ? "mobile" : "desktop";
-
-        // Try to get authenticated user email
-        const { data: { user: scannerUser } } = await supabase.auth.getUser();
-        const scannerEmail = scannerUser?.email || null;
-
-        let country = "Unknown";
-        let region = "Unknown";
-        let city = "Unknown";
-        let ipAddress = "Unknown";
-
         try {
-          const geoRes = await fetch("https://ipapi.co/json/");
-          if (geoRes.ok) {
-            const geo = await geoRes.json();
-            country = geo.country_name || "Unknown";
-            region = geo.region || "Unknown";
-            city = geo.city || "Unknown";
-            ipAddress = geo.ip || "Unknown";
+          const userAgent = navigator.userAgent;
+          const deviceType = /Mobi|Android|iPhone/i.test(userAgent) ? "mobile" : "desktop";
+
+          // Try to get authenticated user email
+          const { data: { user: scannerUser } } = await supabase.auth.getUser();
+          const scannerEmail = scannerUser?.email || null;
+
+          let country = "Unknown";
+          let region = "Unknown";
+          let city = "Unknown";
+          let ipAddress = "Unknown";
+
+          try {
+            const geoRes = await fetch("https://ipapi.co/json/");
+            if (geoRes.ok) {
+              const geo = await geoRes.json();
+              country = geo.country_name || "Unknown";
+              region = geo.region || "Unknown";
+              city = geo.city || "Unknown";
+              ipAddress = geo.ip || "Unknown";
+            }
+          } catch (e) {
+            console.error("Geo IP failed", e);
           }
-        } catch (e) {
-          console.error("Geo IP failed", e);
+
+          // Unique User Identifier: Logged-in ID or fallback (IP + UA)
+          const userIdentifier = scannerUser?.id || `${ipAddress}-${userAgent}`;
+
+          // Use RPC to increment scan atomically and record event
+          // @ts-ignore
+          await supabase.rpc('increment_scan', {
+            target_qr_id: qrId,
+            scanner_email: scannerEmail,
+            device_type: deviceType,
+            country: country,
+            state: region,
+            city: city,
+            ip_address: ipAddress,
+            user_identifier: userIdentifier
+          });
+        } catch (analyticsError) {
+          console.error("Analytics Recording Failed:", analyticsError);
+          // We don't return here because we still want to redirect the user
         }
-
-        // Unique User Identifier: Logged-in ID or fallback (IP + UA)
-        const userIdentifier = scannerUser?.id || `${ipAddress}-${userAgent}`;
-
-        // Use RPC to increment scan atomically and record event
-        // @ts-ignore
-        await supabase.rpc('increment_scan', {
-          target_qr_id: qrId,
-          scanner_email: scannerEmail,
-          device_type: deviceType,
-          country: country,
-          state: region,
-          city: city,
-          ip_address: ipAddress,
-          user_identifier: userIdentifier
-        });
 
         // 3. Handle specific types
         if (qrData.type === "url" || qrData.type === "video" || qrData.type === "app" || qrData.type === "social") {
