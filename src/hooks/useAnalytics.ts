@@ -171,15 +171,41 @@ export function useTopCodes(limit = 4) {
     queryKey: ["top_codes", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Get QR codes owned by user
+      const { data: qrCodes, error: qrError } = await supabase
         .from("qr_codes")
-        .select("name, scan_count")
-        .eq("user_id", user?.id)
-        .order("scan_count", { ascending: false })
-        .limit(limit) as unknown as { data: { name: string, scan_count: number }[] | null, error: any };
+        .select("id, name")
+        .eq("user_id", user?.id) as unknown as { data: { id: string, name: string }[] | null, error: any };
 
-      if (error) throw error;
-      return (data ?? []).map((d) => ({ name: d.name, scans: d.scan_count }));
+      if (qrError) throw qrError;
+      if (!qrCodes || qrCodes.length === 0) return [];
+
+      const qrIds = qrCodes.map(q => q.id);
+
+      // Count actual scan events for each QR code
+      const { data: scanCounts, error: scanError } = await supabase
+        .from("scan_events")
+        .select("qr_code_id")
+        .in("qr_code_id", qrIds) as unknown as { data: { qr_code_id: string }[] | null, error: any };
+
+      if (scanError) throw scanError;
+
+      // Group scan counts by QR code ID
+      const countMap: Record<string, number> = {};
+      scanCounts?.forEach(scan => {
+        countMap[scan.qr_code_id] = (countMap[scan.qr_code_id] || 0) + 1;
+      });
+
+      // Combine QR codes with their scan counts
+      const result = qrCodes.map(qr => ({
+        name: qr.name,
+        scans: countMap[qr.id] || 0
+      }));
+
+      // Sort by scan count descending and limit
+      return result
+        .sort((a, b) => b.scans - a.scans)
+        .slice(0, limit);
     },
   });
 }

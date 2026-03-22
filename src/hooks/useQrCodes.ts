@@ -20,13 +20,38 @@ export function useQrCodes() {
     enabled: !!user,
     queryFn: async () => {
       if (!user) return [];
-      const { data, error } = await supabase
+
+      // Get QR codes
+      const { data: qrCodes, error: qrError } = await supabase
         .from("qr_codes")
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data as QrCode[];
+
+      if (qrError) throw qrError;
+      if (!qrCodes || qrCodes.length === 0) return [];
+
+      const qrIds = qrCodes.map(q => q.id);
+
+      // Count actual scan events for each QR code
+      const { data: scanCounts, error: scanError } = await supabase
+        .from("scan_events")
+        .select("qr_code_id")
+        .in("qr_code_id", qrIds) as unknown as { data: { qr_code_id: string }[] | null, error: any };
+
+      if (scanError) throw scanError;
+
+      // Group scan counts by QR code ID
+      const countMap: Record<string, number> = {};
+      scanCounts?.forEach(scan => {
+        countMap[scan.qr_code_id] = (countMap[scan.qr_code_id] || 0) + 1;
+      });
+
+      // Replace cached scan_count with real count
+      return qrCodes.map(qr => ({
+        ...qr,
+        scan_count: countMap[qr.id] || 0
+      })) as QrCode[];
     },
   });
 
