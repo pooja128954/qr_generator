@@ -49,12 +49,15 @@ export default function Redirect() {
           if (isBot) {
             console.log("Bot/Preview hit detected, skipping analytics:", userAgent);
           } else {
-            // Check session storage to prevent double-fire in same session
-            const sessionKey = `scanned_${qrId}`;
-            if (sessionStorage.getItem(sessionKey)) {
-              console.log("Already scanned in this session, skip analytics increment.");
+            // Check localStorage to prevent double-fire across refreshes/re-mounts
+            const storageKey = `last_scan_${qrId}`;
+            const lastScanTime = localStorage.getItem(storageKey);
+            const now = Date.now();
+
+            if (lastScanTime && (now - parseInt(lastScanTime)) < 10000) {
+              console.log("Recently scanned (within 10s), skip analytics increment.");
             } else {
-              sessionStorage.setItem(sessionKey, "true");
+              localStorage.setItem(storageKey, now.toString());
               
               const deviceType = /Mobi|Android|iPhone/i.test(userAgent) ? "mobile" : "desktop";
 

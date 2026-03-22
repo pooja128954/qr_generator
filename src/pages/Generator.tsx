@@ -75,18 +75,15 @@ export default function Generator() {
 
   const qrRef = useRef<HTMLDivElement>(null);
   const qrCodeInstance = useRef<QRCodeStyling>(new QRCodeStyling({
-    width: 1024,
-    height: 1024,
+    width: 1000,
+    height: 1000,
     type: "svg",
     data: "https://scanovax.com",
     margin: 10,
     imageOptions: {
       crossOrigin: "anonymous",
       margin: 0,
-      imageSize: 0.3,
-    },
-    qrOptions: {
-      errorCorrectionLevel: "Q"
+      imageSize: 0.45
     }
   }));
 
@@ -222,15 +219,14 @@ export default function Generator() {
       backgroundOptions: {
         color: safeBgColor
       },
-      imageOptions: {
-        crossOrigin: "anonymous",
-        margin: 0,
-        imageSize: 0.3
-      },
       qrOptions: {
-        errorCorrectionLevel: "Q"
+        errorCorrectionLevel: ecLevel
       },
-      image: logoFile
+      image: logoFile,
+      imageOptions: {
+        margin: 0,
+        imageSize: 0.45
+      }
     });
   }, [qrValue, fgColor, bgColor, selectedShape, ecLevel, limits.canCustomize, logoFile, qrRef.current]);
 
@@ -647,7 +643,7 @@ export default function Generator() {
                   transition={{ duration: 0.4, ease }}
                   className="mb-4"
                 >
-                  <div ref={qrRef} className="flex justify-center min-h-[200px] min-w-[200px]" />
+                  <div ref={qrRef} className="flex justify-center max-w-[240px] mx-auto w-full aspect-square" />
                 </motion.div>
                 <div className="w-full text-center">
                   <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-1">Target Content</p>
