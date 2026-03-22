@@ -72,3 +72,6 @@ $$;
 drop policy if exists "qr_codes: select public" on public.qr_codes;
 create policy "qr_codes: select public" on public.qr_codes
   for select using (true);
+
+-- 6. Add logo_url column to qr_codes
+alter table public.qr_codes add column if not exists logo_url text;

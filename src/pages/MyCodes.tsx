@@ -54,10 +54,15 @@ export default function MyCodes() {
       width: 300,
       height: 300,
       type: "svg",
-      data: code.content,
+      data: `${window.location.origin}/q/${code.id}`,
+      image: code.logo_url || undefined,
       dotsOptions: {
         color: code.fg_color || "#0f172a",
         type: (code.shape?.toLowerCase() as any) || "square"
+      },
+      imageOptions: {
+        crossOrigin: "anonymous",
+        margin: 5
       },
       backgroundOptions: {
         color: code.bg_color || "#ffffff"

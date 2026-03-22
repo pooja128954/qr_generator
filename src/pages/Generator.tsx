@@ -88,7 +88,7 @@ export default function Generator() {
 
   const [logoFile, setLogoFile] = useState<string | undefined>(undefined);
 
-  const qrValue = `${window.location.origin}/q/${editId || trackingIdRef.current}`;
+  const qrValue = `${window.location.origin}/q/${editId || trackingIdRef.current}${inputValue ? `?v=${encodeURIComponent(inputValue.slice(0, 10))}` : ''}`;
   
   // Content for the QR code if it were static (optional, but we use redirect now)
   const qrContent = inputValue;
@@ -123,17 +123,20 @@ export default function Generator() {
       const existing = codes.find(c => c.id === editId);
       if (existing) {
         setQrName(existing.name);
-        setActiveType(existing.type);
+        setActiveType(existing.type as any);
         setInputValue(existing.content);
         setFgColor(existing.fg_color || "#0f172a");
         setBgColor(existing.bg_color || "#ffffff");
         setSelectedFrame(existing.frame || "None");
         setSelectedShape(existing.shape || "Square");
+        if (existing.logo_url) {
+          setLogoFile(existing.logo_url);
+        }
         if (existing.ec_level) {
           const matched = corrections.find(c => c.startsWith(existing.ec_level!));
           if (matched) setErrorLevel(matched);
         }
-        trackingIdRef.current = existing.id;
+        trackingIdRef.current = existing.id as any;
 
         // Parse vCard if needed
         if (existing.type === "vcard") {
@@ -221,10 +224,36 @@ export default function Generator() {
     });
   }, [qrValue, fgColor, bgColor, selectedShape, ecLevel, limits.canCustomize, logoFile, qrRef.current]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!editId && isLimitReached) {
       toast.error(`You have reached your limit of ${limits.qrLimit} QR codes. Upgrade your plan to create more.`);
       return;
+    }
+
+    let finalLogoUrl = logoFile;
+
+    // Handle logo upload if it's a local blob
+    if (logoFile?.startsWith("blob:")) {
+      const toastId = toast.loading("Saving your customized logo...");
+      try {
+        const response = await fetch(logoFile);
+        const blob = await response.blob();
+        const fileExt = blob.type.split('/')[1] || 'png';
+        const fileName = `logo-${Date.now()}.${fileExt}`;
+        const filePath = `${editId || trackingIdRef.current}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('user_uploads')
+          .upload(filePath, blob);
+
+        if (uploadError) throw uploadError;
+
+        const { data } = supabase.storage.from('user_uploads').getPublicUrl(filePath);
+        finalLogoUrl = data.publicUrl;
+        toast.success("Logo saved!", { id: toastId });
+      } catch (error: any) {
+        toast.error("Logo save failed: " + error.message, { id: toastId });
+      }
     }
 
     const payload = {
@@ -236,6 +265,7 @@ export default function Generator() {
       ec_level: ecLevel,
       frame: selectedFrame,
       shape: selectedShape,
+      logo_url: finalLogoUrl || null,
     };
 
     if (editId) {
@@ -249,6 +279,7 @@ export default function Generator() {
         trackingIdRef.current = crypto.randomUUID();
         setQrName("");
         setInputValue("https://scanovax.com");
+        setLogoFile(undefined);
       }, 1000);
     }
   };
