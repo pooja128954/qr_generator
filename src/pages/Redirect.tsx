@@ -50,14 +50,15 @@ export default function Redirect() {
             console.log("Bot/Preview hit detected, skipping analytics:", userAgent);
           } else {
             // Check localStorage to prevent double-fire across refreshes/re-mounts
-            const storageKey = `last_scan_${qrId}`;
-            const lastScanTime = localStorage.getItem(storageKey);
+            const storageKey = `scan_attempted_${qrId}_${Date.now()}`;
+            const lastScanTime = localStorage.getItem(`last_scan_${qrId}`);
             const now = Date.now();
 
-            if (lastScanTime && (now - parseInt(lastScanTime)) < 60000) {
-              console.log("Recently scanned (within 60s), skip analytics increment.");
+            if (lastScanTime && (now - parseInt(lastScanTime)) < 30000) {
+              console.log("Recently scanned (within 30s), skip analytics increment.");
             } else {
-              localStorage.setItem(storageKey, now.toString());
+              localStorage.setItem(`last_scan_${qrId}`, now.toString());
+              localStorage.setItem(storageKey, 'true'); // Mark this specific attempt
               
               const deviceType = /Mobi|Android|iPhone/i.test(userAgent) ? "mobile" : "desktop";
 
