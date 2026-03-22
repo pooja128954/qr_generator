@@ -51,8 +51,8 @@ export default function MyCodes() {
 
   const getQrInstance = (code: any) => {
     return new QRCodeStyling({
-      width: 300,
-      height: 300,
+      width: 1000,
+      height: 1000,
       type: "svg",
       data: `${window.location.origin}/r/${code.id}`,
       image: code.logo_url || undefined,
@@ -62,7 +62,8 @@ export default function MyCodes() {
       },
       imageOptions: {
         crossOrigin: "anonymous",
-        margin: 5
+        margin: 0,
+        imageSize: 0.4
       },
       backgroundOptions: {
         color: code.bg_color || "#ffffff"
