@@ -1,12 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowRight, BarChart3, Palette, Globe, Zap,
-  Link as LinkIcon, ScanLine, Download, Check
+  Link as LinkIcon, ScanLine, Download, Check, X, Loader2
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
+import { usePlan } from "@/hooks/usePlan";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { PlanType } from "@/lib/database.types";
+import { useState } from "react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -36,12 +42,16 @@ function HeroSection() {
             >
               Get Started <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link
-              to="/pricing"
-              className="inline-flex items-center justify-center gap-2 border border-border px-6 py-3 rounded-lg font-medium hover:bg-accent transition-colors btn-press"
+            <a
+              href="#pricing"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex items-center justify-center gap-2 border border-border px-6 py-3 rounded-lg font-medium hover:bg-accent transition-colors btn-press cursor-pointer"
             >
               View Pricing
-            </Link>
+            </a>
           </div>
 
           <div className="flex items-center gap-6 mt-10 font-mono text-sm text-muted-foreground justify-center">
@@ -152,16 +162,96 @@ function HowItWorks() {
 }
 
 function PricingPreview() {
-  const plans = [
-    { name: "Free", price: "$0", period: "/mo", features: ["5 QR Codes", "100 Scans/mo", "Basic Analytics", "PNG Export"], cta: "Get Started", highlight: false },
-    { name: "Pro", price: "$7", period: "/mo", features: ["Unlimited QR Codes", "Unlimited Scans", "Advanced Analytics", "All Export Formats", "Custom Branding", "Priority Support"], cta: "Start Pro Trial", highlight: true },
-    { name: "Enterprise", price: "Custom", period: "", features: ["Everything in Pro", "SSO & Teams", "API Access", "SLA Guarantee", "Dedicated Support"], cta: "Contact Sales", highlight: false },
+  const plans: { id: PlanType; name: string; price: string; period: string; features: any[]; cta: string; highlight: boolean }[] = [
+    {
+      id: "economic",
+      name: "Economic",
+      price: "₹399",
+      period: "/mo",
+      features: [
+        { text: "Max 50 QR Codes", included: true },
+        { text: "Max 1,000 scans/month", included: true },
+        { text: "Basic analytics", included: true },
+        { text: "PNG download only", included: true },
+        { text: "No branding customization", included: false },
+        { text: "No scan history", included: false },
+      ],
+      cta: "Start Free Trial",
+      highlight: false,
+    },
+    {
+      id: "premium",
+      name: "Premium",
+      price: "₹599",
+      period: "/mo",
+      features: [
+        { text: "Max 300 QR Codes", included: true },
+        { text: "Max 10,000 scans/month", included: true },
+        { text: "Advanced analytics (7 days)", included: true },
+        { text: "All export formats", included: true },
+        { text: "Custom colors + logo", included: true },
+        { text: "Editable (dynamic QR)", included: true },
+      ],
+      cta: "Start Free Trial",
+      highlight: true,
+    },
+    {
+      id: "elegant",
+      name: "Elegant",
+      price: "₹899",
+      period: "/mo",
+      features: [
+        { text: "Unlimited QR Codes", included: true },
+        { text: "Unlimited scans", included: true },
+        { text: "Real-time tracking", included: true },
+        { text: "Performance comparison", included: true },
+        { text: "White-label QR codes", included: true },
+        { text: "Dedicated support", included: true },
+      ],
+      cta: "Start Free Trial",
+      highlight: false,
+    },
   ];
 
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
+  const { isTrial, isTrialExpired } = usePlan();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [isUpgrading, setIsUpgrading] = useState<PlanType | null>(null);
+
+  const handleUpgrade = async (planKey: PlanType) => {
+    if (!isLoggedIn) {
+      navigate(`/register?trial=true`);
+      return;
+    }
+    if (!user) return;
+    
+    setIsUpgrading(planKey);
+    try {
+      // @ts-ignore
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          plan: planKey, 
+          trial_start_date: null, 
+          trial_end_date: null 
+        })
+        .eq('id', user.id);
+        
+      if (error) throw error;
+      
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
+      toast.success(`Successfully upgraded to ${plans.find(p => p.id === planKey)?.name} plan!`);
+      navigate('/dashboard/profile');
+    } catch (err: any) {
+      toast.error("Failed to upgrade plan: " + err.message);
+    } finally {
+      setIsUpgrading(null);
+    }
+  };
 
   return (
-    <section className="section-padding bg-card border-y border-border">
+    <section id="pricing" className="section-padding bg-card border-y border-border">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -172,10 +262,10 @@ function PricingPreview() {
         >
           <p className="label-caps text-primary mb-3">Pricing</p>
           <h2 className="text-3xl md:text-4xl font-semibold mb-4">Simple, Transparent Pricing</h2>
-          <p className="text-muted-foreground">Start free. Scale when you're ready.</p>
+          <p className="text-muted-foreground">Start a 3-day free trial on any plan. Cancel anytime.</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {plans.map((p, i) => (
             <motion.div
               key={p.name}
@@ -183,11 +273,10 @@ function PricingPreview() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, ease, delay: i * 0.08 }}
-              className={`rounded-xl p-6 border ${
-                p.highlight
+              className={`rounded-xl p-6 border ${p.highlight
                   ? "border-primary bg-background shadow-lg shadow-primary/5 relative"
                   : "border-border bg-background"
-              }`}
+                }`}
             >
               {p.highlight && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full">
@@ -200,23 +289,30 @@ function PricingPreview() {
                 <span className="text-sm text-muted-foreground">{p.period}</span>
               </div>
               <ul className="space-y-2.5 mb-6">
-                {p.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Check className="w-4 h-4 text-primary shrink-0" />
-                    {f}
+                {p.features.map((f, idx) => (
+                  <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    {f.included ? (
+                      <Check className="w-4 h-4 text-primary shrink-0" />
+                    ) : (
+                      <X className="w-4 h-4 text-muted-foreground/50 shrink-0" />
+                    )}
+                    <span className={f.included ? "" : "text-muted-foreground/50 line-through"}>
+                      {f.text}
+                    </span>
                   </li>
                 ))}
               </ul>
-              <Link
-                to={p.highlight ? (isLoggedIn ? "/dashboard/qr-generator" : "/register") : "/pricing"}
-                className={`w-full inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium btn-press transition-colors ${
-                  p.highlight
+              <button
+                onClick={() => handleUpgrade(p.id)}
+                disabled={isUpgrading !== null}
+                className={`w-full inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium btn-press transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${p.highlight
                     ? "bg-foreground text-background hover:opacity-90"
                     : "border border-border hover:bg-accent"
-                }`}
+                  }`}
               >
-                {p.cta}
-              </Link>
+                {isUpgrading === p.id ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {!isLoggedIn ? "Start Free Trial" : `Upgrade to ${p.name}`}
+              </button>
             </motion.div>
           ))}
         </div>

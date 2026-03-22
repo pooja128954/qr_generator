@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, Lock, QrCode } from "lucide-react";
+import { Mail, Lock, QrCode, AlertCircle } from "lucide-react";
 import Header from "@/components/Header";
 import { useAuth } from "@/context/AuthContext";
 
@@ -10,13 +10,17 @@ const ease = [0.16, 1, 0.3, 1] as const;
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const { login, loading } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    login();
-    navigate("/dashboard/qr-generator");
+    setError("");
+    try {
+      await login(email, password);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Sign-in failed. Please try again.");
+    }
   };
 
   return (
@@ -37,6 +41,13 @@ export default function Login() {
             <p className="text-sm text-muted-foreground">Sign in to your ScanovaX account</p>
           </div>
 
+          {error && (
+            <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-4 py-3 mb-4">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              {error}
+            </div>
+          )}
+
           <form className="space-y-4" onSubmit={handleLogin}>
             <div>
               <label className="label-caps text-muted-foreground mb-1.5 block">Email</label>
@@ -47,6 +58,7 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
+                  required
                   className="w-full bg-background border border-border rounded-lg pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow"
                 />
               </div>
@@ -60,15 +72,20 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  required
                   className="w-full bg-background border border-border rounded-lg pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow"
                 />
               </div>
             </div>
             <button
               type="submit"
-              className="w-full bg-foreground text-background py-3 rounded-lg font-medium hover:opacity-90 btn-press mt-2"
+              disabled={loading}
+              className="w-full bg-foreground text-background py-3 rounded-lg font-medium hover:opacity-90 btn-press mt-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Sign In
+              {loading ? (
+                <span className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
+              ) : null}
+              {loading ? "Signing in…" : "Sign In"}
             </button>
           </form>
 

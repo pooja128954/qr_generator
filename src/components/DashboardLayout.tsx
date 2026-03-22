@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { QrCode, BarChart3, User, LogOut, Menu } from "lucide-react";
+import { QrCode, BarChart3, User, LogOut, Menu, Home } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -17,8 +17,10 @@ import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/context/AuthContext";
 
 const sidebarLinks = [
+  { label: "Home", to: "/", icon: Home },
   { label: "Profile", to: "/dashboard/profile", icon: User },
   { label: "QR Generator", to: "/dashboard/qr-generator", icon: QrCode },
+  { label: "My QR Codes", to: "/dashboard/codes", icon: QrCode },
   { label: "Analytics", to: "/dashboard/analytics", icon: BarChart3 },
 ];
 

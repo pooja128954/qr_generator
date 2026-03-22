@@ -13,16 +13,16 @@ export default function Header() {
 
   const createQrDest = isLoggedIn ? "/dashboard/qr-generator" : "/login";
 
-  const handleFeaturesClick = (e: React.MouseEvent) => {
+  const handleScrollToSection = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     setMobileOpen(false);
     if (window.location.pathname !== "/") {
       navigate("/");
       setTimeout(() => {
-        document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     } else {
-      document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -38,24 +38,15 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center gap-8">
           <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Home</Link>
-          <a href="/#features" onClick={handleFeaturesClick} className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
-          <Link to="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</Link>
+          <a href="/#features" onClick={(e) => handleScrollToSection(e, "features")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
+          <a href="/#pricing" onClick={(e) => handleScrollToSection(e, "pricing")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          {isLoggedIn ? (
-            <Link
-              to="/dashboard/qr-generator"
-              className="inline-flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 btn-press"
-            >
-              Dashboard
-            </Link>
-          ) : (
-            <>
-              <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Login</Link>
-              <Link to={createQrDest} className="inline-flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 btn-press">Create QR</Link>
-            </>
-          )}
+          <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Login</Link>
+          <Link to={createQrDest} className="inline-flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 btn-press">
+            Create QR
+          </Link>
         </div>
 
         <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)}>
@@ -74,16 +65,10 @@ export default function Header() {
           >
             <div className="container py-4 flex flex-col gap-3">
               <Link to="/" className="text-sm py-2" onClick={() => setMobileOpen(false)}>Home</Link>
-              <a href="/#features" className="text-sm py-2" onClick={handleFeaturesClick}>Features</a>
-              <Link to="/pricing" className="text-sm py-2" onClick={() => setMobileOpen(false)}>Pricing</Link>
-              {isLoggedIn ? (
-                <Link to="/dashboard/qr-generator" className="inline-flex items-center justify-center bg-foreground text-background px-5 py-2.5 rounded-lg text-sm font-medium btn-press" onClick={() => setMobileOpen(false)}>Dashboard</Link>
-              ) : (
-                <>
-                  <Link to="/login" className="text-sm py-2" onClick={() => setMobileOpen(false)}>Login</Link>
-                  <Link to="/login" className="inline-flex items-center justify-center bg-foreground text-background px-5 py-2.5 rounded-lg text-sm font-medium btn-press" onClick={() => setMobileOpen(false)}>Create QR</Link>
-                </>
-              )}
+              <a href="/#features" className="text-sm py-2" onClick={(e) => handleScrollToSection(e, "features")}>Features</a>
+              <a href="/#pricing" className="text-sm py-2" onClick={(e) => handleScrollToSection(e, "pricing")}>Pricing</a>
+              <Link to="/login" className="text-sm py-2" onClick={() => setMobileOpen(false)}>Login</Link>
+              <Link to={createQrDest} className="inline-flex items-center justify-center bg-foreground text-background px-5 py-2.5 rounded-lg text-sm font-medium btn-press" onClick={() => setMobileOpen(false)}>Create QR</Link>
             </div>
           </motion.div>
         )}

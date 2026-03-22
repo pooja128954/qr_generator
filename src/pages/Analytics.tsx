@@ -1,135 +1,181 @@
 import { motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 import { Scan, Users, Monitor, Smartphone, Globe } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
+import UpgradeBanner from "@/components/UpgradeBanner";
+import { useScanStats, useWeeklyScans, useTopCodes } from "@/hooks/useAnalytics";
+import { useQrCodes } from "@/hooks/useQrCodes";
+import { usePlan } from "@/hooks/usePlan";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const overviewStats = [
-  { label: "Total Scans", value: "14,892", icon: Scan },
-  { label: "Unique Scans", value: "9,341", icon: Users },
-  { label: "Desktop", value: "38%", icon: Monitor },
-  { label: "Mobile", value: "62%", icon: Smartphone },
-];
-
-const dailyData = [
-  { day: "Mon", scans: 420 },
-  { day: "Tue", scans: 380 },
-  { day: "Wed", scans: 510 },
-  { day: "Thu", scans: 470 },
-  { day: "Fri", scans: 620 },
-  { day: "Sat", scans: 340 },
-  { day: "Sun", scans: 290 },
-];
-
-const topCodes = [
-  { name: "Product Launch Campaign", scans: 3421 },
-  { name: "Event Check-In", scans: 1893 },
-  { name: "WiFi Guest Access", scans: 842 },
-  { name: "Menu QR Code", scans: 567 },
-];
-
-const topLocations = [
-  { country: "United States", scans: 5120, flag: "🇺🇸" },
-  { country: "Germany", scans: 2340, flag: "🇩🇪" },
-  { country: "Japan", scans: 1890, flag: "🇯🇵" },
-  { country: "United Kingdom", scans: 1456, flag: "🇬🇧" },
-  { country: "Brazil", scans: 987, flag: "🇧🇷" },
-];
-
-const maxScans = Math.max(...dailyData.map((d) => d.scans));
+function StatSkeleton() {
+  return <div className="bg-card border border-border rounded-xl p-5 animate-pulse"><div className="h-3 w-24 rounded bg-accent mb-3" /><div className="h-7 w-16 rounded bg-accent" /></div>;
+}
 
 export default function Analytics() {
+  const [searchParams] = useSearchParams();
+  const qrId = searchParams.get("qrId");
+
+  const { data: stats, isLoading: statsLoading } = useScanStats(qrId || undefined);
+  const { data: weeklyData = [], isLoading: weeklyLoading } = useWeeklyScans(qrId || undefined);
+  const { data: topCodes = [], isLoading: topLoading } = useTopCodes();
+  const { codes } = useQrCodes();
+
+  const currentQr = qrId ? codes.find(c => c.id === qrId) : null;
+  const { limits } = usePlan();
+
+  const isBasic = limits.analytics === "basic";
+  const isPremiumOrFull = limits.analytics === "premium" || limits.analytics === "full";
+
+  const overviewStats = [
+    { label: "Total Scans", value: stats?.totalScans.toLocaleString() ?? "0", icon: Scan },
+    { label: "Unique Scans", value: stats?.uniqueScans.toLocaleString() ?? "0", icon: Users },
+    { label: "Desktop", value: `${stats?.desktopPct ?? 38}%`, icon: Monitor },
+    { label: "Mobile", value: `${stats?.mobilePct ?? 62}%`, icon: Smartphone },
+  ];
+
+  const maxScans = weeklyData.length > 0 ? Math.max(...weeklyData.map((d) => d.scans), 1) : 1;
+
   return (
     <DashboardLayout>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
         <h1 className="text-2xl font-semibold mb-1">Analytics</h1>
-        <p className="text-sm text-muted-foreground mb-8">Track scan performance across all your QR codes.</p>
+        <p className="text-sm text-muted-foreground mb-8">
+          {qrId ? `Viewing stats for "${currentQr?.name || 'Loading...'}"` : "Track scan performance across all your QR codes."}
+        </p>
 
+        {/* Overview Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-          {overviewStats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease, delay: i * 0.08 }}
-              className="bg-card border border-border rounded-xl p-5"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="label-caps text-muted-foreground">{s.label}</span>
-                <s.icon className="w-4 h-4 text-muted-foreground" />
-              </div>
-              <p className="text-2xl font-semibold tabular-nums">{s.value}</p>
-            </motion.div>
-          ))}
+          {statsLoading
+            ? Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)
+            : overviewStats.map((s, i) => {
+              if (isBasic && (s.label === "Desktop" || s.label === "Mobile")) {
+                return null; // Skip rendering these stat cards for basic users
+              }
+              return (
+                <motion.div
+                  key={s.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease, delay: i * 0.08 }}
+                  className="bg-card border border-border rounded-xl p-5"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="label-caps text-muted-foreground">{s.label}</span>
+                    <s.icon className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <p className="text-2xl font-semibold tabular-nums">{s.value}</p>
+                </motion.div>
+              );
+            })}
+
+          {isBasic && (
+            <div className="col-span-2 hidden lg:flex items-center justify-center p-4">
+              <p className="text-sm text-muted-foreground">Device stats locked on Economic plan.</p>
+            </div>
+          )}
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
+          {/* Weekly Scans Bar Chart */}
           <div className="bg-card border border-border rounded-xl p-6">
             <h3 className="font-semibold mb-1">Weekly Scans</h3>
             <p className="text-xs text-muted-foreground mb-6">Last 7 days</p>
-            <div className="flex items-end gap-3 h-40">
-              {dailyData.map((d) => (
-                <div key={d.day} className="flex-1 flex flex-col items-center gap-2">
-                  <span className="text-xs font-mono tabular-nums text-muted-foreground">{d.scans}</span>
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: `${(d.scans / maxScans) * 100}%` }}
-                    transition={{ duration: 0.6, ease, delay: 0.3 }}
-                    className="w-full bg-primary/20 rounded-t-md relative overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-primary/40 rounded-t-md" />
-                  </motion.div>
-                  <span className="text-xs text-muted-foreground">{d.day}</span>
-                </div>
-              ))}
-            </div>
+
+            {isBasic ? (
+              <UpgradeBanner
+                title="Time-Based Analytics Locked"
+                description="Upgrade to Premium to visualize your scan history and track engagement over time."
+              />
+            ) : weeklyLoading ? (
+              <div className="flex items-end gap-3 h-40">
+                {Array.from({ length: 7 }).map((_, i) => (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                    <div className="w-full rounded-t-md bg-accent animate-pulse" style={{ height: `${20 + Math.random() * 60}%` }} />
+                    <div className="h-3 w-6 rounded bg-accent animate-pulse" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-end gap-3 h-40">
+                {weeklyData.map((d) => (
+                  <div key={d.day} className="flex-1 flex flex-col items-center gap-2">
+                    <span className="text-xs font-mono tabular-nums text-muted-foreground">{d.scans}</span>
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: `${(d.scans / maxScans) * 100}%` }}
+                      transition={{ duration: 0.6, ease, delay: 0.3 }}
+                      className="w-full bg-primary/20 rounded-t-md relative overflow-hidden min-h-[4px]"
+                    >
+                      <div className="absolute inset-0 bg-primary/40 rounded-t-md" />
+                    </motion.div>
+                    <span className="text-xs text-muted-foreground">{d.day}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
+          {/* Top QR Codes */}
           <div className="bg-card border border-border rounded-xl p-6">
             <h3 className="font-semibold mb-1">Top QR Codes</h3>
             <p className="text-xs text-muted-foreground mb-6">By scan count</p>
-            <div className="space-y-4">
-              {topCodes.map((c, i) => (
-                <div key={c.name} className="flex items-center gap-3">
-                  <span className="font-mono text-xs text-muted-foreground w-5">{String(i + 1).padStart(2, "0")}</span>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium mb-1">{c.name}</p>
-                    <div className="w-full h-1.5 bg-accent rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(c.scans / topCodes[0].scans) * 100}%` }}
-                        transition={{ duration: 0.6, ease, delay: 0.3 + i * 0.1 }}
-                        className="h-full bg-primary rounded-full"
-                      />
+            {topLoading ? (
+              <div className="space-y-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="flex items-center gap-3 animate-pulse">
+                    <div className="h-3 w-5 rounded bg-accent" />
+                    <div className="flex-1">
+                      <div className="h-4 w-3/4 rounded bg-accent mb-2" />
+                      <div className="h-1.5 w-full rounded-full bg-accent" />
                     </div>
+                    <div className="h-4 w-10 rounded bg-accent" />
                   </div>
-                  <span className="font-mono text-sm tabular-nums">{c.scans.toLocaleString()}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : topCodes.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">No QR codes yet. Create your first one!</p>
+            ) : (
+              <div className="space-y-4">
+                {topCodes.map((c, i) => (
+                  <div key={c.name} className="flex items-center gap-3">
+                    <span className="font-mono text-xs text-muted-foreground w-5">{String(i + 1).padStart(2, "0")}</span>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium mb-1 truncate">{c.name}</p>
+                      <div className="w-full h-1.5 bg-accent rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${topCodes[0].scans > 0 ? (c.scans / topCodes[0].scans) * 100 : 0}%` }}
+                          transition={{ duration: 0.6, ease, delay: 0.3 + i * 0.1 }}
+                          className="h-full bg-primary rounded-full"
+                        />
+                      </div>
+                    </div>
+                    <span className="font-mono text-sm tabular-nums">{c.scans.toLocaleString()}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
+          {/* Placeholder: Scan Locations */}
           <div className="bg-card border border-border rounded-xl p-6 lg:col-span-2">
             <div className="flex items-center gap-2 mb-1">
               <Globe className="w-4 h-4 text-muted-foreground" />
               <h3 className="font-semibold">Scan Locations</h3>
             </div>
             <p className="text-xs text-muted-foreground mb-6">Top countries by scan volume</p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-              {topLocations.map((l, i) => (
-                <motion.div
-                  key={l.country}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, ease, delay: 0.4 + i * 0.05 }}
-                  className="border border-border rounded-lg p-4 text-center"
-                >
-                  <span className="text-2xl mb-2 block">{l.flag}</span>
-                  <p className="text-sm font-medium">{l.country}</p>
-                  <p className="font-mono text-sm tabular-nums text-muted-foreground">{l.scans.toLocaleString()}</p>
-                </motion.div>
-              ))}
-            </div>
+            {isBasic ? (
+              <UpgradeBanner
+                title="Location Data Locked"
+                description="Upgrade to view where in the world your QR codes are being scanned."
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-6">
+                Geo-analytics will appear here as your QR codes are scanned with location data.
+              </p>
+            )}
           </div>
         </div>
       </motion.div>
