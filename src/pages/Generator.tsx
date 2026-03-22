@@ -75,14 +75,18 @@ export default function Generator() {
 
   const qrRef = useRef<HTMLDivElement>(null);
   const qrCodeInstance = useRef<QRCodeStyling>(new QRCodeStyling({
-    width: 200,
-    height: 200,
+    width: 1024,
+    height: 1024,
     type: "svg",
     data: "https://scanovax.com",
     margin: 10,
     imageOptions: {
       crossOrigin: "anonymous",
-      margin: 5,
+      margin: 0,
+      imageSize: 0.3,
+    },
+    qrOptions: {
+      errorCorrectionLevel: "Q"
     }
   }));
 
@@ -218,8 +222,13 @@ export default function Generator() {
       backgroundOptions: {
         color: safeBgColor
       },
+      imageOptions: {
+        crossOrigin: "anonymous",
+        margin: 0,
+        imageSize: 0.3
+      },
       qrOptions: {
-        errorCorrectionLevel: ecLevel
+        errorCorrectionLevel: "Q"
       },
       image: logoFile
     });
