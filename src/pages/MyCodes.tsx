@@ -54,7 +54,7 @@ export default function MyCodes() {
       width: 300,
       height: 300,
       type: "svg",
-      data: `${window.location.origin}/q/${code.id}`,
+      data: `${window.location.origin}/r/${code.id}`,
       image: code.logo_url || undefined,
       dotsOptions: {
         color: code.fg_color || "#0f172a",

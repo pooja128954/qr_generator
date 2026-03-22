@@ -28,7 +28,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/q/:qrId" element={<Redirect />} />
+            <Route path="/r/:qrId" element={<Redirect />} />
             <Route path="/dashboard/qr-generator" element={<ProtectedRoute><Generator /></ProtectedRoute>} />
             <Route path="/dashboard/codes" element={<ProtectedRoute><MyCodes /></ProtectedRoute>} />
             <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />

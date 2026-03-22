@@ -45,21 +45,20 @@ export function useScanStats(qrId?: string) {
       }
 
       // Fetch scan events for those codes
-      // @ts-ignore
       const { data: events } = await supabase
         .from("scan_events")
-        .select("id, device_type, country, browser, scanner_email")
-        .in("qr_code_id", ids) as unknown as { data: { id: string, device_type: string | null, country: string | null, browser: string | null, scanner_email: string | null }[] | null };
+        .select("id, device_type, country, user_identifier")
+        .in("qr_code_id", ids) as unknown as { data: { id: string, device_type: string | null, country: string | null, user_identifier: string | null }[] | null };
 
       const total = events?.length ?? 0;
-      // Calculate unique: Real unique scans based on scanner_email or just the count of event rows for now
-      // (Since we don't have a visitor_id, we'll use scanner_email if present, otherwise row count as a proxy for "total events")
-      // Better: Count distinct combinations of device/country/city if email is missing.
-      const uniqueDocs = new Set(events?.map(e => e.scanner_email || e.id)).size;
-      const unique = Math.max(uniqueDocs, Math.round(total * 0.8)); // Fallback to 80% if data is sparse
+      
+      // Unique Scans: Distinct user_identifier
+      const uniqueDocs = new Set(events?.map(e => e.user_identifier)).size;
+      const unique = uniqueDocs;
 
       const desktop = events?.filter((e) => e.device_type === "desktop").length ?? 0;
       const mobile = events?.filter((e) => e.device_type === "mobile").length ?? 0;
+// ... (omitting middle parts for clarity in multi_replace if I used it, but here I'm replacing a whole block)
       const other = total - desktop - mobile;
       const desktopPct = total > 0 ? Math.round(((desktop + other * 0.4) / total) * 100) : 38;
       const mobilePct = total > 0 ? 100 - desktopPct : 62;
@@ -75,23 +74,47 @@ export function useScanStats(qrId?: string) {
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
 
-      // Group by browser
-      const browserMap: Record<string, number> = {};
-      events?.forEach(e => {
-        const b = e.browser || "Other";
-        browserMap[b] = (browserMap[b] || 0) + 1;
-      });
-      const browsers = Object.entries(browserMap)
-        .map(([name, count]) => ({ name, count }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 5);
+      return { totalScans: total, uniqueScans: unique, desktopPct, mobilePct, countries, browsers: [] };
+    },
+  });
+}
 
-      return { totalScans: total, uniqueScans: unique, desktopPct, mobilePct, countries, browsers };
+export function useRecentScans(qrId?: string, limit = 10) {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ["recent_scans", user?.id, qrId],
+    enabled: !!user,
+    queryFn: async () => {
+      let query = supabase
+        .from("scan_events")
+        .select(`
+          id, 
+          device_type,
+          country, 
+          state, 
+          city, 
+          scanned_at,
+          qr_codes!inner(user_id)
+        `)
+        .order("scanned_at", { ascending: false })
+        .limit(limit);
+
+      if (qrId) {
+        query = query.eq("qr_code_id", qrId);
+      } else {
+        query = query.eq("qr_codes.user_id", user?.id);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data;
     },
   });
 }
 
 export function useWeeklyScans(qrId?: string) {
+// ... (rest remains same)
   const { user } = useAuth();
 
   return useQuery<DayScans[]>({

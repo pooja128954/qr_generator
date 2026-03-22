@@ -89,7 +89,7 @@ export default function Generator() {
   const [logoFile, setLogoFile] = useState<string | undefined>(undefined);
 
   // Use the full inputValue in a preview param so the QR code visually changes for every character
-  const qrValue = `${window.location.origin}/q/${editId || trackingIdRef.current}${inputValue ? `?preview=${encodeURIComponent(inputValue)}` : ''}`;
+  const qrValue = `${window.location.origin}/r/${editId || trackingIdRef.current}${inputValue ? `?preview=${encodeURIComponent(inputValue)}` : ''}`;
   
   // Content for the QR code if it were static (optional, but we use redirect now)
   const qrContent = inputValue;

@@ -48,6 +48,7 @@ export default function Redirect() {
         let country = "Unknown";
         let region = "Unknown";
         let city = "Unknown";
+        let ipAddress = "Unknown";
 
         try {
           const geoRes = await fetch("https://ipapi.co/json/");
@@ -56,10 +57,14 @@ export default function Redirect() {
             country = geo.country_name || "Unknown";
             region = geo.region || "Unknown";
             city = geo.city || "Unknown";
+            ipAddress = geo.ip || "Unknown";
           }
         } catch (e) {
           console.error("Geo IP failed", e);
         }
+
+        // Unique User Identifier: Logged-in ID or fallback (IP + UA)
+        const userIdentifier = scannerUser?.id || `${ipAddress}-${userAgent}`;
 
         // Use RPC to increment scan atomically and record event
         // @ts-ignore
@@ -69,7 +74,9 @@ export default function Redirect() {
           device_type: deviceType,
           country: country,
           state: region,
-          city: city
+          city: city,
+          ip_address: ipAddress,
+          user_identifier: userIdentifier
         });
 
         // 3. Handle specific types

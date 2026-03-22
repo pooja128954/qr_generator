@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Scan, Users, Monitor, Smartphone, Globe } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import UpgradeBanner from "@/components/UpgradeBanner";
-import { useScanStats, useWeeklyScans, useTopCodes } from "@/hooks/useAnalytics";
+import { useScanStats, useWeeklyScans, useTopCodes, useRecentScans } from "@/hooks/useAnalytics";
 import { useQrCodes } from "@/hooks/useQrCodes";
 import { usePlan } from "@/hooks/usePlan";
 
@@ -20,6 +20,7 @@ export default function Analytics() {
   const { data: stats, isLoading: statsLoading } = useScanStats(qrId || undefined);
   const { data: weeklyData = [], isLoading: weeklyLoading } = useWeeklyScans(qrId || undefined);
   const { data: topCodes = [], isLoading: topLoading } = useTopCodes();
+  const { data: recentScans = [], isLoading: recentLoading } = useRecentScans(qrId || undefined);
   const { codes } = useQrCodes();
 
   const currentQr = qrId ? codes.find(c => c.id === qrId) : null;
@@ -159,22 +160,68 @@ export default function Analytics() {
             )}
           </div>
 
-          {/* Placeholder: Scan Locations */}
+          {/* Scan History & Locations */}
           <div className="bg-card border border-border rounded-xl p-6 lg:col-span-2">
             <div className="flex items-center gap-2 mb-1">
               <Globe className="w-4 h-4 text-muted-foreground" />
-              <h3 className="font-semibold">Scan Locations</h3>
+              <h3 className="font-semibold">Recent Scans & Locations</h3>
             </div>
-            <p className="text-xs text-muted-foreground mb-6">Top countries by scan volume</p>
+            <p className="text-xs text-muted-foreground mb-6">Real-time scan history and visitor locations</p>
+            
             {isBasic ? (
               <UpgradeBanner
                 title="Location Data Locked"
-                description="Upgrade to view where in the world your QR codes are being scanned."
+                description="Upgrade to Premium to view where in the world your QR codes are being scanned."
               />
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-6">
-                Geo-analytics will appear here as your QR codes are scanned with location data.
-              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-muted-foreground text-[10px] uppercase tracking-wider">
+                      <th className="text-left font-semibold pb-3 pl-2">Location (State, City)</th>
+                      <th className="text-left font-semibold pb-3">Device Type</th>
+                      <th className="text-right font-semibold pb-3 pr-2">Scanned At</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentLoading ? (
+                      Array.from({ length: 5 }).map((_, i) => (
+                        <tr key={i} className="border-b border-border/50 last:border-0 animate-pulse">
+                          <td className="py-4 pl-2"><div className="h-4 w-40 bg-accent rounded" /></td>
+                          <td className="py-4"><div className="h-4 w-20 bg-accent rounded" /></td>
+                          <td className="py-4 pr-2 text-right"><div className="h-4 w-24 bg-accent rounded ml-auto" /></td>
+                        </tr>
+                      ))
+                    ) : recentScans.length === 0 ? (
+                      <tr>
+                        <td colSpan={3} className="py-12 text-center text-muted-foreground">
+                          No scan data available yet.
+                        </td>
+                      </tr>
+                    ) : (
+                      recentScans.map((scan: any) => (
+                        <tr key={scan.id} className="border-b border-border/50 last:border-0 hover:bg-accent/30 transition-colors group">
+                          <td className="py-4 pl-2">
+                            <span className="font-medium text-foreground">{scan.state || "Unknown"}</span>
+                            <span className="text-muted-foreground ml-2">({scan.city || "Unknown"})</span>
+                          </td>
+                          <td className="py-4 text-muted-foreground capitalize">
+                            <div className="flex items-center gap-2">
+                              {scan.device_type === "mobile" ? <Smartphone className="w-3.5 h-3.5" /> : <Monitor className="w-3.5 h-3.5" />}
+                              {scan.device_type || "Desktop"}
+                            </div>
+                          </td>
+                          <td className="py-4 pr-2 text-right text-xs font-mono text-muted-foreground tabular-nums">
+                            {new Date(scan.scanned_at).toLocaleString("en-US", { 
+                              month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" 
+                            })}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>
