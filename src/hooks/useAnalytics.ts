@@ -29,30 +29,40 @@ export function useScanStats(qrId?: string) {
     enabled: !!user,
     queryFn: async () => {
       let ids: string[] = [];
+      let totalScansValue = 0;
 
       if (qrId) {
         // Only fetch for specific QR
-        const { data } = await supabase.from("qr_codes").select("id").eq("id", qrId).single() as unknown as { data: { id: string } | null };
-        if (data) ids = [data.id];
+        const { data } = await supabase.from("qr_codes").select("id, scan_count").eq("id", qrId).single() as unknown as { data: { id: string, scan_count: number } | null };
+        if (data) {
+          ids = [data.id];
+          totalScansValue = data.scan_count;
+        }
       } else {
-        // Get all QR code IDs owned by user
-        const { data: qrCodes } = await supabase.from("qr_codes").select("id") as unknown as { data: { id: string }[] | null };
-        if (qrCodes) ids = qrCodes.map((q) => q.id);
+        // Get all QR codes owned by user
+        const { data: qrCodes } = await supabase.from("qr_codes").select("id, scan_count") as unknown as { data: { id: string, scan_count: number }[] | null };
+        if (qrCodes) {
+          ids = qrCodes.map((q) => q.id);
+          totalScansValue = qrCodes.reduce((acc, q) => acc + q.scan_count, 0);
+        }
       }
 
       if (ids.length === 0) {
         return { totalScans: 0, uniqueScans: 0, desktopPct: 0, mobilePct: 0, countries: [], browsers: [] };
       }
 
-      // Fetch scan events for those codes
+      // Fetch scan events for those codes (for unique and geo stats)
       const { data: events } = await supabase
         .from("scan_events")
         .select("id, device_type, country, user_identifier")
         .in("qr_code_id", ids) as unknown as { data: { id: string, device_type: string | null, country: string | null, user_identifier: string | null }[] | null };
 
-      const total = events?.length ?? 0;
+      const totalFromEvents = events?.length ?? 0;
       
-      // Unique Scans: Distinct user_identifier
+      // Use the actual total from qr_codes table for the card display
+      const total = totalScansValue;
+      
+      // Unique Scans: Distinct user_identifier from events
       const uniqueDocs = new Set(events?.map(e => e.user_identifier)).size;
       const unique = uniqueDocs;
 
