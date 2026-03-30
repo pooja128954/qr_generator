@@ -22,33 +22,33 @@ export function useQrCodes() {
       if (!user) return [];
 
       // Get QR codes
-      const { data: qrCodes, error: qrError } = await supabase
+      const { data: qrCodes, error: qrError } = await (supabase as any)
         .from("qr_codes")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("user_id", user?.id)
         .order("created_at", { ascending: false });
 
       if (qrError) throw qrError;
       if (!qrCodes || qrCodes.length === 0) return [];
 
-      const qrIds = qrCodes.map(q => q.id);
+      const qrIds = qrCodes.map((q: any) => q.id);
 
       // Count actual scan events for each QR code
-      const { data: scanCounts, error: scanError } = await supabase
+      const { data: scanCounts, error: scanError } = await (supabase as any)
         .from("scan_events")
         .select("qr_code_id")
-        .in("qr_code_id", qrIds) as unknown as { data: { qr_code_id: string }[] | null, error: any };
+        .in("qr_code_id", qrIds);
 
       if (scanError) throw scanError;
 
       // Group scan counts by QR code ID
       const countMap: Record<string, number> = {};
-      scanCounts?.forEach(scan => {
+      (scanCounts as any[])?.forEach(scan => {
         countMap[scan.qr_code_id] = (countMap[scan.qr_code_id] || 0) + 1;
       });
 
       // Replace cached scan_count with real count
-      return qrCodes.map(qr => ({
+      return qrCodes.map((qr: any) => ({
         ...qr,
         scan_count: countMap[qr.id] || 0
       })) as QrCode[];
@@ -58,7 +58,7 @@ export function useQrCodes() {
   const createMutation = useMutation({
     mutationFn: async (payload: QrCodeInsert) => {
       if (!user) throw new Error("Not logged in");
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("qr_codes")
         .insert({ ...payload, user_id: user.id });
       if (error) throw error;
@@ -72,7 +72,7 @@ export function useQrCodes() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, payload }: { id: string; payload: Partial<QrCodeInsert> }) => {
-      const { error } = await supabase.from("qr_codes").update(payload).eq("id", id);
+      const { error } = await (supabase as any).from("qr_codes").update(payload).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -84,7 +84,7 @@ export function useQrCodes() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("qr_codes").delete().eq("id", id);
+      const { error } = await (supabase as any).from("qr_codes").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -102,9 +102,7 @@ export function useQrCodes() {
       id: string;
       status: "active" | "paused";
     }) => {
-      // @ts-ignore
-      // @ts-ignore
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("qr_codes")
         .update({ status })
         .eq("id", id);

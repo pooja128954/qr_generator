@@ -38,6 +38,7 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center gap-8">
           <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Home</Link>
+          <Link to="/solutions" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Solution</Link>
           <a href="/#features" onClick={(e) => handleScrollToSection(e, "features")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
           <a href="/#pricing" onClick={(e) => handleScrollToSection(e, "pricing")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
         </nav>
@@ -65,6 +66,7 @@ export default function Header() {
           >
             <div className="container py-4 flex flex-col gap-3">
               <Link to="/" className="text-sm py-2" onClick={() => setMobileOpen(false)}>Home</Link>
+              <Link to="/solutions" className="text-sm py-2" onClick={() => setMobileOpen(false)}>Solution</Link>
               <a href="/#features" className="text-sm py-2" onClick={(e) => handleScrollToSection(e, "features")}>Features</a>
               <a href="/#pricing" className="text-sm py-2" onClick={(e) => handleScrollToSection(e, "pricing")}>Pricing</a>
               <Link to="/login" className="text-sm py-2" onClick={() => setMobileOpen(false)}>Login</Link>

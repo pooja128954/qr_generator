@@ -230,3 +230,32 @@ export function useTopCodes(limit = 4) {
     },
   });
 }
+
+export function useLeads(qrId?: string, limit = 10) {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ["leads", user?.id, qrId],
+    enabled: !!user,
+    queryFn: async () => {
+      let query = (supabase as any)
+        .from("lead_captures")
+        .select(`
+          *,
+          qr_codes!inner(name, user_id)
+        `)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (qrId) {
+        query = query.eq("qr_code_id", qrId);
+      } else {
+        query = query.eq("qr_codes.user_id", user?.id);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data;
+    },
+  });
+}

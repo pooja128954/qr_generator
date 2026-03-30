@@ -2,7 +2,7 @@ import { PlanType } from "./database.types";
 
 export type ExportFormat = "png" | "svg" | "pdf";
 export type AnalyticsLevel = "none" | "basic" | "premium" | "full";
-export type CustomizationLevel = "basic" | "limited" | "full";
+export type CustomizationLevel = "none" | "basic" | "limited" | "full";
 
 export interface PlanConfig {
   name: string;
@@ -35,7 +35,7 @@ export const PLANS: Record<PlanType, PlanConfig> = {
     qrLimit: Infinity, // No limit on QR codes, but static only
     scanLimit: 100,
     analytics: "none",
-    customization: "basic",
+    customization: "none",
     editable: false,
     logoUpload: false,
     exports: ["png"],

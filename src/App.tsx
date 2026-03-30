@@ -14,6 +14,7 @@ import Redirect from "./pages/Redirect.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import MyCodes from "./pages/MyCodes.tsx";
 import Analytics from "./pages/Analytics.tsx";
+import Solutions from "./pages/Solutions.tsx";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/solutions" element={<Solutions />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/r/:qrId" element={<Redirect />} />

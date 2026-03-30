@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Scan, Users, Monitor, Smartphone, Globe } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import UpgradeBanner from "@/components/UpgradeBanner";
-import { useScanStats, useWeeklyScans, useTopCodes, useRecentScans } from "@/hooks/useAnalytics";
+import { useScanStats, useWeeklyScans, useTopCodes, useRecentScans, useLeads } from "@/hooks/useAnalytics";
 import { useQrCodes } from "@/hooks/useQrCodes";
 import { usePlan } from "@/hooks/usePlan";
 
@@ -21,6 +21,7 @@ export default function Analytics() {
   const { data: weeklyData = [], isLoading: weeklyLoading } = useWeeklyScans(qrId || undefined);
   const { data: topCodes = [], isLoading: topLoading } = useTopCodes();
   const { data: recentScans = [], isLoading: recentLoading } = useRecentScans(qrId || undefined);
+  const { data: leads = [], isLoading: leadsLoading } = useLeads(qrId || undefined);
   const { codes } = useQrCodes();
 
   const currentQr = qrId ? codes.find(c => c.id === qrId) : null;
@@ -50,6 +51,7 @@ export default function Analytics() {
     { label: "Unique Scans", value: stats?.uniqueScans.toLocaleString() ?? "0", icon: Users },
     { label: "Desktop", value: `${stats?.desktopPct ?? 38}%`, icon: Monitor },
     { label: "Mobile", value: `${stats?.mobilePct ?? 62}%`, icon: Smartphone },
+    { label: "Lead Conversions", value: leads.length.toLocaleString(), icon: Users },
   ];
 
   const maxScans = weeklyData.length > 0 ? Math.max(...weeklyData.map((d) => d.scans), 1) : 1;
@@ -63,7 +65,7 @@ export default function Analytics() {
         </p>
 
         {/* Overview Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
           {statsLoading
             ? Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)
             : overviewStats.map((s, i) => {
@@ -172,6 +174,80 @@ export default function Analytics() {
                     <span className="font-mono text-sm tabular-nums">{c.scans.toLocaleString()}</span>
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+
+          {/* Recent Leads Table */}
+          <div className="bg-card border border-border rounded-xl p-6 lg:col-span-2">
+            <div className="flex items-center gap-2 mb-1">
+              <Users className="w-4 h-4 text-primary" />
+              <h3 className="font-semibold">Recent Leads (Lead Capture)</h3>
+            </div>
+            <p className="text-xs text-muted-foreground mb-6">Detailed information from users who filled the lead form</p>
+
+            {isBasic ? (
+              <UpgradeBanner
+                title="Lead Data Locked"
+                description="Upgrade to Premium to collect and view detailed lead information from your QR codes."
+              />
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-muted-foreground text-[10px] uppercase tracking-wider">
+                      <th className="text-left font-semibold pb-3 pl-2">Name / Email</th>
+                      <th className="text-left font-semibold pb-3">Phone</th>
+                      <th className="text-left font-semibold pb-3">Location</th>
+                      <th className="text-left font-semibold pb-3">Device</th>
+                      <th className="text-right font-semibold pb-3 pr-2">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leadsLoading ? (
+                      Array.from({ length: 3 }).map((_, i) => (
+                        <tr key={i} className="border-b border-border/50 last:border-0 animate-pulse">
+                          <td className="py-4 pl-2"><div className="h-4 w-32 bg-accent rounded mb-1" /><div className="h-3 w-40 bg-accent rounded opacity-50" /></td>
+                          <td className="py-4"><div className="h-4 w-24 bg-accent rounded" /></td>
+                          <td className="py-4"><div className="h-4 w-20 bg-accent rounded" /></td>
+                          <td className="py-4"><div className="h-4 w-12 bg-accent rounded" /></td>
+                          <td className="py-4 pr-2 text-right"><div className="h-4 w-20 bg-accent rounded ml-auto" /></td>
+                        </tr>
+                      ))
+                    ) : leads.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="py-12 text-center text-muted-foreground italic">
+                          No leads captured yet. Enable "Lead Capture" in the Generator to start collecting data.
+                        </td>
+                      </tr>
+                    ) : (
+                      leads.map((lead: any) => (
+                        <tr key={lead.id} className="border-b border-border/50 last:border-0 hover:bg-accent/30 transition-colors group">
+                          <td className="py-4 pl-2">
+                            <div className="font-semibold text-foreground">{lead.name}</div>
+                            <div className="text-[10px] text-muted-foreground lowercase">{lead.email}</div>
+                          </td>
+                          <td className="py-4 text-xs font-mono text-muted-foreground">{lead.phone || "—"}</td>
+                          <td className="py-4">
+                            <div className="text-xs font-medium">{lead.city || "Unknown"}</div>
+                            <div className="text-[10px] text-muted-foreground">{lead.country || "Unknown"}</div>
+                          </td>
+                          <td className="py-4">
+                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                              {lead.device_type === "mobile" ? <Smartphone className="w-3 h-3" /> : <Monitor className="w-3 h-3" />}
+                              {lead.device_type || "PC"}
+                            </div>
+                          </td>
+                          <td className="py-4 pr-2 text-right text-[10px] font-mono text-muted-foreground tabular-nums">
+                            {new Date(lead.created_at).toLocaleDateString()}
+                            <br />
+                            {new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
