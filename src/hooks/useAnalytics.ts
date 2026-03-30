@@ -98,9 +98,10 @@ export function useScanStats(qrId?: string) {
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
 
-      // Always use qr_codes.scan_count as the single source of truth for Total Scans.
-      // This ensures My QR Codes, Analytics Total Scans, and Top QR Codes all show the same number.
-      return { totalScans: totalScansValue, uniqueScans: unique, desktopPct, mobilePct, countries, browsers: [] };
+      // Use scan_events count if available, fall back to qr_codes.scan_count
+      const totalScans = eventCount > 0 ? eventCount : totalScansValue;
+
+      return { totalScans, uniqueScans: unique, desktopPct, mobilePct, countries, browsers: [] };
 
     },
   });
