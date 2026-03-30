@@ -138,8 +138,8 @@ export default function Redirect() {
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!leadData.name || !leadData.email) {
-      toast.error("Please fill in all required fields.");
+    if (!leadData.name || !leadData.email || !leadData.phone) {
+      toast.error("Please fill in name, email, and phone.");
       return;
     }
 
@@ -236,10 +236,11 @@ export default function Redirect() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] ml-1">Phone (Optional)</label>
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] ml-1">Phone Number</label>
                 <div className="relative block">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
                   <input
+                    required
                     type="tel"
                     placeholder="+00 000 0000"
                     value={leadData.phone}

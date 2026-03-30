@@ -1204,6 +1204,33 @@ export default function Generator() {
               )}
             </div>
 
+            {/* 4. Lead Capture Toggle */}
+            <div>
+              <h3 className="label-caps text-muted-foreground mb-3 font-bold flex items-center gap-2">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px]">4</span>
+                Lead Capture Before Redirect
+              </h3>
+              <div className="flex items-center justify-between p-4 border border-border rounded-xl bg-background/50 group hover:border-primary/30 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Users className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">Enable Lead Form</p>
+                    <p className="text-[10px] text-muted-foreground">Scanners must submit name, email, and phone before redirect.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setLeadCaptureEnabled(!leadCaptureEnabled)}
+                  type="button"
+                  aria-pressed={leadCaptureEnabled}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 ${leadCaptureEnabled ? 'bg-primary' : 'bg-muted-foreground/30'}`}
+                >
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${leadCaptureEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
+                </button>
+              </div>
+            </div>
+
             {/* Customize Button and Modal */}
             <div className="pt-4">
               <Dialog open={isCustomizing} onOpenChange={setIsCustomizing}>
