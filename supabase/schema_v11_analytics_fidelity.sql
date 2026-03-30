@@ -2,6 +2,10 @@
 -- ScanovaX — Schema V11 High-Fidelity Analytics & Tracking
 -- ============================================================
 
+-- 0. ENSURE COLUMNS EXIST (Crucial for fresh installs)
+ALTER TABLE public.qr_codes ADD COLUMN IF NOT EXISTS scan_count bigint DEFAULT 0;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS monthly_scan_count bigint DEFAULT 0;
+
 -- 1. Definitively Atomic Independent Increment RPC
 -- This version removes ALL de-duplication to ensure that 
 -- Total Scans = All-time global hits
