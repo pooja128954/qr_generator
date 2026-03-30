@@ -185,7 +185,7 @@ export default function MyCodes() {
                       </p>
 
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold tabular-nums">{(c.scan_count ?? 0).toLocaleString()} scans</span>
+                        <span className="text-sm font-semibold tabular-nums text-primary/80">Total Scans: {(c.scan_count ?? 0).toLocaleString()}</span>
                         <div className="flex gap-1">
                           {limits.editable && (
                             <Link to={`/dashboard/qr-generator?edit=${c.id}`} className="p-1.5 rounded-md hover:bg-accent transition-colors" title="Edit">

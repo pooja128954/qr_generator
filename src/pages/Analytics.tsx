@@ -171,7 +171,7 @@ export default function Analytics() {
                         />
                       </div>
                     </div>
-                    <span className="font-mono text-sm tabular-nums">{c.scans.toLocaleString()}</span>
+                    <span className="font-mono text-sm tabular-nums text-primary font-bold">{c.scans.toLocaleString()} scans</span>
                   </div>
                 ))}
               </div>
