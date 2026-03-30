@@ -29,23 +29,27 @@ export function useScanStats(qrId?: string) {
   return useQuery<ScanStats>({
     queryKey: ["scan_stats", user?.id, qrId, limits.analytics],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       let ids: string[] = [];
       let totalScansValue = 0;
 
       if (qrId) {
         // Only fetch for specific QR
-        const { data } = await supabase.from("qr_codes").select("id, scan_count").eq("id", qrId).single() as unknown as { data: { id: string, scan_count: number } | null };
+        const { data, error } = await supabase.from("qr_codes").select("id, scan_count").eq("id", qrId).single() as unknown as { data: { id: string, scan_count: number } | null, error: any };
+        if (error) { console.error("[Analytics] QR fetch error:", error); }
         if (data) {
           ids = [data.id];
-          totalScansValue = data.scan_count;
+          totalScansValue = Number(data.scan_count ?? 0);
         }
       } else {
         // Get all QR codes owned by user
-        const { data: qrCodes } = await supabase.from("qr_codes").select("id, scan_count").eq("user_id", user?.id) as unknown as { data: { id: string, scan_count: number }[] | null };
+        const { data: qrCodes, error } = await supabase.from("qr_codes").select("id, scan_count").eq("user_id", user?.id) as unknown as { data: { id: string, scan_count: number }[] | null, error: any };
+        if (error) { console.error("[Analytics] QR codes fetch error:", error); }
         if (qrCodes) {
           ids = qrCodes.map((q) => q.id);
-          totalScansValue = qrCodes.reduce((acc, q) => acc + q.scan_count, 0);
+          totalScansValue = qrCodes.reduce((acc, q) => acc + Number(q.scan_count ?? 0), 0);
         }
       }
 
@@ -66,14 +70,23 @@ export function useScanStats(qrId?: string) {
         query = query.gte("scanned_at", sevenDaysAgo.toISOString());
       }
 
-      const { data: events } = await query as unknown as { data: { id: string, device_type: string | null, country: string | null, user_identifier: string | null }[] | null };
+      const { data: events, error: eventsError } = await query as unknown as { data: { id: string, device_type: string | null, country: string | null, user_identifier: string | null }[] | null, error: any };
+      
+      if (eventsError) { console.error("[Analytics] Scan events fetch error:", eventsError); }
+
 
       // Total scans should be the count of all audit events in the result set
       // This is the most high-fidelity method to avoid double-counting.
       const logTotal = events?.length ?? 0;
+
+      // Use the master scan_count from qr_codes for Total Scans (accurate, no row-limit issues)
+      // Use scan_events for derived stats (unique, device breakdown, geo)
+      const eventCount = events?.length ?? 0;
+
       
       // Unique scans come from the distinct user_identifiers in those events
       const unique = new Set(events?.filter(e => e.user_identifier).map(e => e.user_identifier) ?? []).size;
+
 
       // Decide which total to show: 
       // If we have a log, it is the most accurate for the current view.
@@ -81,6 +94,7 @@ export function useScanStats(qrId?: string) {
       const finalTotal = logTotal > 0 ? logTotal : (totalScansValue > 0 ? totalScansValue : 0);
 
       const eventCount = logTotal;
+
       const desktop = events?.filter((e) => e.device_type === "desktop").length ?? 0;
       const mobile = events?.filter((e) => e.device_type === "mobile").length ?? 0;
       const other = eventCount - desktop - mobile;
@@ -99,6 +113,7 @@ export function useScanStats(qrId?: string) {
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
 
+
       return { 
         totalScans: finalTotal,       // Source of Truth: Log count
         uniqueScans: unique,          // Distinct visitors
@@ -107,6 +122,10 @@ export function useScanStats(qrId?: string) {
         countries, 
         browsers: [] 
       };
+
+      // totalScansValue comes from qr_codes.scan_count (the authoritative counter)
+      return { totalScans: totalScansValue, uniqueScans: unique, desktopPct, mobilePct, countries, browsers: [] };
+
     },
   });
 }
@@ -117,6 +136,8 @@ export function useRecentScans(qrId?: string, limit = 10) {
   return useQuery({
     queryKey: ["recent_scans", user?.id, qrId],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       let query = supabase
         .from("scan_events")
@@ -152,6 +173,8 @@ export function useWeeklyScans(qrId?: string) {
   return useQuery<DayScans[]>({
     queryKey: ["weekly_scans", user?.id, qrId],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       let ids: string[] = [];
 
@@ -196,6 +219,8 @@ export function useTopCodes(limit = 4) {
   return useQuery<TopCode[]>({
     queryKey: ["top_codes", user?.id, limits.analytics],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       // Get QR codes owned by user with their global scan counts
       const { data: qrCodes, error: qrError } = await supabase
@@ -222,6 +247,8 @@ export function useLeads(qrId?: string, limit = 10) {
   return useQuery({
     queryKey: ["leads", user?.id, qrId],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       let query = (supabase as any)
         .from("lead_captures")

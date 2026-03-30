@@ -18,6 +18,8 @@ export function useQrCodes() {
   const { data: codes = [], isLoading } = useQuery({
     queryKey: ["qr_codes", user?.id],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       if (!user) return [];
 
