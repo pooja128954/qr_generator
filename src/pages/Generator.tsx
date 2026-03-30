@@ -796,10 +796,9 @@ export default function Generator() {
         ...payload,
         id: trackingIdRef.current as any,
       });
-      // Only reset/refresh AFTER successful save
-      trackingIdRef.current = crypto.randomUUID();
+      // Keep the ID stable so subsequent downloads work!
+      // Only reset the form but notify the user
       setQrName("");
-      setInputValue("https://scanovax.com");
       setLogoFile(undefined);
     }
   };

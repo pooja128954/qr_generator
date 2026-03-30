@@ -72,6 +72,7 @@ export default function Redirect() {
 
           if (rpcError) {
             console.error("Analytics RPC Failure:", rpcError);
+            toast.error("Analytics synchronization failed: " + rpcError.message);
           } else {
             console.log("Analytics Success: Scan recorded for " + qrId);
           }
