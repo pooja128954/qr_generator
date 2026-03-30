@@ -51,19 +51,12 @@ export default function Redirect() {
         // 2. Gather Environment Data
         const userAgent = navigator.userAgent;
 
-        // STRENGTHENED BOT DETECTION: Only block real crawlers, allow manual user hits
-        const isBot = /bot|crawler|spider|slurp|bing|google/i.test(userAgent);
-        
-        if (isBot) {
-          console.log("Analytics Skip: Bot detected (" + userAgent + ")");
-
-        // RELAXED BOT DETECTION: Only block confirmed search engine crawlers
+        // Bot detection: Only block confirmed search engine crawlers
         // Allow social app in-app browsers (WhatsApp, Facebook, Instagram, etc.)
         const isBot = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|crawl/i.test(userAgent);
         
         if (isBot) {
           console.log("[Scan] Skip: Search engine bot detected (" + userAgent + ")");
-
         } else {
           // 3. Capture Geography (best-effort, don't block on failure)
           let geo = { country_name: "Unknown", region: "Unknown", city: "Unknown", ip: "Unknown" };
@@ -82,34 +75,11 @@ export default function Redirect() {
 
           // 4. Record the scan via RPC
           const deviceType = /Mobi|Android|iPhone/i.test(userAgent) ? "mobile" : "desktop";
+          const userIdentifier = `${geo.ip}-${userAgent}`.substring(0, 100);
 
-          
-          // Create a deterministic hash of IP + UserAgent for unique identification
-          // Use a simple hash to keep it short and consistent
-          const userIdentifierRaw = `${geo.ip}-${userAgent}`;
-          let userIdentifier = userIdentifierRaw;
-          try {
-            // Create a simple hash by taking first 50 chars of raw identifier
-            // This keeps it consistent while avoiding overly long strings
-            userIdentifier = userIdentifierRaw.substring(0, 100);
-          } catch (e) {
-            userIdentifier = geo.ip || "Unknown";
-          }
+          console.log("[Scan] Recording scan:", { qrId, deviceType, country: geo.country_name });
 
-          console.log("Recording atomic scan with params:", {
-            target_qr_id: qrId,
-            device_type: deviceType,
-            country: geo.country_name,
-            user_identifier: userIdentifier.substring(0, 20) + "..."
-          });
-          
-          const { error: rpcError, data: rpcData } = await (supabase as any).rpc('increment_scan', {
-
-          const userIdentifier = `${geo.ip}-${userAgent}`;
-
-          console.log("[Scan] Recording scan — device:", deviceType, "country:", geo.country_name);
           const { error: rpcError } = await (supabase as any).rpc('increment_scan', {
-
             target_qr_id: qrId,
             scanner_email: null,
             device_type: deviceType,
@@ -121,24 +91,9 @@ export default function Redirect() {
           });
 
           if (rpcError) {
-
-            console.error("❌ Analytics RPC Error:", {
-              code: rpcError.code,
-              message: rpcError.message,
-              details: rpcError.details,
-              hint: rpcError.hint
-            });
-            // Still show error but allow redirect to continue
-            console.warn("⚠️ Scan tracking failed, but redirecting anyway. Check Supabase schema deployment.");
-            // Only show toast if user is likely to see it (longer timeout before redirect)
-          } else {
-            console.log("✅ Analytics Success: Scan recorded for " + qrId);
-            console.log("RPC Data:", rpcData);
-
             console.error("[Scan] RPC increment_scan failed:", rpcError);
           } else {
             console.log("[Scan] ✓ Scan recorded successfully for", qrId);
-
           }
         }
 

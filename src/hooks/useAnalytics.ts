@@ -74,26 +74,11 @@ export function useScanStats(qrId?: string) {
       
       if (eventsError) { console.error("[Analytics] Scan events fetch error:", eventsError); }
 
-
-      // Total scans should be the count of all audit events in the result set
-      // This is the most high-fidelity method to avoid double-counting.
-      const logTotal = events?.length ?? 0;
-
-      // Use the master scan_count from qr_codes for Total Scans (accurate, no row-limit issues)
-      // Use scan_events for derived stats (unique, device breakdown, geo)
+      // Total scans = number of scan event rows (each scan creates exactly one row)
       const eventCount = events?.length ?? 0;
 
-      
       // Unique scans come from the distinct user_identifiers in those events
       const unique = new Set(events?.filter(e => e.user_identifier).map(e => e.user_identifier) ?? []).size;
-
-
-      // Decide which total to show: 
-      // If we have a log, it is the most accurate for the current view.
-      // We only fall back to the atomic counter if the log is empty but the main counter says otherwise.
-      const finalTotal = logTotal > 0 ? logTotal : (totalScansValue > 0 ? totalScansValue : 0);
-
-      const eventCount = logTotal;
 
       const desktop = events?.filter((e) => e.device_type === "desktop").length ?? 0;
       const mobile = events?.filter((e) => e.device_type === "mobile").length ?? 0;
@@ -113,18 +98,10 @@ export function useScanStats(qrId?: string) {
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
 
+      // Use scan_events count if available, fall back to qr_codes.scan_count
+      const totalScans = eventCount > 0 ? eventCount : totalScansValue;
 
-      return { 
-        totalScans: finalTotal,       // Source of Truth: Log count
-        uniqueScans: unique,          // Distinct visitors
-        desktopPct, 
-        mobilePct, 
-        countries, 
-        browsers: [] 
-      };
-
-      // totalScansValue comes from qr_codes.scan_count (the authoritative counter)
-      return { totalScans: totalScansValue, uniqueScans: unique, desktopPct, mobilePct, countries, browsers: [] };
+      return { totalScans, uniqueScans: unique, desktopPct, mobilePct, countries, browsers: [] };
 
     },
   });
