@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
+import { usePlan } from "@/hooks/usePlan";
 import { toast } from "sonner";
 import type { Database } from "@/lib/database.types";
 
@@ -13,10 +14,11 @@ export type QrCodeInsert = Omit<
 
 export function useQrCodes() {
   const { user } = useAuth();
+  const { limits } = usePlan();
   const queryClient = useQueryClient();
 
   const { data: codes = [], isLoading } = useQuery({
-    queryKey: ["qr_codes", user?.id],
+    queryKey: ["qr_codes", user?.id, limits.analytics],
     enabled: !!user,
     staleTime: 0,
     refetchOnWindowFocus: true,
@@ -31,11 +33,42 @@ export function useQrCodes() {
         .order("created_at", { ascending: false });
 
       if (qrError) throw qrError;
+
+      const ids = (qrCodes as any[] | null)?.map((qr) => qr.id) ?? [];
+      let hitsByQrId: Record<string, number> = {};
+
+      if (ids.length > 0) {
+        let scansQuery = (supabase as any)
+          .from("scan_events")
+          .select("qr_code_id")
+          .in("qr_code_id", ids);
+
+        if (limits.analytics === "basic") {
+          const sevenDaysAgo = new Date();
+          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+          scansQuery = scansQuery.gte("scanned_at", sevenDaysAgo.toISOString());
+        }
+
+        const { data: events, error: eventsError } = await scansQuery as unknown as {
+          data: { qr_code_id: string | null }[] | null;
+          error: any;
+        };
+
+        if (eventsError) {
+          console.error("[MyCodes] Scan events fetch error:", eventsError);
+        } else {
+          hitsByQrId = (events ?? []).reduce((acc, ev) => {
+            if (!ev.qr_code_id) return acc;
+            acc[ev.qr_code_id] = (acc[ev.qr_code_id] ?? 0) + 1;
+            return acc;
+          }, {} as Record<string, number>);
+        }
+      }
       
-      // Ensure scan_count is always a number to prevent toLocaleString crashes
+      // Keep My Codes aligned with Analytics hit counting logic.
       return (qrCodes as any[]).map(qr => ({
         ...qr,
-        scan_count: Number(qr.scan_count ?? 0)
+        scan_count: Number(hitsByQrId[qr.id] ?? qr.scan_count ?? 0)
       })) as QrCode[];
     },
   });

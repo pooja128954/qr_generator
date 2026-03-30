@@ -74,7 +74,7 @@ export function useScanStats(qrId?: string) {
       
       if (eventsError) { console.error("[Analytics] Scan events fetch error:", eventsError); }
 
-      // Total scans = number of scan event rows (each scan creates exactly one row)
+      // Total scans are derived from scan events for analytics fidelity.
       const eventCount = events?.length ?? 0;
 
       // Unique scans come from the distinct user_identifiers in those events
@@ -98,7 +98,7 @@ export function useScanStats(qrId?: string) {
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
 
-      // Use scan_events count if available, fall back to qr_codes.scan_count
+      // Use scan_events count if available, fall back to qr_codes.scan_count.
       const totalScans = eventCount > 0 ? eventCount : totalScansValue;
 
       return { totalScans, uniqueScans: unique, desktopPct, mobilePct, countries, browsers: [] };
@@ -199,21 +199,55 @@ export function useTopCodes(limit = 4) {
     staleTime: 0,
     refetchOnWindowFocus: true,
     queryFn: async () => {
-      // Get QR codes owned by user with their global scan counts
+      // Get all QR codes owned by user.
       const { data: qrCodes, error: qrError } = await supabase
         .from("qr_codes")
         .select("id, name, scan_count")
-        .eq("user_id", user?.id)
-        .order("scan_count", { ascending: false })
-        .limit(limit);
+        .eq("user_id", user?.id) as unknown as {
+          data: { id: string; name: string; scan_count: number | null }[] | null;
+          error: any;
+        };
 
       if (qrError) throw qrError;
       if (!qrCodes || qrCodes.length === 0) return [];
 
-      return (qrCodes as any[]).map(qr => ({
-        name: qr.name,
-        scans: qr.scan_count || 0
-      }));
+      const ids = qrCodes.map((qr) => qr.id);
+
+      let scansQuery = supabase
+        .from("scan_events")
+        .select("qr_code_id")
+        .in("qr_code_id", ids);
+
+      if (limits.analytics === "basic") {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        scansQuery = scansQuery.gte("scanned_at", sevenDaysAgo.toISOString());
+      }
+
+      const { data: events, error: eventsError } = await scansQuery as unknown as {
+        data: { qr_code_id: string | null }[] | null;
+        error: any;
+      };
+
+      if (eventsError) {
+        console.error("[Analytics] Top codes scan events fetch error:", eventsError);
+      }
+
+      const hitsByQrId = (events ?? []).reduce((acc, ev) => {
+        if (!ev.qr_code_id) return acc;
+        acc[ev.qr_code_id] = (acc[ev.qr_code_id] ?? 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      const hasEventRows = (events?.length ?? 0) > 0;
+
+      return qrCodes
+        .map((qr) => ({
+          name: qr.name,
+          scans: hasEventRows ? Number(hitsByQrId[qr.id] ?? 0) : Number(qr.scan_count ?? 0),
+        }))
+        .sort((a, b) => b.scans - a.scans)
+        .slice(0, limit);
     },
   });
 }

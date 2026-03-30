@@ -99,8 +99,11 @@ export default function MyCodes() {
         toast.error("PDF export requires a Premium or Elegant plan.");
         return;
       }
-      const blob = await qr.getRawData("png");
-      if (!blob) return;
+      const rawData = await qr.getRawData("png");
+      if (!rawData) return;
+      const blob = rawData instanceof Blob
+        ? rawData
+        : new Blob([Uint8Array.from(rawData as ArrayLike<number>)], { type: "image/png" });
       const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const reader = new FileReader();
       reader.readAsDataURL(blob);
