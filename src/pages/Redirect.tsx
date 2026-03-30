@@ -21,7 +21,8 @@ export default function Redirect() {
       processed.current = true;
 
       try {
-        console.log("Analytics Initialization: Fetching QR Data...");
+        console.log("[Scan] Starting scan flow for QR ID:", qrId);
+
         // 1. Fetch QR metadata
         const { data: qr, error: qrError } = await (supabase as any)
           .from("qr_codes")
@@ -29,7 +30,16 @@ export default function Redirect() {
           .eq("id", qrId)
           .maybeSingle();
 
-        if (qrError || !qr) {
+        console.log("[Scan] QR fetch result:", { qr: qr?.id, error: qrError?.message });
+
+        if (qrError) {
+          console.error("[Scan] QR fetch error:", qrError);
+          setError("QR code not found or has been deleted.");
+          return;
+        }
+
+        if (!qr) {
+          console.error("[Scan] QR code not found (null). Possible RLS issue — anonymous users may not have SELECT permission on qr_codes.");
           setError("QR code not found or has been deleted.");
           return;
         }
@@ -38,27 +48,33 @@ export default function Redirect() {
 
         // 2. Gather Environment Data
         const userAgent = navigator.userAgent;
-        // RELAXED BOT DETECTION: Only block real search crawlers, allow social app browsers (WhatsApp/FB/etc)
-        const isBot = /bot|crawler|spider|slurp|bing|google/i.test(userAgent) || (navigator as any).webdriver;
+        // RELAXED BOT DETECTION: Only block confirmed search engine crawlers
+        // Allow social app in-app browsers (WhatsApp, Facebook, Instagram, etc.)
+        const isBot = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|crawl/i.test(userAgent);
         
         if (isBot) {
-          console.log("Analytics Skip: Bot or Crawler detected (" + userAgent + ")");
+          console.log("[Scan] Skip: Search engine bot detected (" + userAgent + ")");
         } else {
-          // 3. Capture Geography (Parallel to not block the flow)
+          // 3. Capture Geography (best-effort, don't block on failure)
           let geo = { country_name: "Unknown", region: "Unknown", city: "Unknown", ip: "Unknown" };
           try {
-            const geoRes = await fetch("https://ipapi.co/json/");
+            const geoController = new AbortController();
+            const geoTimeout = setTimeout(() => geoController.abort(), 3000);
+            const geoRes = await fetch("https://ipapi.co/json/", { signal: geoController.signal });
+            clearTimeout(geoTimeout);
             if (geoRes.ok) {
               geo = await geoRes.json();
               setGeoInfo(geo);
             }
-          } catch (e) { console.error("Geo-IP capture failed:", e); }
+          } catch (e) { 
+            console.warn("[Scan] Geo-IP lookup failed (non-blocking):", e); 
+          }
 
-          // 4. Atomic Scan Increment (Total + Unique log)
+          // 4. Record the scan via RPC
           const deviceType = /Mobi|Android|iPhone/i.test(userAgent) ? "mobile" : "desktop";
-          const userIdentifier = `${geo.ip}-${userAgent}`; // Primary Unique ID
+          const userIdentifier = `${geo.ip}-${userAgent}`;
 
-          console.log("Recording atomic scan...");
+          console.log("[Scan] Recording scan — device:", deviceType, "country:", geo.country_name);
           const { error: rpcError } = await (supabase as any).rpc('increment_scan', {
             target_qr_id: qrId,
             scanner_email: null,
@@ -71,26 +87,25 @@ export default function Redirect() {
           });
 
           if (rpcError) {
-            console.error("Analytics RPC Failure:", rpcError);
-            toast.error("Analytics synchronization failed: " + rpcError.message);
+            console.error("[Scan] RPC increment_scan failed:", rpcError);
           } else {
-            console.log("Analytics Success: Scan recorded for " + qrId);
+            console.log("[Scan] ✓ Scan recorded successfully for", qrId);
           }
         }
 
         // 5. Redirection Logic
         if (qr.lead_capture_enabled) {
-          console.log("Lead Capture Enabled: Intercepting Redirection.");
+          console.log("[Scan] Lead capture enabled — showing form.");
           setShowForm(true);
         } else {
-          console.log("Standard Redirect: Proceeding to destination.");
-          // Small delay for tracking to settle
+          console.log("[Scan] Redirecting to destination:", qr.content?.slice(0, 60));
           setTimeout(() => {
             performRedirect(qr);
           }, 600);
         }
 
       } catch (err: any) {
+        console.error("[Scan] Unexpected error:", err);
         setError("Error processing scan: " + err.message);
       }
     }
