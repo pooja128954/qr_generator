@@ -69,14 +69,12 @@ export function useScanStats(qrId?: string) {
       const { data: events } = await query as unknown as { data: { id: string, device_type: string | null, country: string | null, user_identifier: string | null }[] | null };
 
       // Total scans should be the count of all audit events in the result set
-      // Source of Truth: Total Scans comes from the master table counter (calculated above)
-      // Unique Scans comes from distinct user identifiers in the event log
-      const total = totalScansValue;
-        
+      const total = events?.length ?? 0;
+      
       // Unique scans come from the distinct user_identifiers in those events
       const unique = new Set(events?.filter(e => e.user_identifier).map(e => e.user_identifier) ?? []).size;
 
-      const eventCount = events?.length ?? 0;
+      const eventCount = total;
       const desktop = events?.filter((e) => e.device_type === "desktop").length ?? 0;
       const mobile = events?.filter((e) => e.device_type === "mobile").length ?? 0;
       const other = eventCount - desktop - mobile;
