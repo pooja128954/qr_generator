@@ -406,7 +406,9 @@ export default function Generator() {
   // Instead of encoding the target URL directly (static), 
   // we encode a redirection link (dynamic) that hits our tracking component.
   const currentTrackingId = editId || trackingIdRef.current;
-  const trackingUrl = `${window.location.origin}/r/${currentTrackingId}`;
+  // Use a 'visual salt' so the QR dots change as the user types (Live Preview)
+  const visualHash = inputValue ? btoa(unescape(encodeURIComponent(inputValue.slice(-10)))).slice(0, 8) : "default";
+  const trackingUrl = `${window.location.origin}/r/${currentTrackingId}?v=${visualHash}`;
   
   // This value is purely for internal formatting/native behavior fallbacks
   let qrValue = trackingUrl; 
@@ -565,13 +567,13 @@ export default function Generator() {
     qrCodeInstance.current.update({
       data: qrValue,
       dotsOptions,
-      cornersSquareOptions: { color: safeFgColor, type: eyeFrameLibType },
-      cornersDotOptions: { color: safeFgColor, type: eyeBallLibType },
+      cornersSquareOptions: { color: "transparent", type: eyeFrameLibType },
+      cornersDotOptions: { color: "transparent", type: eyeBallLibType },
       backgroundOptions: { color: "transparent" },
-      margin: 20, // Increased Quiet Zone for better scan reliability on high-density dynamic URLs
+      margin: 0, // Removed padding to keep eye frames aligned and satisfy scannability
       qrOptions: { errorCorrectionLevel: safeEcLevel.charAt(0) as ErrorCorrectionLevel },
       image: safeLogo,
-      imageOptions: { margin: 15, imageSize: 0.18 } // Standard 18% size + 30% recovery = near-perfect scannability
+      imageOptions: { margin: 10, imageSize: 0.25 } // Reduced logo size to 25% for 30% recovery headroom
     });
 
     forceSvgFill();
@@ -735,7 +737,7 @@ export default function Generator() {
       }
     };
 
-    const t = setTimeout(injectCustomShapes, 10); 
+    const t = setTimeout(injectCustomShapes, 50); 
     return () => clearTimeout(t);
   }, [qrValue, fgColor, bgColor, selectedShape, ecLevel, colorMode, gradientColor1, gradientColor2, gradientAngle, bodyType, eyeFrameType, eyeBallType, limits.customization, limits.logoUpload, logoFile, base64Logo, qrRef.current, activeTemplate]);
 
@@ -1861,7 +1863,8 @@ export default function Generator() {
                     const actualSrc = solidProcessedMasks[selectedShape] || shapeDef?.src;
                     const combinedMask = (shapeDef?.isPng && actualSrc && !isSquare) ? `url("${actualSrc}")` : undefined;
 
-                    const finalQrSize = safeZone.size * 0.72 * qrScale; // Increased gap safety from 0.82 to 0.72
+                    const finalQrSize = safeZone.size * 0.82 * qrScale; 
+
                     const outerStyle: React.CSSProperties = {
                       maskImage: combinedMask,
                       maskSize: '100% 100%',
