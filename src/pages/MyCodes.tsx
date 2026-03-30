@@ -185,7 +185,7 @@ export default function MyCodes() {
                       </p>
 
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold tabular-nums">{c.scan_count.toLocaleString()} scans</span>
+                        <span className="text-sm font-semibold tabular-nums">{(c.scan_count ?? 0).toLocaleString()} scans</span>
                         <div className="flex gap-1">
                           {limits.editable && (
                             <Link to={`/dashboard/qr-generator?edit=${c.id}`} className="p-1.5 rounded-md hover:bg-accent transition-colors" title="Edit">
@@ -250,9 +250,9 @@ export default function MyCodes() {
                             <p className="text-sm font-semibold">{c.type.toUpperCase()}</p>
                           </div>
                           <div className="bg-accent/50 p-3 rounded-xl border border-border">
-                            <p className="text-[10px] label-caps text-muted-foreground mb-1">Total Scans</p>
-                            <p className="text-sm font-semibold">{c.scan_count.toLocaleString()}</p>
-                          </div>
+                          <p className="text-[10px] label-caps text-muted-foreground mb-1">Total Scans</p>
+                          <p className="text-sm font-semibold">{(c.scan_count ?? 0).toLocaleString()}</p>
+                        </div>
                         </div>
                         <div className="bg-accent/50 p-3 rounded-xl border border-border">
                           <p className="text-[10px] label-caps text-muted-foreground mb-1">Created Date</p>

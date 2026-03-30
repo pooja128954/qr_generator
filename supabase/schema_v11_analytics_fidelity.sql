@@ -60,3 +60,8 @@ BEGIN
   );
 END;
 $$;
+
+-- 2. CRITICAL: Grant permission to the anonymous 'scanner' role 
+-- so that public QR scans can actually trigger the counter.
+GRANT EXECUTE ON FUNCTION public.increment_scan TO anon, authenticated;
+

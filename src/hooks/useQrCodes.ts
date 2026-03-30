@@ -29,7 +29,12 @@ export function useQrCodes() {
         .order("created_at", { ascending: false });
 
       if (qrError) throw qrError;
-      return qrCodes as QrCode[];
+      
+      // Ensure scan_count is always a number to prevent toLocaleString crashes
+      return (qrCodes as any[]).map(qr => ({
+        ...qr,
+        scan_count: Number(qr.scan_count ?? 0)
+      })) as QrCode[];
     },
   });
 

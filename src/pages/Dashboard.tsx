@@ -140,7 +140,7 @@ export default function Dashboard() {
               <div>
                 <div className="flex items-center justify-between text-sm mb-2">
                   <span className="font-medium">Monthly Scans</span>
-                  <span className="text-muted-foreground">{profile?.monthly_scan_count || 0} / {limits.scanLimit === Infinity ? "Unlimited" : limits.scanLimit.toLocaleString()}</span>
+                  <span className="text-muted-foreground">{(profile?.monthly_scan_count || 0).toLocaleString()} / {limits.scanLimit === Infinity ? "Unlimited" : (limits.scanLimit ?? 0).toLocaleString()}</span>
                 </div>
                 {limits.scanLimit !== Infinity && (
                   <div className="w-full h-2 bg-accent rounded-full overflow-hidden">
