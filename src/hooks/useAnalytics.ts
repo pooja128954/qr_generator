@@ -29,6 +29,8 @@ export function useScanStats(qrId?: string) {
   return useQuery<ScanStats>({
     queryKey: ["scan_stats", user?.id, qrId, limits.analytics],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       let ids: string[] = [];
       let totalScansValue = 0;
@@ -109,6 +111,8 @@ export function useRecentScans(qrId?: string, limit = 10) {
   return useQuery({
     queryKey: ["recent_scans", user?.id, qrId],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       let query = supabase
         .from("scan_events")
@@ -144,6 +148,8 @@ export function useWeeklyScans(qrId?: string) {
   return useQuery<DayScans[]>({
     queryKey: ["weekly_scans", user?.id, qrId],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       let ids: string[] = [];
 
@@ -188,6 +194,8 @@ export function useTopCodes(limit = 4) {
   return useQuery<TopCode[]>({
     queryKey: ["top_codes", user?.id, limits.analytics],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       // Get QR codes owned by user with their global scan counts
       const { data: qrCodes, error: qrError } = await supabase
@@ -214,6 +222,8 @@ export function useLeads(qrId?: string, limit = 10) {
   return useQuery({
     queryKey: ["leads", user?.id, qrId],
     enabled: !!user,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       let query = (supabase as any)
         .from("lead_captures")
