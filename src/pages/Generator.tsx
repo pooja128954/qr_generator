@@ -441,8 +441,8 @@ export default function Generator() {
       default: return "https://scanovax.com";
     }
   };
-  // Bind QR value exactly to user input, NO hardcoded wrappers or tracking formats
-  let qrValue = inputValue || getPlaceholder();
+  // Bind QR value to dynamic tracking URL so scan counts and lead forms work!
+  let qrValue = trackingUrl;
   const qrContent = inputValue;
   // Sync complex inputs to inputValue
   useEffect(() => {
