@@ -423,11 +423,7 @@ export default function Generator() {
   const trackingUrl = `${window.location.origin}/r/${currentTrackingId}?v=${visualHash}${previewParams}`;
 
   // This value is purely for internal formatting/native behavior fallbacks
-  let qrValue = trackingUrl;
-
-  // Content for the QR code if it were static (optional, but we use redirect now)
-  const qrContent = inputValue;
-
+  
   const getPlaceholder = () => {
     switch (activeType) {
       case "url": return "https://example.com";
@@ -440,14 +436,14 @@ export default function Generator() {
       case "resume": return "Upload your Resume (PDF)";
       case "menu": return "Upload your Menu (PDF/Image)";
       case "maps": return "Enter location address or coordinates";
-      case "payments": return "Enter UPI ID or payment link";
-      case "review": return "Enter Google Review page URL";
-      case "meet": return "Enter Google Meet link";
-      case "presentation": return "Enter Google Slides or Canva link";
-      default: return "Enter content...";
+      case "wifi": return "WIFI:T:nopass;S:NetworkName;;";
+      case "contact": return "BEGIN:VCARD\\nVERSION:3.0\\nFN:John Doe\\nTEL:+123456789\\nEND:VCARD";
+      default: return "https://scanovax.com";
     }
   };
-
+  // Bind QR value exactly to user input, NO hardcoded wrappers or tracking formats
+  let qrValue = inputValue || getPlaceholder();
+  const qrContent = inputValue;
   // Sync complex inputs to inputValue
   useEffect(() => {
     if (activeType === "wifi") {
@@ -592,186 +588,20 @@ export default function Generator() {
       }
     };
 
-    // We override ALL eye frames and balls for perfect alignment and centering
-    // supported or not by library
-    const hideEyeFrame = true; // safeEyeFrameType === "hexagon-frame" || safeEyeFrameType === "pentagon-frame";
-    const hideEyeBall = true;   // safeEyeBallType === "diamond" || safeEyeBallType === "star";
-
     qrCodeInstance.current.update({
       data: qrValue,
       dotsOptions,
-      cornersSquareOptions: { color: "transparent", type: eyeFrameLibType },
-      cornersDotOptions: { color: "transparent", type: eyeBallLibType },
+      cornersSquareOptions: { color: eyeColor, type: eyeFrameLibType },
+      cornersDotOptions: { color: eyeColor, type: eyeBallLibType },
       backgroundOptions: { color: "transparent" },
-      margin: 0, // Removed padding to keep eye frames aligned and satisfy scannability
+      margin: 15, // PROPER QUIET ZONE added for scannability
       qrOptions: { errorCorrectionLevel: safeEcLevel.charAt(0) as ErrorCorrectionLevel },
       image: safeLogo,
-      imageOptions: { margin: 10, imageSize: 0.25 } // Reduced logo size to 25% for 30% recovery headroom
+      imageOptions: { margin: 8, imageSize: 0.24, hideBackgroundDots: true } // Protect logo space
     });
 
     forceSvgFill();
 
-    // Standardized Finder Pattern & Custom Body Injection
-    const injectCustomShapes = () => {
-      forceSvgFill();
-      const svg = qrRef.current?.querySelector("svg");
-      if (!svg) return;
-
-      const size = 1000;
-      const qrInternal = (qrCodeInstance.current as any)._qr;
-      if (!qrInternal) return;
-
-      const count = qrInternal.getModuleCount();
-      const mod = size / count; // module size
-      const eyeSize = mod * 7;
-
-      let overlayGroup = svg.querySelector("#custom-overlay-layer");
-      if (!overlayGroup) {
-        overlayGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        overlayGroup.setAttribute("id", "custom-overlay-layer");
-        svg.appendChild(overlayGroup);
-      }
-      overlayGroup.innerHTML = "";
-
-      // Support for Gradients in Custom Shapes
-      if (useGradient) {
-        const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-        const lg = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-        lg.setAttribute("id", "custom-overlay-gradient");
-        lg.setAttribute("gradientTransform", `rotate(${gradientAngle}, 500, 500)`);
-
-        const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-        stop1.setAttribute("offset", "0%");
-        stop1.setAttribute("stop-color", gradientColor1);
-
-        const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-        stop2.setAttribute("offset", "100%");
-        stop2.setAttribute("stop-color", gradientColor2);
-
-        lg.appendChild(stop1);
-        lg.appendChild(stop2);
-        defs.appendChild(lg);
-        overlayGroup.appendChild(defs);
-      }
-
-      const shapeFill = useGradient ? "url(#custom-overlay-gradient)" : safeFgColor;
-
-      const corners = [
-        { x: 0, y: 0 },
-        { x: size - eyeSize, y: 0 },
-        { x: 0, y: size - eyeSize }
-      ];
-
-      // Draw Standardized Eye Frames (7x7 module grid)
-      corners.forEach(corner => {
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        const cx = corner.x + eyeSize / 2;
-        const cy = corner.y + eyeSize / 2;
-        const r_out = eyeSize / 2;
-        const r_in = (eyeSize - (mod * 2)) / 2;
-        let d = "";
-
-        switch (safeEyeFrameType) {
-          case "extra-rounded":
-            const rad = eyeSize * 0.3;
-            d = `M${corner.x + rad},${corner.y} L${corner.x + eyeSize - rad},${corner.y} Q${corner.x + eyeSize},${corner.y} ${corner.x + eyeSize},${corner.y + rad} L${corner.x + eyeSize},${corner.y + eyeSize - rad} Q${corner.x + eyeSize},${corner.y + eyeSize} ${corner.x + eyeSize - rad},${corner.y + eyeSize} L${corner.x + rad},${corner.y + eyeSize} Q${corner.x},${corner.y + eyeSize} ${corner.x},${corner.y + eyeSize - rad} L${corner.x},${corner.y + rad} Q${corner.x},${corner.y} ${corner.x + rad},${corner.y} Z 
-                 M${corner.x + rad},${corner.y + mod} Q${corner.x + mod},${corner.y + mod} ${corner.x + mod},${corner.y + rad} L${corner.x + mod},${corner.y + eyeSize - rad} Q${corner.x + mod},${corner.y + eyeSize - mod} ${corner.x + rad},${corner.y + eyeSize - mod} L${corner.x + eyeSize - rad},${corner.y + eyeSize - mod} Q${corner.x + eyeSize - mod},${corner.y + eyeSize - mod} ${corner.x + eyeSize - mod},${corner.y + eyeSize - rad} L${corner.x + eyeSize - mod},${corner.y + rad} Q${corner.x + eyeSize - mod},${corner.y + mod} ${corner.x + eyeSize - rad},${corner.y + mod} Z`;
-            break;
-          case "dot":
-            d = `M${cx},${corner.y} A${r_out},${r_out} 0 1,1 ${cx},${corner.y + eyeSize} A${r_out},${r_out} 0 1,1 ${cx},${corner.y} Z
-                 M${cx},${corner.y + mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y + eyeSize - mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y + mod} Z`;
-            break;
-          case "hexagon-frame":
-            const getHex = (r: number) => Array.from({ length: 6 }, (_, i) => ({ x: cx + r * Math.cos(i * Math.PI / 3 - Math.PI / 2), y: cy + r * Math.sin(i * Math.PI / 3 - Math.PI / 2) }));
-            const pOut = getHex(r_out), pIn = getHex(r_in).reverse();
-            d = `M${pOut[0].x},${pOut[0].y} ${pOut.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z M${pIn[0].x},${pIn[0].y} ${pIn.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z`;
-            break;
-          case "pentagon-frame":
-            const getPent = (r: number) => Array.from({ length: 5 }, (_, i) => ({ x: cx + r * Math.cos(i * 2 * Math.PI / 5 - Math.PI / 2), y: cy + r * Math.sin(i * 2 * Math.PI / 5 - Math.PI / 2) }));
-            const pentO = getPent(r_out), pentI = getPent(r_in).reverse();
-            d = `M${pentO[0].x},${pentO[0].y} ${pentO.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z M${pentI[0].x},${pentI[0].y} ${pentI.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z`;
-            break;
-          case "square":
-          default:
-            d = `M${corner.x},${corner.y} h${eyeSize} v${eyeSize} h-${eyeSize} Z M${corner.x + mod},${corner.y + mod} v${eyeSize - 2 * mod} h${eyeSize - 2 * mod} v-${eyeSize - 2 * mod} Z`;
-            break;
-        }
-
-        path.setAttribute("d", d.replace(/\s+/g, " "));
-        path.setAttribute("fill", shapeFill);
-        path.setAttribute("fill-rule", "evenodd");
-        overlayGroup?.appendChild(path);
-      });
-
-      // Draw Standardized Eye Balls (3x3 module grid centered)
-      const ballSize = mod * 3;
-      corners.forEach(corner => {
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        const bcx = corner.x + eyeSize / 2;
-        const bcy = corner.y + eyeSize / 2;
-        const br = ballSize / 2;
-        let bd = "";
-
-        switch (safeEyeBallType) {
-          case "dot": bd = `M${bcx},${bcy - br} A${br},${br} 0 1,1 ${bcx},${bcy + br} A${br},${br} 0 1,1 ${bcx},${bcy - br} Z`; break;
-          case "diamond": bd = `M${bcx},${bcy - br} L${bcx + br},${bcy} L${bcx},${bcy + br} L${bcx - br},${bcy} Z`; break;
-          case "star":
-            const p = []; for (let i = 0; i < 10; i++) { const ang = i * Math.PI / 5 - Math.PI / 2; const r = i % 2 ? br * 0.4 : br; p.push(`${bcx + r * Math.cos(ang)},${bcy + r * Math.sin(ang)}`); }
-            bd = `M${p.join(" L")} Z`; break;
-          case "square":
-          default: bd = `M${bcx - br},${bcy - br} h${ballSize} v${ballSize} h-${ballSize} Z`; break;
-        }
-        path.setAttribute("d", bd);
-        path.setAttribute("fill", shapeFill);
-        overlayGroup?.appendChild(path);
-      });
-
-      // CORE FIX: Take over Body Module drawing if custom shape is selected
-      const isCustomBody = ["heart", "star5", "four-star", "pentagon", "hexagon"].includes(safeBodyType);
-      if (isCustomBody) {
-        for (let r = 0; r < count; r++) {
-          for (let c = 0; c < count; c++) {
-            if (!qrInternal.isDark(r, c)) continue;
-            // Skip finder pattern zones
-            if ((r < 7 && c < 7) || (r < 7 && c >= count - 7) || (r >= count - 7 && c < 7)) continue;
-
-            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            const mcx = c * mod + mod / 2;
-            const mcy = r * mod + mod / 2;
-            const msize = mod * 0.95; // modules slightly smaller for definition
-            const mr = msize / 2;
-            let md = "";
-
-            switch (safeBodyType) {
-              case "heart":
-                md = `M${mcx},${mcy + mr} C${mcx - msize * 0.7},${mcy} ${mcx - msize * 0.9},${mcy - mr} ${mcx},${mcy - msize * 0.2} C${mcx + msize * 0.9},${mcy - mr} ${mcx + msize * 0.7},${mcy} ${mcx},${mcy + mr} Z`;
-                break;
-              case "star5":
-                const p5 = []; for (let i = 0; i < 10; i++) { const ang = i * Math.PI / 5 - Math.PI / 2; const rad = i % 2 ? mr * 0.4 : mr; p5.push(`${mcx + rad * Math.cos(ang)},${mcy + rad * Math.sin(ang)}`); }
-                md = `M${p5.join(" L")} Z`;
-                break;
-              case "four-star":
-                md = `M${mcx},${mcy - mr} Q${mcx + mr * 0.2},${mcy} ${mcx + mr},${mcy} Q${mcx + mr * 0.2},${mcy} ${mcx},${mcy + mr} Q${mcx - mr * 0.2},${mcy} ${mcx - mr},${mcy} Q${mcx - mr * 0.2},${mcy} ${mcx},${mcy - mr} Z`;
-                break;
-              case "pentagon":
-                const pP = []; for (let i = 0; i < 5; i++) { const ang = i * 2 * Math.PI / 5 - Math.PI / 2; pP.push(`${mcx + mr * Math.cos(ang)},${mcy + mr * Math.sin(ang)}`); }
-                md = `M${pP.join(" L")} Z`;
-                break;
-              case "hexagon":
-                const pH = []; for (let i = 0; i < 6; i++) { const ang = i * Math.PI / 3 - Math.PI / 2; pH.push(`${mcx + mr * Math.cos(ang)},${mcy + mr * Math.sin(ang)}`); }
-                md = `M${pH.join(" L")} Z`;
-                break;
-            }
-            path.setAttribute("d", md);
-            path.setAttribute("fill", shapeFill);
-            overlayGroup?.appendChild(path);
-          }
-        }
-      }
-    };
-
-    const t = setTimeout(injectCustomShapes, 50);
-    return () => clearTimeout(t);
   }, [qrValue, fgColor, bgColor, selectedShape, ecLevel, colorMode, gradientColor1, gradientColor2, gradientAngle, bodyType, eyeFrameType, eyeBallType, limits.customization, limits.logoUpload, logoFile, base64Logo, qrRef.current, activeTemplate]);
 
 
