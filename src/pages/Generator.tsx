@@ -469,6 +469,27 @@ export default function Generator() {
           if (matched) setErrorLevel(matched);
         }
         setLeadCaptureEnabled(!!(existing as any).lead_capture_enabled);
+        
+        // Restore styling & patterns
+        if ((existing as any).body_type) setBodyType((existing as any).body_type);
+        if ((existing as any).eye_frame_type) setEyeFrameType((existing as any).eye_frame_type);
+        if ((existing as any).eye_ball_type) setEyeBallType((existing as any).eye_ball_type);
+        if ((existing as any).color_mode) setColorMode((existing as any).color_mode as any);
+        if ((existing as any).gradient_color1) setGradientColor1((existing as any).gradient_color1);
+        if ((existing as any).gradient_color2) setGradientColor2((existing as any).gradient_color2);
+        if ((existing as any).gradient_angle !== null) setGradientAngle(Number((existing as any).gradient_angle));
+
+        // Restore transformations
+        if ((existing as any).qr_scale !== null) setQrScale(Number((existing as any).qr_scale));
+        if ((existing as any).shape_scale !== null) setShapeScale(Number((existing as any).shape_scale));
+        if ((existing as any).qr_offset_x !== null) setQrOffsetX(Number((existing as any).qr_offset_x));
+        if ((existing as any).qr_offset_y !== null) setQrOffsetY(Number((existing as any).qr_offset_y));
+        if ((existing as any).shape_offset_x !== null) setShapeOffsetX(Number((existing as any).shape_offset_x));
+        if ((existing as any).shape_offset_y !== null) setShapeOffsetY(Number((existing as any).shape_offset_y));
+        
+        // Restore template
+        if ((existing as any).active_template) setActiveTemplate((existing as any).active_template);
+
         trackingIdRef.current = existing.id as any;
       }
     }
@@ -787,6 +808,22 @@ export default function Generator() {
       shape: limits.customization !== "none" ? selectedShape : "Square",
       logo_url: (limits.logoUpload && finalLogoUrl?.startsWith("http")) ? finalLogoUrl : null,
       lead_capture_enabled: leadCaptureEnabled,
+      // Advanced styling
+      body_type: bodyType,
+      eye_frame_type: eyeFrameType,
+      eye_ball_type: eyeBallType,
+      color_mode: colorMode,
+      gradient_color1: gradientColor1,
+      gradient_color2: gradientColor2,
+      gradient_angle: gradientAngle,
+      // Transformations
+      qr_scale: qrScale,
+      shape_scale: shapeScale,
+      qr_offset_x: qrOffsetX,
+      qr_offset_y: qrOffsetY,
+      shape_offset_x: shapeOffsetX,
+      shape_offset_y: shapeOffsetY,
+      active_template: activeTemplate,
     };
 
     if (editId) {
@@ -1253,18 +1290,28 @@ export default function Generator() {
 
                   <Tabs defaultValue="dot-style" className="w-full mt-4">
                     <TabsList className="grid grid-cols-3 w-full bg-accent/50 p-1 mb-1">
-                      <TabsTrigger value="dot-style" className="text-xs font-bold">Shapes</TabsTrigger>
-                      <TabsTrigger value="shapes" className="text-xs font-bold">QR Frame</TabsTrigger>
-                      <TabsTrigger value="colors" className="text-xs font-bold">Colors</TabsTrigger>
+                      <TabsTrigger value="dot-style" className="text-xs font-bold flex items-center gap-1">
+                        Shapes {limits.customization === 'none' && <Lock className="w-3 h-3" />}
+                      </TabsTrigger>
+                      <TabsTrigger value="shapes" className="text-xs font-bold flex items-center gap-1">
+                        QR Frame {limits.customization === 'none' && <Lock className="w-3 h-3" />}
+                      </TabsTrigger>
+                      <TabsTrigger value="colors" className="text-xs font-bold flex items-center gap-1">
+                        Colors {limits.customization === 'none' && <Lock className="w-3 h-3" />}
+                      </TabsTrigger>
                     </TabsList>
                     <TabsList className="grid grid-cols-3 w-full bg-accent/50 p-1">
-                      <TabsTrigger value="stickers" className="text-xs font-bold">Stickers</TabsTrigger>
-                      <TabsTrigger value="pre-designed" className="text-xs font-bold">Pre-designed</TabsTrigger>
+                      <TabsTrigger value="stickers" className="text-xs font-bold flex items-center gap-1">
+                        Logo Upload {!limits.logoUpload && <Lock className="w-3 h-3" />}
+                      </TabsTrigger>
+                      <TabsTrigger value="pre-designed" className="text-xs font-bold flex items-center gap-1">
+                        Pre-designed {limits.customization !== 'full' && <Lock className="w-3 h-3" />}
+                      </TabsTrigger>
                       <TabsTrigger value="extra" className="text-xs font-bold">Extra</TabsTrigger>
                     </TabsList>
 
                     {/* ── NEW: Shapes tab with 3 sub-controls ── */}
-                    <TabsContent value="dot-style" className="mt-4 space-y-6">
+                    <TabsContent value="dot-style" className="mt-4 space-y-6 relative">
 
                       {/* 1. Body Type */}
                       <div>
@@ -1339,6 +1386,17 @@ export default function Generator() {
                       </div>
 
                       <p className="text-[10px] text-muted-foreground text-center">Each control is independent — changes update the live preview instantly.</p>
+
+                      {limits.customization === 'none' && (
+                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
+                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
+                          <p className="font-bold text-sm mb-1">Shapes Locked</p>
+                          <p className="text-xs text-muted-foreground mb-4">Custom QR dot patterns are available on Premium and above.</p>
+                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
+                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
+                          </button>
+                        </div>
+                      )}
                     </TabsContent>
 
                     <TabsContent value="extra" className="mt-6">
@@ -1384,7 +1442,7 @@ export default function Generator() {
                     </TabsContent>
 
                     {/* ── Existing: QR Frame (outline shape) ── */}
-                    <TabsContent value="shapes" className="mt-6">
+                    <TabsContent value="shapes" className="mt-6 relative">
                       <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">QR Outline Shape</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         {allShapes.map((s) => {
@@ -1482,9 +1540,20 @@ export default function Generator() {
                           </div>
                         </div>
                       </div>
+
+                      {limits.customization === 'none' && (
+                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
+                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
+                          <p className="font-bold text-sm mb-1">QR Frames Locked</p>
+                          <p className="text-xs text-muted-foreground mb-4">Custom QR frame shapes are available on Premium and above.</p>
+                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
+                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
+                          </button>
+                        </div>
+                      )}
                     </TabsContent>
 
-                    <TabsContent value="pre-designed" className="mt-6">
+                    <TabsContent value="pre-designed" className="mt-6 relative">
                       <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Visual Templates</h4>
                       {activeTemplate && (
                         <div className="mb-3 flex items-center gap-2 p-2.5 bg-primary/5 border border-primary/20 rounded-lg">
@@ -1612,10 +1681,21 @@ export default function Generator() {
                           </div>
                         </div>
                       </div>
+
+                      {limits.customization !== 'full' && (
+                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
+                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
+                          <p className="font-bold text-sm mb-1">Pre-designed Templates Locked</p>
+                          <p className="text-xs text-muted-foreground mb-4">Visual templates are exclusively available on the Elegant plan.</p>
+                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
+                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
+                          </button>
+                        </div>
+                      )}
                     </TabsContent>
 
-                    <TabsContent value="stickers" className="mt-6">
-                      <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Logo & Stickers</h4>
+                    <TabsContent value="stickers" className="mt-6 relative">
+                      <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Logo Upload</h4>
                       <div className="space-y-6">
                         <div>
                           <p className="text-xs font-bold text-muted-foreground mb-2">Upload Custom Logo</p>
@@ -1641,9 +1721,20 @@ export default function Generator() {
                           )}
                         </div>
                       </div>
+
+                      {!limits.logoUpload && (
+                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
+                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
+                          <p className="font-bold text-sm mb-1">Logo Upload Locked</p>
+                          <p className="text-xs text-muted-foreground mb-4">Upload your custom logo on Premium and Elegant plans.</p>
+                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
+                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
+                          </button>
+                        </div>
+                      )}
                     </TabsContent>
 
-                    <TabsContent value="colors" className="mt-6">
+                    <TabsContent value="colors" className="mt-6 relative">
                       <div className="space-y-6">
 
                         {/* Foreground Color Mode Toggle */}
@@ -1776,6 +1867,17 @@ export default function Generator() {
                         </div>
 
                       </div>
+
+                      {limits.customization === 'none' && (
+                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
+                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
+                          <p className="font-bold text-sm mb-1">Color Customization Locked</p>
+                          <p className="text-xs text-muted-foreground mb-4">Custom QR colors and gradients are available on Premium and above.</p>
+                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
+                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
+                          </button>
+                        </div>
+                      )}
                     </TabsContent>
 
                     <TabsContent value="extra" className="mt-6">

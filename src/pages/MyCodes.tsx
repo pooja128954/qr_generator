@@ -50,15 +50,35 @@ export default function MyCodes() {
   };
 
   const getQrInstance = (code: any) => {
+    const useGradient = code.color_mode === "gradient";
+    
     return new QRCodeStyling({
       width: 1000,
       height: 1000,
       type: "svg",
       data: `${window.location.origin}/r/${code.id}`,
       image: code.logo_url || undefined,
-      dotsOptions: {
+      dotsOptions: useGradient ? {
+        type: (code.body_type as any) || "square",
+        gradient: {
+          type: "linear",
+          rotation: ((code.gradient_angle || 45) * Math.PI) / 180,
+          colorStops: [
+            { offset: 0, color: code.gradient_color1 || "#6366f1" },
+            { offset: 1, color: code.gradient_color2 || "#ec4899" },
+          ],
+        },
+      } : {
         color: code.fg_color || "#0f172a",
-        type: (code.shape?.toLowerCase() as any) || "square"
+        type: (code.body_type as any) || "square"
+      },
+      cornersSquareOptions: {
+        color: useGradient ? code.gradient_color1 : (code.fg_color || "#0f172a"),
+        type: (code.eye_frame_type as any) || "square"
+      },
+      cornersDotOptions: {
+        color: useGradient ? code.gradient_color1 : (code.fg_color || "#0f172a"),
+        type: (code.eye_ball_type as any) || "square"
       },
       imageOptions: {
         crossOrigin: "anonymous",
@@ -69,7 +89,7 @@ export default function MyCodes() {
         color: code.bg_color || "#ffffff"
       },
       qrOptions: {
-        errorCorrectionLevel: (code.ec_level?.charAt(0) as any) || "M"
+        errorCorrectionLevel: (code.ec_level?.charAt(0) as any) || "H"
       }
     });
   };

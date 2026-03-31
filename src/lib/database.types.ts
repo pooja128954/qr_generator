@@ -53,6 +53,20 @@ export interface Database {
           status: "active" | "paused";
           scan_count: number;
           logo_url: string | null;
+          body_type: string | null;
+          eye_frame_type: string | null;
+          eye_ball_type: string | null;
+          color_mode: string | null;
+          gradient_color1: string | null;
+          gradient_color2: string | null;
+          gradient_angle: number | null;
+          qr_scale: number | null;
+          shape_scale: number | null;
+          qr_offset_x: number | null;
+          qr_offset_y: number | null;
+          shape_offset_x: number | null;
+          shape_offset_y: number | null;
+          active_template: string | null;
           created_at: string;
         };
         Insert: {
@@ -69,6 +83,20 @@ export interface Database {
           status?: "active" | "paused";
           scan_count?: number;
           logo_url?: string | null;
+          body_type?: string | null;
+          eye_frame_type?: string | null;
+          eye_ball_type?: string | null;
+          color_mode?: string | null;
+          gradient_color1?: string | null;
+          gradient_color2?: string | null;
+          gradient_angle?: number | null;
+          qr_scale?: number | null;
+          shape_scale?: number | null;
+          qr_offset_x?: number | null;
+          qr_offset_y?: number | null;
+          shape_offset_x?: number | null;
+          shape_offset_y?: number | null;
+          active_template?: string | null;
           created_at?: string;
         };
         Update: {
@@ -83,6 +111,20 @@ export interface Database {
           status?: "active" | "paused";
           scan_count?: number;
           logo_url?: string | null;
+          body_type?: string | null;
+          eye_frame_type?: string | null;
+          eye_ball_type?: string | null;
+          color_mode?: string | null;
+          gradient_color1?: string | null;
+          gradient_color2?: string | null;
+          gradient_angle?: number | null;
+          qr_scale?: number | null;
+          shape_scale?: number | null;
+          qr_offset_x?: number | null;
+          qr_offset_y?: number | null;
+          shape_offset_x?: number | null;
+          shape_offset_y?: number | null;
+          active_template?: string | null;
         };
       };
       scan_events: {
