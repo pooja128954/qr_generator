@@ -34,14 +34,35 @@ export default function Redirect() {
 
         console.log("[Scan] QR fetch result:", { qr: qr?.id, error: qrError?.message });
 
-        if (qrError) {
-          console.error("[Scan] QR fetch error:", qrError);
-          setError("QR code not found or has been deleted.");
-          return;
-        }
+        if (qrError || !qr) {
+          // Check for fallback preview data first (used in Live Previews or unsaved downloads)
+          const urlParams = new URLSearchParams(window.location.search);
+          const prevUrl = urlParams.get('prev');
+          const prevType = urlParams.get('type') || 'url';
 
-        if (!qr) {
-          console.error("[Scan] QR code not found (null). Possible RLS issue — anonymous users may not have SELECT permission on qr_codes.");
+          if (prevUrl) {
+            try {
+              const decodedData = decodeURIComponent(escape(atob(prevUrl)));
+              console.log("[Scan] Using Preview Fallback:", decodedData);
+              const fallbackQr = {
+                id: qrId,
+                type: prevType,
+                content: decodedData,
+                lead_capture_enabled: false
+              };
+              setQrData(fallbackQr);
+              
+              // Proceed instantly to redirect without recording analytical scan
+              setTimeout(() => {
+                performRedirect(fallbackQr);
+              }, 600);
+              return;
+            } catch (e) {
+              console.warn("[Scan] Failed to decode preview fallback", e);
+            }
+          }
+
+          console.error("[Scan] QR fetch error or not found:", qrError);
           setError("QR code not found or has been deleted.");
           return;
         }

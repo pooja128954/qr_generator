@@ -408,7 +408,19 @@ export default function Generator() {
   const currentTrackingId = editId || trackingIdRef.current;
   // Use a 'visual salt' so the QR dots change as the user types (Live Preview)
   const visualHash = inputValue ? btoa(unescape(encodeURIComponent(inputValue.slice(-10)))).slice(0, 8) : "default";
-  const trackingUrl = `${window.location.origin}/r/${currentTrackingId}?v=${visualHash}`;
+
+  // Add fallback preview encoding so the Live Preview scans instantly without DB save
+  let previewParams = "";
+  try {
+    if (inputValue) {
+      const b64 = btoa(unescape(encodeURIComponent(inputValue)));
+      previewParams = `&prev=${encodeURIComponent(b64)}&type=${activeType}`;
+    }
+  } catch (e) {
+    // ignore encoding errors for unsupported text during typing
+  }
+
+  const trackingUrl = `${window.location.origin}/r/${currentTrackingId}?v=${visualHash}${previewParams}`;
 
   // This value is purely for internal formatting/native behavior fallbacks
   let qrValue = trackingUrl;
@@ -1165,6 +1177,7 @@ export default function Generator() {
                       value={wifiPassword}
                       onChange={(e) => setWifiPassword(e.target.value)}
                       placeholder="••••••••"
+                      autoComplete="off"
                       className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
                     />
                   </div>
