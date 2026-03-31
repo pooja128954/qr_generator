@@ -253,9 +253,9 @@ export default function MyCodes() {
                             <p className="text-sm font-semibold">{c.type.toUpperCase()}</p>
                           </div>
                           <div className="bg-accent/50 p-3 rounded-xl border border-border">
-                          <p className="text-[10px] label-caps text-muted-foreground mb-1">Total Scans</p>
-                          <p className="text-sm font-semibold">{(c.scan_count ?? 0).toLocaleString()}</p>
-                        </div>
+                            <p className="text-[10px] label-caps text-muted-foreground mb-1">Total Scans</p>
+                            <p className="text-sm font-semibold">{(c.scan_count ?? 0).toLocaleString()}</p>
+                          </div>
                         </div>
                         <div className="bg-accent/50 p-3 rounded-xl border border-border">
                           <p className="text-[10px] label-caps text-muted-foreground mb-1">Created Date</p>

@@ -9,6 +9,7 @@ import ActivityLogsSection from "./sections/ActivityLogsSection";
 import LeadsSection from "./sections/LeadsSection";
 import ControlsSection from "./sections/ControlsSection";
 import RevenueSection from "./sections/RevenueSection";
+import ChatRequestsSection from "./sections/ChatRequestsSection";
 
 const SECTIONS: Record<string, React.ComponentType> = {
   overview: OverviewSection,
@@ -18,6 +19,7 @@ const SECTIONS: Record<string, React.ComponentType> = {
   "qr-codes": QrMonitoringSection,
   logs: ActivityLogsSection,
   leads: LeadsSection,
+  "chat-requests": ChatRequestsSection,
   controls: ControlsSection,
   revenue: RevenueSection,
 };

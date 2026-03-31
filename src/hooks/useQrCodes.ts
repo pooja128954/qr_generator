@@ -64,7 +64,7 @@ export function useQrCodes() {
           }, {} as Record<string, number>);
         }
       }
-      
+
       // Keep My Codes aligned with Analytics hit counting logic.
       return (qrCodes as any[]).map(qr => ({
         ...qr,
@@ -83,7 +83,7 @@ export function useQrCodes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["qr_codes", user?.id] });
-      toast.success("QR code saved!");
+      toast.success("Your QRs are saved in My QR codes!");
     },
     onError: (err: Error) => toast.error(err.message),
   });

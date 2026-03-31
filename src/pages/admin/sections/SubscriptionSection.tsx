@@ -121,6 +121,7 @@ export default function SubscriptionSection() {
                     fontSize: "12px",
                     color: "#fff",
                   }}
+                  itemStyle={{ color: "#fff" }}
                 />
                 <Bar dataKey="users" radius={[8, 8, 0, 0]}>
                   {chartData.map((entry, i) => (

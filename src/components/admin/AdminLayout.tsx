@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Shield,
+  MessageSquare,
 } from "lucide-react";
 
 const navItems = [
@@ -25,6 +26,7 @@ const navItems = [
   { id: "qr-codes", label: "QR Codes", icon: QrCode },
   { id: "logs", label: "Activity Logs", icon: ScrollText },
   { id: "leads", label: "Lead Data", icon: Contact },
+  { id: "chat-requests", label: "Chat Requests", icon: MessageSquare },
   { id: "controls", label: "Controls", icon: Settings },
   { id: "revenue", label: "Revenue", icon: DollarSign },
 ];

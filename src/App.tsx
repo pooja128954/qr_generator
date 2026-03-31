@@ -18,6 +18,7 @@ import Analytics from "./pages/Analytics.tsx";
 import Solutions from "./pages/Solutions.tsx";
 import AdminLogin from "./pages/admin/AdminLogin.tsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.tsx";
+import Chatbot from "@/components/Chatbot";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AuthProvider>
+          <Chatbot />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/solutions" element={<Solutions />} />

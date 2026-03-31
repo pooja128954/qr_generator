@@ -61,65 +61,65 @@ const qrTypes = [
 
 const frames = ["None", "Scan Me", "Point Here", "Follow Us"];
 
-type ShapeDef = { 
-  id: string; 
-  label: string; 
-  src?: string; 
-  innerScale: number; 
-  isPng?: boolean; 
-  previewCircle?: boolean; 
-  previewPoints?: string; 
-  previewPath?: string; 
-  clip?: string; 
-  radius?: string; 
+type ShapeDef = {
+  id: string;
+  label: string;
+  src?: string;
+  innerScale: number;
+  isPng?: boolean;
+  previewCircle?: boolean;
+  previewPoints?: string;
+  previewPath?: string;
+  clip?: string;
+  radius?: string;
   safeZone?: { cx: number; cy: number; size: number }; // Maximum Inscribed Square (0.0 - 1.0)
 };
 
 // Clean array containing ONLY the newly uploaded PNG shapes for the frame selector
 const allShapes: ShapeDef[] = [
-  { id: "Square",     label: "Square",                                    innerScale: 1.0,  isPng: false, safeZone: { cx: 0.5, cy: 0.5, size: 0.85 } },
-  { id: "Brain",      label: "Brain",      src: "/shapes/brain.png",      innerScale: 0.55, isPng: true,  safeZone: { cx: 0.5, cy: 0.5, size: 0.55 } },
-  { id: "Circle",     label: "Circle",     src: "/shapes/circle.png",     innerScale: 0.65, isPng: true,  safeZone: { cx: 0.5, cy: 0.5, size: 0.65 } },
-  { id: "Dress",      label: "Dress",      src: "/shapes/dress.png",      innerScale: 0.40, isPng: true,  safeZone: { cx: 0.5, cy: 0.5, size: 0.40 } },
-  { id: "Face",       label: "Face",       src: "/shapes/face.png",       innerScale: 0.55, isPng: true,  safeZone: { cx: 0.5, cy: 0.5, size: 0.50 } },
-  { id: "Heart",      label: "Heart",      src: "/shapes/heart.png",      innerScale: 0.50, isPng: true,  safeZone: { cx: 0.5, cy: 0.45, size: 0.50 } },
-  { id: "Hexagon",    label: "Hexagon",    src: "/shapes/hexagon (2).png",innerScale: 0.60, isPng: true,  safeZone: { cx: 0.5, cy: 0.5, size: 0.60 } },
-  { id: "House",      label: "House",      src: "/shapes/house.png",      innerScale: 0.55, isPng: true,  safeZone: { cx: 0.5, cy: 0.6, size: 0.50 } },
-  { id: "Ice Cream",  label: "Ice Cream",  src: "/shapes/ice_cream.png",  innerScale: 0.40, isPng: true,  safeZone: { cx: 0.5, cy: 0.4, size: 0.40 } },
-  { id: "Message",    label: "Message",    src: "/shapes/message.png",    innerScale: 0.55, isPng: true,  safeZone: { cx: 0.5, cy: 0.45, size: 0.50 } },
-  { id: "Shirt",      label: "Shirt",      src: "/shapes/shirt.png",      innerScale: 0.50, isPng: true,  safeZone: { cx: 0.5, cy: 0.5, size: 0.50 } },
-  { id: "Star",       label: "Star",       src: "/shapes/star.png",       innerScale: 0.40, isPng: true,  safeZone: { cx: 0.5, cy: 0.5, size: 0.40 } }
+  { id: "Square", label: "Square", innerScale: 1.0, isPng: false, safeZone: { cx: 0.5, cy: 0.5, size: 0.85 } },
+  { id: "Brain", label: "Brain", src: "/shapes/brain.png", innerScale: 0.55, isPng: true, safeZone: { cx: 0.5, cy: 0.5, size: 0.55 } },
+  { id: "Circle", label: "Circle", src: "/shapes/circle.png", innerScale: 0.65, isPng: true, safeZone: { cx: 0.5, cy: 0.5, size: 0.65 } },
+  { id: "Dress", label: "Dress", src: "/shapes/dress.png", innerScale: 0.40, isPng: true, safeZone: { cx: 0.5, cy: 0.5, size: 0.40 } },
+  { id: "Face", label: "Face", src: "/shapes/face.png", innerScale: 0.55, isPng: true, safeZone: { cx: 0.5, cy: 0.5, size: 0.50 } },
+  { id: "Heart", label: "Heart", src: "/shapes/heart.png", innerScale: 0.50, isPng: true, safeZone: { cx: 0.5, cy: 0.45, size: 0.50 } },
+  { id: "Hexagon", label: "Hexagon", src: "/shapes/hexagon (2).png", innerScale: 0.60, isPng: true, safeZone: { cx: 0.5, cy: 0.5, size: 0.60 } },
+  { id: "House", label: "House", src: "/shapes/house.png", innerScale: 0.55, isPng: true, safeZone: { cx: 0.5, cy: 0.6, size: 0.50 } },
+  { id: "Ice Cream", label: "Ice Cream", src: "/shapes/ice_cream.png", innerScale: 0.40, isPng: true, safeZone: { cx: 0.5, cy: 0.4, size: 0.40 } },
+  { id: "Message", label: "Message", src: "/shapes/message.png", innerScale: 0.55, isPng: true, safeZone: { cx: 0.5, cy: 0.45, size: 0.50 } },
+  { id: "Shirt", label: "Shirt", src: "/shapes/shirt.png", innerScale: 0.50, isPng: true, safeZone: { cx: 0.5, cy: 0.5, size: 0.50 } },
+  { id: "Star", label: "Star", src: "/shapes/star.png", innerScale: 0.40, isPng: true, safeZone: { cx: 0.5, cy: 0.5, size: 0.40 } }
 ];
 
 const corrections = ["L (7%)", "M (15%)", "Q (25%)", "H (30%)"];
 
 // ─── Body Type (dot style) ────────────────────────────────────────────────
 const bodyTypes: Array<{ id: string; label: string; dotType: string; preview: (c: string) => React.ReactNode }> = [
-  { id: "square",   label: "Square",        dotType: "square",  preview: (c) => <rect x="20" y="20" width="60" height="60" fill={c} /> },
-  { id: "dots",     label: "Small Dots",    dotType: "dots",    preview: (c) => <>{[22,50,78].map(x => [22,50,78].map(y => <circle key={`${x}${y}`} cx={x} cy={y} r="9" fill={c} />))}</> },
-  { id: "rounded",  label: "Rounded",       dotType: "rounded", preview: (c) => <rect x="18" y="18" width="64" height="64" rx="20" fill={c} /> },
-  { id: "star5",    label: "5-Point Star",  dotType: "dots",    preview: (c) => <polygon points="50,12 61,38 90,38 68,56 76,82 50,66 24,82 32,56 10,38 39,38" fill={c} /> },
-  { id: "heart",    label: "Heart",         dotType: "dots",    preview: (c) => <path d="M50,78 C15,60 5,40 5,28 C5,15 14,7 26,7 C36,7 45,15 50,21 C55,15 64,7 74,7 C86,7 95,15 95,28 C95,40 85,60 50,78Z" fill={c} /> },
-  { id: "four-star",label: "4-Point Star",  dotType: "classy",  preview: (c) => <polygon points="50,8 60,40 92,50 60,60 50,92 40,60 8,50 40,40" fill={c} /> },
-  { id: "pentagon", label: "Pentagon",      dotType: "rounded", preview: (c) => <polygon points="50,5 93,36 77,93 23,93 7,36" fill={c} /> },
-  { id: "hexagon",  label: "Hexagon",       dotType: "extra-rounded", preview: (c) => <polygon points="50,5 91,27 91,73 50,95 9,73 9,27" fill={c} /> },
+  { id: "square", label: "Square", dotType: "square", preview: (c) => <rect x="20" y="20" width="60" height="60" fill={c} /> },
+  { id: "dots", label: "Small Dots", dotType: "dots", preview: (c) => <>{[22, 50, 78].map(x => [22, 50, 78].map(y => <circle key={`${x}${y}`} cx={x} cy={y} r="9" fill={c} />))}</> },
+  { id: "rounded", label: "Rounded", dotType: "rounded", preview: (c) => <rect x="18" y="18" width="64" height="64" rx="20" fill={c} /> },
+  { id: "star5", label: "5-Point Star", dotType: "dots", preview: (c) => <polygon points="50,12 61,38 90,38 68,56 76,82 50,66 24,82 32,56 10,38 39,38" fill={c} /> },
+  { id: "heart", label: "Heart", dotType: "dots", preview: (c) => <path d="M50,78 C15,60 5,40 5,28 C5,15 14,7 26,7 C36,7 45,15 50,21 C55,15 64,7 74,7 C86,7 95,15 95,28 C95,40 85,60 50,78Z" fill={c} /> },
+  { id: "four-star", label: "4-Point Star", dotType: "classy", preview: (c) => <polygon points="50,8 60,40 92,50 60,60 50,92 40,60 8,50 40,40" fill={c} /> },
+  { id: "pentagon", label: "Pentagon", dotType: "rounded", preview: (c) => <polygon points="50,5 93,36 77,93 23,93 7,36" fill={c} /> },
+  { id: "hexagon", label: "Hexagon", dotType: "extra-rounded", preview: (c) => <polygon points="50,5 91,27 91,73 50,95 9,73 9,27" fill={c} /> },
 ];
 
 // ─── Eye Frame Type (cornersSquare style) ────────────────────────────────
 const eyeFrameTypes: Array<{ id: string; label: string; type: string; preview: (c: string) => React.ReactNode }> = [
-  { id: "square",        label: "Square",   type: "square",        preview: (c) => <rect x="15" y="15" width="70" height="70" strokeWidth="10" stroke={c} fill="none" /> },
-  { id: "extra-rounded", label: "Rounded",  type: "extra-rounded", preview: (c) => <rect x="15" y="15" width="70" height="70" rx="24" strokeWidth="10" stroke={c} fill="none" /> },
-  { id: "dot",           label: "Circle",   type: "dot",           preview: (c) => <circle cx="50" cy="50" r="35" strokeWidth="10" stroke={c} fill="none" /> },
-  { id: "hexagon-frame", label: "Hexagon",  type: "extra-rounded", preview: (c) => <polygon points="50,8 88,29 88,71 50,92 12,71 12,29" strokeWidth="10" stroke={c} fill="none" /> },
-  { id: "pentagon-frame",label: "Pentagon", type: "square",        preview: (c) => <polygon points="50,8 92,38 76,90 24,90 8,38" strokeWidth="10" stroke={c} fill="none" /> },
+  { id: "square", label: "Square", type: "square", preview: (c) => <rect x="15" y="15" width="70" height="70" strokeWidth="10" stroke={c} fill="none" /> },
+  { id: "extra-rounded", label: "Rounded", type: "extra-rounded", preview: (c) => <rect x="15" y="15" width="70" height="70" rx="24" strokeWidth="10" stroke={c} fill="none" /> },
+  { id: "dot", label: "Circle", type: "dot", preview: (c) => <circle cx="50" cy="50" r="35" strokeWidth="10" stroke={c} fill="none" /> },
+  { id: "hexagon-frame", label: "Hexagon", type: "extra-rounded", preview: (c) => <polygon points="50,8 88,29 88,71 50,92 12,71 12,29" strokeWidth="10" stroke={c} fill="none" /> },
+  { id: "pentagon-frame", label: "Pentagon", type: "square", preview: (c) => <polygon points="50,8 92,38 76,90 24,90 8,38" strokeWidth="10" stroke={c} fill="none" /> },
 ];
 
 // ─── Eye Ball Type (cornersDot style) ───────────────────────────────────
 const eyeBallTypes: Array<{ id: string; label: string; type: string; preview: (c: string) => React.ReactNode }> = [
-  { id: "square",  label: "Square",  type: "square", preview: (c) => <rect x="25" y="25" width="50" height="50" fill={c} /> },
-  { id: "dot",     label: "Circle",  type: "dot",    preview: (c) => <circle cx="50" cy="50" r="28" fill={c} /> },
+  { id: "square", label: "Square", type: "square", preview: (c) => <rect x="25" y="25" width="50" height="50" fill={c} /> },
+  { id: "dot", label: "Circle", type: "dot", preview: (c) => <circle cx="50" cy="50" r="28" fill={c} /> },
   { id: "diamond", label: "Diamond", type: "square", preview: (c) => <polygon points="50,22 78,50 50,78 22,50" fill={c} /> },
-  { id: "star",    label: "Star",    type: "dot",    preview: (c) => <polygon points="50,15 58,38 83,38 63,53 70,78 50,63 30,78 37,53 17,38 42,38" fill={c} /> },
+  { id: "star", label: "Star", type: "dot", preview: (c) => <polygon points="50,15 58,38 83,38 63,53 70,78 50,63 30,78 37,53 17,38 42,38" fill={c} /> },
 ];
 
 // Each template's whitebox defines where the white QR area is inside the PNG (all as 0-1 fractions).
@@ -199,9 +199,9 @@ export default function Generator() {
   const [leadCaptureEnabled, setLeadCaptureEnabled] = useState(false);
 
   // Dot style controls (independent)
-  const [bodyType,     setBodyType]     = useState("square");         // body dot style
+  const [bodyType, setBodyType] = useState("square");         // body dot style
   const [eyeFrameType, setEyeFrameType] = useState("square");         // corner frame style
-  const [eyeBallType,  setEyeBallType]  = useState("square");         // corner ball style
+  const [eyeBallType, setEyeBallType] = useState("square");         // corner ball style
 
   // Color mode: 'single' or 'gradient'
   const [colorMode, setColorMode] = useState<"single" | "gradient">("single");
@@ -218,11 +218,11 @@ export default function Generator() {
   const [gradientAngle, setGradientAngle] = useState(45);
 
   const gradientPresets = [
-    { label: "Violet → Pink",  c1: "#6366f1", c2: "#ec4899" },
-    { label: "Blue → Cyan",   c1: "#3b82f6", c2: "#06b6d4" },
-    { label: "Orange → Red",  c1: "#f97316", c2: "#ef4444" },
-    { label: "Green → Teal",  c1: "#22c55e", c2: "#14b8a6" },
-    { label: "Gold → Amber",  c1: "#eab308", c2: "#f97316" },
+    { label: "Violet → Pink", c1: "#6366f1", c2: "#ec4899" },
+    { label: "Blue → Cyan", c1: "#3b82f6", c2: "#06b6d4" },
+    { label: "Orange → Red", c1: "#f97316", c2: "#ef4444" },
+    { label: "Green → Teal", c1: "#22c55e", c2: "#14b8a6" },
+    { label: "Gold → Amber", c1: "#eab308", c2: "#f97316" },
     { label: "Purple → Blue", c1: "#a855f7", c2: "#3b82f6" },
   ];
 
@@ -286,14 +286,14 @@ export default function Generator() {
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
-            
+
             const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             const data = imgData.data;
 
             const startX = Math.floor(canvas.width / 2);
             const startY = Math.floor(canvas.height / 2);
             const startIndex = (startY * canvas.width + startX) * 4;
-            
+
             if (data[startIndex + 3] > 128) {
               resolve(shape.src!); // Already solid
               return;
@@ -306,7 +306,7 @@ export default function Generator() {
             while (stack.length > 0) {
               const [x, y] = stack.pop()!;
               const index = (y * canvas.width + x) * 4;
-              
+
               data[index] = 0; data[index + 1] = 0; data[index + 2] = 0; data[index + 3] = 255;
 
               const neighbors = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]];
@@ -321,14 +321,14 @@ export default function Generator() {
                 }
               }
             }
-            
+
             // Solidify perimeter bound
             for (let i = 0; i < data.length; i += 4) {
-              if (data[i+3] >= 128) {
-                data[i] = 0; data[i+1] = 0; data[i+2] = 0; data[i+3] = 255;
+              if (data[i + 3] >= 128) {
+                data[i] = 0; data[i + 1] = 0; data[i + 2] = 0; data[i + 3] = 255;
               }
             }
-            
+
             ctx.putImageData(imgData, 0, 0);
             resolve(canvas.toDataURL("image/png"));
           };
@@ -409,13 +409,13 @@ export default function Generator() {
   // Use a 'visual salt' so the QR dots change as the user types (Live Preview)
   const visualHash = inputValue ? btoa(unescape(encodeURIComponent(inputValue.slice(-10)))).slice(0, 8) : "default";
   const trackingUrl = `${window.location.origin}/r/${currentTrackingId}?v=${visualHash}`;
-  
+
   // This value is purely for internal formatting/native behavior fallbacks
-  let qrValue = trackingUrl; 
+  let qrValue = trackingUrl;
 
   // Content for the QR code if it were static (optional, but we use redirect now)
   const qrContent = inputValue;
-  
+
   const getPlaceholder = () => {
     switch (activeType) {
       case "url": return "https://example.com";
@@ -521,25 +521,25 @@ export default function Generator() {
     const safeBodyType = limits.customization !== "none" ? bodyType : "square";
     const useGradient = limits.customization !== "none" && colorMode === "gradient";
     const isCustomBody = ["heart", "star5", "four-star", "pentagon", "hexagon"].includes(safeBodyType);
-    const dotsOptions: any = isCustomBody 
+    const dotsOptions: any = isCustomBody
       ? { color: "transparent", type: "square" }
       : (useGradient
         ? {
-            type: safeBodyType as DotType,
-            gradient: {
-              type: "linear",
-              rotation: (gradientAngle * Math.PI) / 180,
-              colorStops: [
-                { offset: 0, color: gradientColor1 },
-                { offset: 1, color: gradientColor2 },
-              ],
-            },
-          }
+          type: safeBodyType as DotType,
+          gradient: {
+            type: "linear",
+            rotation: (gradientAngle * Math.PI) / 180,
+            colorStops: [
+              { offset: 0, color: gradientColor1 },
+              { offset: 1, color: gradientColor2 },
+            ],
+          },
+        }
         : { type: safeBodyType as DotType, color: safeFgColor });
 
     const eyeColor = useGradient ? gradientColor1 : safeFgColor;
     const safeEyeFrameType = limits.customization !== "none" ? eyeFrameType : "square";
-    const safeEyeBallType  = limits.customization !== "none" ? eyeBallType  : "square";
+    const safeEyeBallType = limits.customization !== "none" ? eyeBallType : "square";
 
     const eyeBallDef = eyeBallTypes.find(e => e.id === safeEyeBallType);
     const eyeBallLibType = (eyeBallDef?.type ?? "square") as any;
@@ -558,7 +558,7 @@ export default function Generator() {
         svg.style.maxHeight = "100%";
       }
     };
-    
+
     // We override ALL eye frames and balls for perfect alignment and centering
     // supported or not by library
     const hideEyeFrame = true; // safeEyeFrameType === "hexagon-frame" || safeEyeFrameType === "pentagon-frame";
@@ -577,21 +577,21 @@ export default function Generator() {
     });
 
     forceSvgFill();
-    
+
     // Standardized Finder Pattern & Custom Body Injection
     const injectCustomShapes = () => {
       forceSvgFill();
       const svg = qrRef.current?.querySelector("svg");
       if (!svg) return;
-      
+
       const size = 1000;
       const qrInternal = (qrCodeInstance.current as any)._qr;
       if (!qrInternal) return;
-      
+
       const count = qrInternal.getModuleCount();
       const mod = size / count; // module size
       const eyeSize = mod * 7;
-      
+
       let overlayGroup = svg.querySelector("#custom-overlay-layer");
       if (!overlayGroup) {
         overlayGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
@@ -599,22 +599,22 @@ export default function Generator() {
         svg.appendChild(overlayGroup);
       }
       overlayGroup.innerHTML = "";
-      
+
       // Support for Gradients in Custom Shapes
       if (useGradient) {
         const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
         const lg = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
         lg.setAttribute("id", "custom-overlay-gradient");
         lg.setAttribute("gradientTransform", `rotate(${gradientAngle}, 500, 500)`);
-        
+
         const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
         stop1.setAttribute("offset", "0%");
         stop1.setAttribute("stop-color", gradientColor1);
-        
+
         const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
         stop2.setAttribute("offset", "100%");
         stop2.setAttribute("stop-color", gradientColor2);
-        
+
         lg.appendChild(stop1);
         lg.appendChild(stop2);
         defs.appendChild(lg);
@@ -635,41 +635,41 @@ export default function Generator() {
         const cx = corner.x + eyeSize / 2;
         const cy = corner.y + eyeSize / 2;
         const r_out = eyeSize / 2;
-        const r_in = (eyeSize - (mod * 2)) / 2; 
+        const r_in = (eyeSize - (mod * 2)) / 2;
         let d = "";
-        
+
         switch (safeEyeFrameType) {
           case "extra-rounded":
             const rad = eyeSize * 0.3;
-            d = `M${corner.x+rad},${corner.y} L${corner.x+eyeSize-rad},${corner.y} Q${corner.x+eyeSize},${corner.y} ${corner.x+eyeSize},${corner.y+rad} L${corner.x+eyeSize},${corner.y+eyeSize-rad} Q${corner.x+eyeSize},${corner.y+eyeSize} ${corner.x+eyeSize-rad},${corner.y+eyeSize} L${corner.x+rad},${corner.y+eyeSize} Q${corner.x},${corner.y+eyeSize} ${corner.x},${corner.y+eyeSize-rad} L${corner.x},${corner.y+rad} Q${corner.x},${corner.y} ${corner.x+rad},${corner.y} Z 
-                 M${corner.x+rad},${corner.y+mod} Q${corner.x+mod},${corner.y+mod} ${corner.x+mod},${corner.y+rad} L${corner.x+mod},${corner.y+eyeSize-rad} Q${corner.x+mod},${corner.y+eyeSize-mod} ${corner.x+rad},${corner.y+eyeSize-mod} L${corner.x+eyeSize-rad},${corner.y+eyeSize-mod} Q${corner.x+eyeSize-mod},${corner.y+eyeSize-mod} ${corner.x+eyeSize-mod},${corner.y+eyeSize-rad} L${corner.x+eyeSize-mod},${corner.y+rad} Q${corner.x+eyeSize-mod},${corner.y+mod} ${corner.x+eyeSize-rad},${corner.y+mod} Z`;
+            d = `M${corner.x + rad},${corner.y} L${corner.x + eyeSize - rad},${corner.y} Q${corner.x + eyeSize},${corner.y} ${corner.x + eyeSize},${corner.y + rad} L${corner.x + eyeSize},${corner.y + eyeSize - rad} Q${corner.x + eyeSize},${corner.y + eyeSize} ${corner.x + eyeSize - rad},${corner.y + eyeSize} L${corner.x + rad},${corner.y + eyeSize} Q${corner.x},${corner.y + eyeSize} ${corner.x},${corner.y + eyeSize - rad} L${corner.x},${corner.y + rad} Q${corner.x},${corner.y} ${corner.x + rad},${corner.y} Z 
+                 M${corner.x + rad},${corner.y + mod} Q${corner.x + mod},${corner.y + mod} ${corner.x + mod},${corner.y + rad} L${corner.x + mod},${corner.y + eyeSize - rad} Q${corner.x + mod},${corner.y + eyeSize - mod} ${corner.x + rad},${corner.y + eyeSize - mod} L${corner.x + eyeSize - rad},${corner.y + eyeSize - mod} Q${corner.x + eyeSize - mod},${corner.y + eyeSize - mod} ${corner.x + eyeSize - mod},${corner.y + eyeSize - rad} L${corner.x + eyeSize - mod},${corner.y + rad} Q${corner.x + eyeSize - mod},${corner.y + mod} ${corner.x + eyeSize - rad},${corner.y + mod} Z`;
             break;
           case "dot":
-            d = `M${cx},${corner.y} A${r_out},${r_out} 0 1,1 ${cx},${corner.y+eyeSize} A${r_out},${r_out} 0 1,1 ${cx},${corner.y} Z
-                 M${cx},${corner.y+mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y+eyeSize-mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y+mod} Z`;
+            d = `M${cx},${corner.y} A${r_out},${r_out} 0 1,1 ${cx},${corner.y + eyeSize} A${r_out},${r_out} 0 1,1 ${cx},${corner.y} Z
+                 M${cx},${corner.y + mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y + eyeSize - mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y + mod} Z`;
             break;
           case "hexagon-frame":
-            const getHex = (r: number) => Array.from({length:6}, (_,i)=>({x:cx+r*Math.cos(i*Math.PI/3-Math.PI/2), y:cy+r*Math.sin(i*Math.PI/3-Math.PI/2)}));
-            const pOut=getHex(r_out), pIn=getHex(r_in).reverse();
-            d = `M${pOut[0].x},${pOut[0].y} ${pOut.slice(1).map(p=>`L${p.x},${p.y}`).join(' ')} Z M${pIn[0].x},${pIn[0].y} ${pIn.slice(1).map(p=>`L${p.x},${p.y}`).join(' ')} Z`;
+            const getHex = (r: number) => Array.from({ length: 6 }, (_, i) => ({ x: cx + r * Math.cos(i * Math.PI / 3 - Math.PI / 2), y: cy + r * Math.sin(i * Math.PI / 3 - Math.PI / 2) }));
+            const pOut = getHex(r_out), pIn = getHex(r_in).reverse();
+            d = `M${pOut[0].x},${pOut[0].y} ${pOut.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z M${pIn[0].x},${pIn[0].y} ${pIn.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z`;
             break;
           case "pentagon-frame":
-            const getPent = (r: number) => Array.from({length:5}, (_,i)=>({x:cx+r*Math.cos(i*2*Math.PI/5-Math.PI/2), y:cy+r*Math.sin(i*2*Math.PI/5-Math.PI/2)}));
-            const pentO=getPent(r_out), pentI=getPent(r_in).reverse();
-            d = `M${pentO[0].x},${pentO[0].y} ${pentO.slice(1).map(p=>`L${p.x},${p.y}`).join(' ')} Z M${pentI[0].x},${pentI[0].y} ${pentI.slice(1).map(p=>`L${p.x},${p.y}`).join(' ')} Z`;
+            const getPent = (r: number) => Array.from({ length: 5 }, (_, i) => ({ x: cx + r * Math.cos(i * 2 * Math.PI / 5 - Math.PI / 2), y: cy + r * Math.sin(i * 2 * Math.PI / 5 - Math.PI / 2) }));
+            const pentO = getPent(r_out), pentI = getPent(r_in).reverse();
+            d = `M${pentO[0].x},${pentO[0].y} ${pentO.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z M${pentI[0].x},${pentI[0].y} ${pentI.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z`;
             break;
           case "square":
           default:
-            d = `M${corner.x},${corner.y} h${eyeSize} v${eyeSize} h-${eyeSize} Z M${corner.x+mod},${corner.y+mod} v${eyeSize-2*mod} h${eyeSize-2*mod} v-${eyeSize-2*mod} Z`;
+            d = `M${corner.x},${corner.y} h${eyeSize} v${eyeSize} h-${eyeSize} Z M${corner.x + mod},${corner.y + mod} v${eyeSize - 2 * mod} h${eyeSize - 2 * mod} v-${eyeSize - 2 * mod} Z`;
             break;
         }
-        
-        path.setAttribute("d", d.replace(/\s+/g," "));
+
+        path.setAttribute("d", d.replace(/\s+/g, " "));
         path.setAttribute("fill", shapeFill);
         path.setAttribute("fill-rule", "evenodd");
         overlayGroup?.appendChild(path);
       });
-      
+
       // Draw Standardized Eye Balls (3x3 module grid centered)
       const ballSize = mod * 3;
       corners.forEach(corner => {
@@ -678,15 +678,15 @@ export default function Generator() {
         const bcy = corner.y + eyeSize / 2;
         const br = ballSize / 2;
         let bd = "";
-        
+
         switch (safeEyeBallType) {
-          case "dot":    bd = `M${bcx},${bcy-br} A${br},${br} 0 1,1 ${bcx},${bcy+br} A${br},${br} 0 1,1 ${bcx},${bcy-br} Z`; break;
-          case "diamond":bd = `M${bcx},${bcy-br} L${bcx+br},${bcy} L${bcx},${bcy+br} L${bcx-br},${bcy} Z`; break;
+          case "dot": bd = `M${bcx},${bcy - br} A${br},${br} 0 1,1 ${bcx},${bcy + br} A${br},${br} 0 1,1 ${bcx},${bcy - br} Z`; break;
+          case "diamond": bd = `M${bcx},${bcy - br} L${bcx + br},${bcy} L${bcx},${bcy + br} L${bcx - br},${bcy} Z`; break;
           case "star":
-            const p = []; for(let i=0;i<10;i++){const ang=i*Math.PI/5-Math.PI/2; const r=i%2?br*0.4:br; p.push(`${bcx+r*Math.cos(ang)},${bcy+r*Math.sin(ang)}`);}
+            const p = []; for (let i = 0; i < 10; i++) { const ang = i * Math.PI / 5 - Math.PI / 2; const r = i % 2 ? br * 0.4 : br; p.push(`${bcx + r * Math.cos(ang)},${bcy + r * Math.sin(ang)}`); }
             bd = `M${p.join(" L")} Z`; break;
           case "square":
-          default: bd = `M${bcx-br},${bcy-br} h${ballSize} v${ballSize} h-${ballSize} Z`; break;
+          default: bd = `M${bcx - br},${bcy - br} h${ballSize} v${ballSize} h-${ballSize} Z`; break;
         }
         path.setAttribute("d", bd);
         path.setAttribute("fill", shapeFill);
@@ -711,21 +711,21 @@ export default function Generator() {
 
             switch (safeBodyType) {
               case "heart":
-                md = `M${mcx},${mcy+mr} C${mcx-msize*0.7},${mcy} ${mcx-msize*0.9},${mcy-mr} ${mcx},${mcy-msize*0.2} C${mcx+msize*0.9},${mcy-mr} ${mcx+msize*0.7},${mcy} ${mcx},${mcy+mr} Z`;
+                md = `M${mcx},${mcy + mr} C${mcx - msize * 0.7},${mcy} ${mcx - msize * 0.9},${mcy - mr} ${mcx},${mcy - msize * 0.2} C${mcx + msize * 0.9},${mcy - mr} ${mcx + msize * 0.7},${mcy} ${mcx},${mcy + mr} Z`;
                 break;
               case "star5":
-                const p5 = []; for(let i=0;i<10;i++){const ang=i*Math.PI/5-Math.PI/2; const rad=i%2?mr*0.4:mr; p5.push(`${mcx+rad*Math.cos(ang)},${mcy+rad*Math.sin(ang)}`);}
+                const p5 = []; for (let i = 0; i < 10; i++) { const ang = i * Math.PI / 5 - Math.PI / 2; const rad = i % 2 ? mr * 0.4 : mr; p5.push(`${mcx + rad * Math.cos(ang)},${mcy + rad * Math.sin(ang)}`); }
                 md = `M${p5.join(" L")} Z`;
                 break;
               case "four-star":
-                md = `M${mcx},${mcy-mr} Q${mcx+mr*0.2},${mcy} ${mcx+mr},${mcy} Q${mcx+mr*0.2},${mcy} ${mcx},${mcy+mr} Q${mcx-mr*0.2},${mcy} ${mcx-mr},${mcy} Q${mcx-mr*0.2},${mcy} ${mcx},${mcy-mr} Z`;
+                md = `M${mcx},${mcy - mr} Q${mcx + mr * 0.2},${mcy} ${mcx + mr},${mcy} Q${mcx + mr * 0.2},${mcy} ${mcx},${mcy + mr} Q${mcx - mr * 0.2},${mcy} ${mcx - mr},${mcy} Q${mcx - mr * 0.2},${mcy} ${mcx},${mcy - mr} Z`;
                 break;
               case "pentagon":
-                const pP = []; for(let i=0;i<5;i++){const ang=i*2*Math.PI/5-Math.PI/2; pP.push(`${mcx+mr*Math.cos(ang)},${mcy+mr*Math.sin(ang)}`);}
+                const pP = []; for (let i = 0; i < 5; i++) { const ang = i * 2 * Math.PI / 5 - Math.PI / 2; pP.push(`${mcx + mr * Math.cos(ang)},${mcy + mr * Math.sin(ang)}`); }
                 md = `M${pP.join(" L")} Z`;
                 break;
               case "hexagon":
-                const pH = []; for(let i=0;i<6;i++){const ang=i*Math.PI/3-Math.PI/2; pH.push(`${mcx+mr*Math.cos(ang)},${mcy+mr*Math.sin(ang)}`);}
+                const pH = []; for (let i = 0; i < 6; i++) { const ang = i * Math.PI / 3 - Math.PI / 2; pH.push(`${mcx + mr * Math.cos(ang)},${mcy + mr * Math.sin(ang)}`); }
                 md = `M${pH.join(" L")} Z`;
                 break;
             }
@@ -737,7 +737,7 @@ export default function Generator() {
       }
     };
 
-    const t = setTimeout(injectCustomShapes, 50); 
+    const t = setTimeout(injectCustomShapes, 50);
     return () => clearTimeout(t);
   }, [qrValue, fgColor, bgColor, selectedShape, ecLevel, colorMode, gradientColor1, gradientColor2, gradientAngle, bodyType, eyeFrameType, eyeBallType, limits.customization, limits.logoUpload, logoFile, base64Logo, qrRef.current, activeTemplate]);
 
@@ -880,7 +880,7 @@ export default function Generator() {
   // ─── Share — uses the SAME capture as Download for full consistency ──────────
   // Shape masks, template overlays, colors, logo — all preserved.
   const handleShare = async (platform: "whatsapp" | "facebook" | "instagram" | "youtube", subType?: string) => {
-    const url  = encodeURIComponent(qrValue);
+    const url = encodeURIComponent(qrValue);
     const text = encodeURIComponent("Check out my new QR Code!");
 
     const toastId = toast.loading("Preparing image...");
@@ -921,7 +921,7 @@ export default function Generator() {
     if (['instagram', 'youtube', 'facebook'].includes(platform) && subType) {
       toast.success(`Saving QR for ${platform} ${subType}... Attach it in the app.`);
       triggerDownload();
-      navigator.clipboard.writeText(qrValue).catch(() => {});
+      navigator.clipboard.writeText(qrValue).catch(() => { });
       setTimeout(() => toast.success("Content copied! Paste it in your post."), 2000);
       return;
     }
@@ -937,7 +937,7 @@ export default function Generator() {
         break;
       case "instagram":
       case "youtube":
-        navigator.clipboard.writeText(qrValue).catch(() => {});
+        navigator.clipboard.writeText(qrValue).catch(() => { });
         toast.success(`Content link copied for ${platform}!`);
         break;
     }
@@ -1012,7 +1012,7 @@ export default function Generator() {
                 <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px]">1</span>
                 Select QR Type
               </h3>
-              
+
               <div className="relative group/carousel flex items-center">
                 {/* Left Arrow */}
                 {showLeftArrow && (
@@ -1021,12 +1021,12 @@ export default function Generator() {
                     className="absolute -left-4 z-10 p-1.5 rounded-full bg-background border border-border shadow-md hover:bg-accent text-foreground transition-all flex items-center justify-center"
                     aria-label="Scroll left"
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
                   </button>
                 )}
 
                 {/* Scroll Container */}
-                <div 
+                <div
                   ref={typeScrollRef}
                   onScroll={handleTypeScroll}
                   className="flex overflow-x-auto gap-3 py-1 snap-x relative w-full scrollbar-none scroll-smooth"
@@ -1041,8 +1041,8 @@ export default function Generator() {
                         }
                       }}
                       className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl border text-xs font-medium transition-all btn-press shrink-0 min-w-[90px] snap-center ${activeType === t.id
-                          ? "border-primary bg-primary/5 text-primary shadow-sm"
-                          : "border-border hover:border-foreground/20 text-muted-foreground hover:text-foreground line-clamp-1"
+                        ? "border-primary bg-primary/5 text-primary shadow-sm"
+                        : "border-border hover:border-foreground/20 text-muted-foreground hover:text-foreground line-clamp-1"
                         }`}
                     >
                       <t.icon className="w-5 h-5 shrink-0" />
@@ -1058,7 +1058,7 @@ export default function Generator() {
                     className="absolute -right-4 z-10 p-1.5 rounded-full bg-background border border-border shadow-md hover:bg-accent text-foreground transition-all flex items-center justify-center"
                     aria-label="Scroll right"
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
                   </button>
                 )}
               </div>
@@ -1243,8 +1243,8 @@ export default function Generator() {
                 <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                       <Palette className="w-6 h-6 text-primary" />
-                       Customize Your QR Code
+                      <Palette className="w-6 h-6 text-primary" />
+                      Customize Your QR Code
                     </DialogTitle>
                     <DialogDescription className="sr-only">
                       Adjust colors, shapes, and logos to customize your dynamic QR code.
@@ -1272,13 +1272,12 @@ export default function Generator() {
                         <div className="grid grid-cols-4 gap-2">
                           {bodyTypes.map((b) => {
                             const sel = bodyType === b.id;
-                            const c   = sel ? "hsl(var(--primary))" : "hsl(var(--foreground)/0.4)";
+                            const c = sel ? "hsl(var(--primary))" : "hsl(var(--foreground)/0.4)";
                             const bg2 = sel ? "hsl(var(--primary)/0.08)" : "hsl(var(--accent))";
                             return (
                               <button key={b.id} onClick={() => setBodyType(b.id)}
-                                className={`flex flex-col items-center gap-1.5 p-2 rounded-xl border-2 transition-all ${
-                                  sel ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-foreground/30"
-                                }`}
+                                className={`flex flex-col items-center gap-1.5 p-2 rounded-xl border-2 transition-all ${sel ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-foreground/30"
+                                  }`}
                               >
                                 <svg width="44" height="44" viewBox="0 0 100 100" fill="none">
                                   <rect width="100" height="100" rx="8" fill={bg2} />
@@ -1297,13 +1296,12 @@ export default function Generator() {
                         <div className="grid grid-cols-4 gap-2">
                           {eyeFrameTypes.map((ef) => {
                             const sel = eyeFrameType === ef.id;
-                            const c   = sel ? "hsl(var(--primary))" : "hsl(var(--foreground)/0.4)";
+                            const c = sel ? "hsl(var(--primary))" : "hsl(var(--foreground)/0.4)";
                             const bg2 = sel ? "hsl(var(--primary)/0.08)" : "hsl(var(--accent))";
                             return (
                               <button key={ef.id} onClick={() => setEyeFrameType(ef.id)}
-                                className={`flex flex-col items-center gap-1.5 p-2 rounded-xl border-2 transition-all ${
-                                  sel ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-foreground/30"
-                                }`}
+                                className={`flex flex-col items-center gap-1.5 p-2 rounded-xl border-2 transition-all ${sel ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-foreground/30"
+                                  }`}
                               >
                                 <svg width="44" height="44" viewBox="0 0 100 100" fill="none">
                                   <rect width="100" height="100" rx="8" fill={bg2} />
@@ -1322,13 +1320,12 @@ export default function Generator() {
                         <div className="grid grid-cols-4 gap-2">
                           {eyeBallTypes.map((eb) => {
                             const sel = eyeBallType === eb.id;
-                            const c   = sel ? "hsl(var(--primary))" : "hsl(var(--foreground)/0.4)";
+                            const c = sel ? "hsl(var(--primary))" : "hsl(var(--foreground)/0.4)";
                             const bg2 = sel ? "hsl(var(--primary)/0.08)" : "hsl(var(--accent))";
                             return (
                               <button key={eb.id} onClick={() => setEyeBallType(eb.id)}
-                                className={`flex flex-col items-center gap-1.5 p-2 rounded-xl border-2 transition-all ${
-                                  sel ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-foreground/30"
-                                }`}
+                                className={`flex flex-col items-center gap-1.5 p-2 rounded-xl border-2 transition-all ${sel ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-foreground/30"
+                                  }`}
                               >
                                 <svg width="44" height="44" viewBox="0 0 100 100" fill="none">
                                   <rect width="100" height="100" rx="8" fill={bg2} />
@@ -1345,51 +1342,51 @@ export default function Generator() {
                     </TabsContent>
 
                     <TabsContent value="extra" className="mt-6">
-                       <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Advanced Settings</h4>
-                       <div className="space-y-6">
-                          <div className="flex items-center justify-between p-4 border border-border rounded-xl bg-background/50 group hover:border-primary/30 transition-colors">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                <Users className="w-5 h-5 text-primary" />
-                              </div>
-                              <div>
-                                <p className="text-sm font-bold text-foreground">Lead Capture Form</p>
-                                <p className="text-[10px] text-muted-foreground">Collect visitor details before redirecting</p>
-                              </div>
+                      <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Advanced Settings</h4>
+                      <div className="space-y-6">
+                        <div className="flex items-center justify-between p-4 border border-border rounded-xl bg-background/50 group hover:border-primary/30 transition-colors">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                              <Users className="w-5 h-5 text-primary" />
                             </div>
-                            <button 
-                              onClick={() => setLeadCaptureEnabled(!leadCaptureEnabled)}
-                              type="button"
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 ${leadCaptureEnabled ? 'bg-primary' : 'bg-muted-foreground/30'}`}
-                            >
-                              <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${leadCaptureEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
-                            </button>
+                            <div>
+                              <p className="text-sm font-bold text-foreground">Lead Capture Form</p>
+                              <p className="text-[10px] text-muted-foreground">Collect visitor details before redirecting</p>
+                            </div>
                           </div>
+                          <button
+                            onClick={() => setLeadCaptureEnabled(!leadCaptureEnabled)}
+                            type="button"
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 ${leadCaptureEnabled ? 'bg-primary' : 'bg-muted-foreground/30'}`}
+                          >
+                            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${leadCaptureEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
+                          </button>
+                        </div>
 
-                          <div className="bg-muted/30 p-4 rounded-xl border border-border">
-                            <h5 className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Error Correction Level</h5>
-                            <div className="grid grid-cols-4 gap-2">
-                              {corrections.map((c) => (
-                                <button
-                                  key={c}
-                                  onClick={() => setErrorLevel(c)}
-                                  className={`py-1.5 rounded-md border text-[10px] font-bold uppercase transition-all ${errorLevel === c ? "bg-primary text-primary-foreground border-primary shadow-sm" : "border-border text-muted-foreground hover:bg-accent"}`}
-                                >
-                                  {c.split(" ")[0]}
-                                </button>
-                              ))}
-                            </div>
-                            <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed">
-                              Higher levels keep QR scannable even if partly damaged or covered. <span className="text-primary font-bold">L=7%, M=15%, Q=25%, H=30%</span>.
-                            </p>
+                        <div className="bg-muted/30 p-4 rounded-xl border border-border">
+                          <h5 className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Error Correction Level</h5>
+                          <div className="grid grid-cols-4 gap-2">
+                            {corrections.map((c) => (
+                              <button
+                                key={c}
+                                onClick={() => setErrorLevel(c)}
+                                className={`py-1.5 rounded-md border text-[10px] font-bold uppercase transition-all ${errorLevel === c ? "bg-primary text-primary-foreground border-primary shadow-sm" : "border-border text-muted-foreground hover:bg-accent"}`}
+                              >
+                                {c.split(" ")[0]}
+                              </button>
+                            ))}
                           </div>
-                       </div>
+                          <p className="text-[10px] text-muted-foreground mt-3 leading-relaxed">
+                            Higher levels keep QR scannable even if partly damaged or covered. <span className="text-primary font-bold">L=7%, M=15%, Q=25%, H=30%</span>.
+                          </p>
+                        </div>
+                      </div>
                     </TabsContent>
 
                     {/* ── Existing: QR Frame (outline shape) ── */}
                     <TabsContent value="shapes" className="mt-6">
-                       <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">QR Outline Shape</h4>
-                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">QR Outline Shape</h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         {allShapes.map((s) => {
                           const isSelected = selectedShape === s.id;
                           const fill = isSelected ? "hsl(var(--primary))" : "hsl(var(--foreground) / 0.35)";
@@ -1398,9 +1395,8 @@ export default function Generator() {
                             <button
                               key={s.id}
                               onClick={() => setSelectedShape(s.id)}
-                              className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${
-                                isSelected ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-foreground/30"
-                              }`}
+                              className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all ${isSelected ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-foreground/30"
+                                }`}
                             >
                               {s.isPng ? (
                                 <div className="w-[52px] h-[52px] bg-accent rounded-lg flex items-center justify-center overflow-hidden">
@@ -1411,402 +1407,398 @@ export default function Generator() {
                                   <rect width="100" height="100" rx="8" fill={bg} />
                                   {s.previewCircle && <circle cx="50" cy="50" r="44" fill={fill} />}
                                   {s.previewPoints && <polygon points={s.previewPoints} fill={fill} />}
-                                  {s.previewPath   && <path d={s.previewPath}   fill={fill} />}
+                                  {s.previewPath && <path d={s.previewPath} fill={fill} />}
                                 </svg>
                               )}
                               <span className="text-[10px] font-bold text-center leading-tight">{s.label}</span>
                             </button>
                           );
                         })}
-                       </div>
-                       <p className="text-[10px] text-muted-foreground mt-3 text-center">Changes the outer clip shape. Dots and eyes stay unchanged.</p>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground mt-3 text-center">Changes the outer clip shape. Dots and eyes stay unchanged.</p>
 
-                       <div className="mt-8 bg-accent/30 border border-border p-5 rounded-2xl shadow-sm space-y-6">
-                         {/* Group 1: Internal QR Controls */}
-                         <div className="space-y-4">
-                           <p className="text-[10px] font-bold text-primary/80 uppercase tracking-widest border-b border-border/50 pb-2">Internal QR Controls</p>
-                           
-                           <div>
-                             <div className="flex justify-between items-center mb-2">
-                               <h4 className="text-sm font-bold text-foreground">Internal QR Scale</h4>
-                               <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">{Math.round(qrScale * 100)}%</span>
-                             </div>
-                             <input type="range" min="0.5" max="1.5" step="0.05" value={qrScale} onChange={(e) => setQrScale(parseFloat(e.target.value))} className="w-full accent-primary hover:accent-primary/80 transition-all cursor-pointer h-2 bg-border rounded-lg appearance-none" />
-                             <p className="text-[9px] text-muted-foreground mt-1 text-left">Shrinks the QR Code inside</p>
-                           </div>
+                      <div className="mt-8 bg-accent/30 border border-border p-5 rounded-2xl shadow-sm space-y-6">
+                        {/* Group 1: Internal QR Controls */}
+                        <div className="space-y-4">
+                          <p className="text-[10px] font-bold text-primary/80 uppercase tracking-widest border-b border-border/50 pb-2">Internal QR Controls</p>
 
-                           <div className="grid grid-cols-2 gap-4">
-                             <div>
-                               <div className="flex justify-between items-center mb-2">
-                                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↔</h4>
-                                 <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetX > 0 ? `+${qrOffsetX}` : qrOffsetX}%</span>
-                               </div>
-                               <input type="range" min="-50" max="50" step="1" value={qrOffsetX} onChange={(e) => setQrOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
-                             </div>
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <h4 className="text-sm font-bold text-foreground">Internal QR Scale</h4>
+                              <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">{Math.round(qrScale * 100)}%</span>
+                            </div>
+                            <input type="range" min="0.5" max="1.5" step="0.05" value={qrScale} onChange={(e) => setQrScale(parseFloat(e.target.value))} className="w-full accent-primary hover:accent-primary/80 transition-all cursor-pointer h-2 bg-border rounded-lg appearance-none" />
+                            <p className="text-[9px] text-muted-foreground mt-1 text-left">Shrinks the QR Code inside</p>
+                          </div>
 
-                             <div>
-                               <div className="flex justify-between items-center mb-2">
-                                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↕</h4>
-                                 <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetY > 0 ? `+${qrOffsetY}` : qrOffsetY}%</span>
-                               </div>
-                               <input type="range" min="-50" max="50" step="1" value={qrOffsetY} onChange={(e) => setQrOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
-                             </div>
-                           </div>
-                         </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↔</h4>
+                                <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetX > 0 ? `+${qrOffsetX}` : qrOffsetX}%</span>
+                              </div>
+                              <input type="range" min="-50" max="50" step="1" value={qrOffsetX} onChange={(e) => setQrOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
+                            </div>
 
-                         {/* Group 2: Frame / Shape Controls */}
-                         <div className="space-y-4 pt-4 border-t border-border/50">
-                           <p className="text-[10px] font-bold text-primary/80 uppercase tracking-widest border-b border-border/50 pb-2">Frame / Shape Controls</p>
-                           
-                           <div>
-                             <div className="flex justify-between items-center mb-2">
-                               <h4 className="text-sm font-bold text-foreground">Frame Scale</h4>
-                               <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">{Math.round(shapeScale * 100)}%</span>
-                             </div>
-                             <input type="range" min="0.5" max="1.5" step="0.05" value={shapeScale} onChange={(e) => setShapeScale(parseFloat(e.target.value))} className="w-full accent-primary hover:accent-primary/80 transition-all cursor-pointer h-2 bg-border rounded-lg appearance-none" />
-                             <p className="text-[9px] text-muted-foreground mt-1 text-left">Shrinks the entire shape boundary</p>
-                           </div>
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↕</h4>
+                                <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetY > 0 ? `+${qrOffsetY}` : qrOffsetY}%</span>
+                              </div>
+                              <input type="range" min="-50" max="50" step="1" value={qrOffsetY} onChange={(e) => setQrOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
+                            </div>
+                          </div>
+                        </div>
 
-                           <div className="grid grid-cols-2 gap-4">
-                             <div>
-                               <div className="flex justify-between items-center mb-2">
-                                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↔</h4>
-                                 <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetX > 0 ? `+${shapeOffsetX}` : shapeOffsetX}%</span>
-                               </div>
-                               <input type="range" min="-50" max="50" step="1" value={shapeOffsetX} onChange={(e) => setShapeOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
-                             </div>
+                        {/* Group 2: Frame / Shape Controls */}
+                        <div className="space-y-4 pt-4 border-t border-border/50">
+                          <p className="text-[10px] font-bold text-primary/80 uppercase tracking-widest border-b border-border/50 pb-2">Frame / Shape Controls</p>
 
-                             <div>
-                               <div className="flex justify-between items-center mb-2">
-                                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↕</h4>
-                                 <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetY > 0 ? `+${shapeOffsetY}` : shapeOffsetY}%</span>
-                               </div>
-                               <input type="range" min="-50" max="50" step="1" value={shapeOffsetY} onChange={(e) => setShapeOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
-                             </div>
-                           </div>
-                         </div>
-                       </div>
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <h4 className="text-sm font-bold text-foreground">Frame Scale</h4>
+                              <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">{Math.round(shapeScale * 100)}%</span>
+                            </div>
+                            <input type="range" min="0.5" max="1.5" step="0.05" value={shapeScale} onChange={(e) => setShapeScale(parseFloat(e.target.value))} className="w-full accent-primary hover:accent-primary/80 transition-all cursor-pointer h-2 bg-border rounded-lg appearance-none" />
+                            <p className="text-[9px] text-muted-foreground mt-1 text-left">Shrinks the entire shape boundary</p>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↔</h4>
+                                <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetX > 0 ? `+${shapeOffsetX}` : shapeOffsetX}%</span>
+                              </div>
+                              <input type="range" min="-50" max="50" step="1" value={shapeOffsetX} onChange={(e) => setShapeOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↕</h4>
+                                <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetY > 0 ? `+${shapeOffsetY}` : shapeOffsetY}%</span>
+                              </div>
+                              <input type="range" min="-50" max="50" step="1" value={shapeOffsetY} onChange={(e) => setShapeOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </TabsContent>
 
                     <TabsContent value="pre-designed" className="mt-6">
-                       <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Visual Templates</h4>
-                       {activeTemplate && (
-                         <div className="mb-3 flex items-center gap-2 p-2.5 bg-primary/5 border border-primary/20 rounded-lg">
-                           <span className="text-xs font-semibold text-primary flex-1">
-                             ✅ Template active: <span className="font-bold">{preDesignTemplates.find(t => t.id === activeTemplate)?.label}</span>
-                           </span>
-                           <button
-                             onClick={() => { setActiveTemplate(null); toast.success("Template removed!"); }}
-                             className="flex items-center gap-1.5 px-2.5 py-1 bg-destructive/10 hover:bg-destructive/20 text-destructive rounded-md text-xs font-bold transition-colors"
-                             title="Deselect template"
-                           >
-                             <X className="w-3 h-3" /> Remove
-                           </button>
-                         </div>
-                       )}
-                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                         {preDesignTemplates.map((template) => (
-                           <div key={template.id} className="relative">
-                             <button
-                               className={`w-full flex flex-col items-center gap-2 p-2 rounded-xl border-2 transition-all group ${
-                                 activeTemplate === template.id ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-primary/50"
-                               }`}
-                               onClick={() => {
-                                 if (activeTemplate === template.id) {
-                                   // clicking same template again = deselect
-                                   setActiveTemplate(null);
-                                   toast.success("Template removed!");
-                                 } else {
-                                   setActiveTemplate(template.id);
-                                   toast.success(`Applied ${template.label} template!`);
-                                 }
-                               }}
-                             >
-                                <div className="w-full aspect-square bg-accent rounded-lg flex items-center justify-center overflow-hidden border border-border/50 group-hover:shadow-sm relative">
-                                  <img src={template.src} alt={template.label} className="w-full h-full object-contain" />
-                                  {activeTemplate === template.id && (
-                                    <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
-                                      <span className="text-[10px] font-black text-primary bg-white/90 px-1.5 py-0.5 rounded-full shadow">ACTIVE</span>
-                                    </div>
-                                  )}
-                                </div>
-                                <span className={`text-[11px] font-bold ${activeTemplate === template.id ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'}`}>{template.label}</span>
-                             </button>
-                             {/* X close button - only on selected template */}
-                             {activeTemplate === template.id && (
-                               <button
-                                 onClick={(e) => {
-                                   e.stopPropagation();
-                                   setActiveTemplate(null);
-                                   toast.success("Template removed!");
-                                 }}
-                                 className="absolute -top-2.5 -right-2.5 w-7 h-7 bg-destructive text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 hover:bg-destructive/80 transition-all z-30 border-2 border-background"
-                                 title="Remove Template"
-                               >
-                                 <X className="w-4 h-4" />
-                               </button>
-                             )}
-                           </div>
-                         ))}
-                       </div>
-                       <p className="text-[10px] text-muted-foreground mt-3 text-center">Click a template to apply. Click again or press ✕ to deselect.</p>
-
-                       {/* QR Visual Transform Controls for Templates */}
-                       <div className="mt-8 bg-accent/30 border border-border p-5 rounded-2xl shadow-sm space-y-6">
-                         {/* Group 1: Internal QR Controls */}
-                         <div className="space-y-4">
-                           <p className="text-[10px] font-bold text-primary/80 uppercase tracking-widest border-b border-border/50 pb-2">Internal QR Controls</p>
-                           
-                           <div>
-                             <div className="flex justify-between items-center mb-2">
-                               <h4 className="text-sm font-bold text-foreground">Internal QR Scale</h4>
-                               <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">{Math.round(qrScale * 100)}%</span>
-                             </div>
-                             <input type="range" min="0.5" max="1.5" step="0.05" value={qrScale} onChange={(e) => setQrScale(parseFloat(e.target.value))} className="w-full accent-primary hover:accent-primary/80 transition-all cursor-pointer h-2 bg-border rounded-lg appearance-none" />
-                             <p className="text-[9px] text-muted-foreground mt-1 text-left">Shrinks the QR Code inside</p>
-                           </div>
-
-                           <div className="grid grid-cols-2 gap-4">
-                             <div>
-                               <div className="flex justify-between items-center mb-2">
-                                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↔</h4>
-                                 <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetX > 0 ? `+${qrOffsetX}` : qrOffsetX}%</span>
-                               </div>
-                               <input type="range" min="-50" max="50" step="1" value={qrOffsetX} onChange={(e) => setQrOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
-                             </div>
-
-                             <div>
-                               <div className="flex justify-between items-center mb-2">
-                                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↕</h4>
-                                 <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetY > 0 ? `+${qrOffsetY}` : qrOffsetY}%</span>
-                               </div>
-                               <input type="range" min="-50" max="50" step="1" value={qrOffsetY} onChange={(e) => setQrOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
-                             </div>
-                           </div>
-                         </div>
-
-                         {/* Group 2: Frame / Shape Controls */}
-                         <div className="space-y-4 pt-4 border-t border-border/50">
-                           <p className="text-[10px] font-bold text-primary/80 uppercase tracking-widest border-b border-border/50 pb-2">Frame / Shape Controls</p>
-                           
-                           <div>
-                             <div className="flex justify-between items-center mb-2">
-                               <h4 className="text-sm font-bold text-foreground">Frame Scale</h4>
-                               <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">{Math.round(shapeScale * 100)}%</span>
-                             </div>
-                             <input type="range" min="0.5" max="1.5" step="0.05" value={shapeScale} onChange={(e) => setShapeScale(parseFloat(e.target.value))} className="w-full accent-primary hover:accent-primary/80 transition-all cursor-pointer h-2 bg-border rounded-lg appearance-none" />
-                             <p className="text-[9px] text-muted-foreground mt-1 text-left">Shrinks the entire shape boundary</p>
-                           </div>
-
-                           <div className="grid grid-cols-2 gap-4">
-                             <div>
-                               <div className="flex justify-between items-center mb-2">
-                                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↔</h4>
-                                 <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetX > 0 ? `+${shapeOffsetX}` : shapeOffsetX}%</span>
-                               </div>
-                               <input type="range" min="-50" max="50" step="1" value={shapeOffsetX} onChange={(e) => setShapeOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
-                             </div>
-
-                             <div>
-                               <div className="flex justify-between items-center mb-2">
-                                 <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↕</h4>
-                                 <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetY > 0 ? `+${shapeOffsetY}` : shapeOffsetY}%</span>
-                               </div>
-                               <input type="range" min="-50" max="50" step="1" value={shapeOffsetY} onChange={(e) => setShapeOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
-                             </div>
-                           </div>
-                         </div>
-                       </div>
-                    </TabsContent>
-
-                    <TabsContent value="stickers" className="mt-6">
-                       <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Logo & Stickers</h4>
-                       <div className="space-y-6">
-                          <div>
-                            <p className="text-xs font-bold text-muted-foreground mb-2">Upload Custom Logo</p>
-                            <label className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/40 transition-colors cursor-pointer block">
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={(e) => {
-                                  if (e.target.files && e.target.files[0]) {
-                                    const url = URL.createObjectURL(e.target.files[0]);
-                                    setLogoFile(url);
-                                  }
+                      <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Visual Templates</h4>
+                      {activeTemplate && (
+                        <div className="mb-3 flex items-center gap-2 p-2.5 bg-primary/5 border border-primary/20 rounded-lg">
+                          <span className="text-xs font-semibold text-primary flex-1">
+                            ✅ Template active: <span className="font-bold">{preDesignTemplates.find(t => t.id === activeTemplate)?.label}</span>
+                          </span>
+                          <button
+                            onClick={() => { setActiveTemplate(null); toast.success("Template removed!"); }}
+                            className="flex items-center gap-1.5 px-2.5 py-1 bg-destructive/10 hover:bg-destructive/20 text-destructive rounded-md text-xs font-bold transition-colors"
+                            title="Deselect template"
+                          >
+                            <X className="w-3 h-3" /> Remove
+                          </button>
+                        </div>
+                      )}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {preDesignTemplates.map((template) => (
+                          <div key={template.id} className="relative">
+                            <button
+                              className={`w-full flex flex-col items-center gap-2 p-2 rounded-xl border-2 transition-all group ${activeTemplate === template.id ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-border hover:border-primary/50"
+                                }`}
+                              onClick={() => {
+                                if (activeTemplate === template.id) {
+                                  // clicking same template again = deselect
+                                  setActiveTemplate(null);
+                                  toast.success("Template removed!");
+                                } else {
+                                  setActiveTemplate(template.id);
+                                  toast.success(`Applied ${template.label} template!`);
+                                }
+                              }}
+                            >
+                              <div className="w-full aspect-square bg-accent rounded-lg flex items-center justify-center overflow-hidden border border-border/50 group-hover:shadow-sm relative">
+                                <img src={template.src} alt={template.label} className="w-full h-full object-contain" />
+                                {activeTemplate === template.id && (
+                                  <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
+                                    <span className="text-[10px] font-black text-primary bg-white/90 px-1.5 py-0.5 rounded-full shadow">ACTIVE</span>
+                                  </div>
+                                )}
+                              </div>
+                              <span className={`text-[11px] font-bold ${activeTemplate === template.id ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'}`}>{template.label}</span>
+                            </button>
+                            {/* X close button - only on selected template */}
+                            {activeTemplate === template.id && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setActiveTemplate(null);
+                                  toast.success("Template removed!");
                                 }}
-                              />
-                              <Upload className="w-6 h-6 text-muted-foreground mx-auto mb-1" />
-                              <p className="text-xs font-bold text-muted-foreground">Drop Image Here</p>
-                            </label>
-                            {logoFile && (
-                              <button onClick={() => setLogoFile(undefined)} className="text-[10px] font-bold text-destructive hover:underline mt-2">
-                                Remove Logo
+                                className="absolute -top-2.5 -right-2.5 w-7 h-7 bg-destructive text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 hover:bg-destructive/80 transition-all z-30 border-2 border-background"
+                                title="Remove Template"
+                              >
+                                <X className="w-4 h-4" />
                               </button>
                             )}
                           </div>
-                       </div>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-muted-foreground mt-3 text-center">Click a template to apply. Click again or press ✕ to deselect.</p>
+
+                      {/* QR Visual Transform Controls for Templates */}
+                      <div className="mt-8 bg-accent/30 border border-border p-5 rounded-2xl shadow-sm space-y-6">
+                        {/* Group 1: Internal QR Controls */}
+                        <div className="space-y-4">
+                          <p className="text-[10px] font-bold text-primary/80 uppercase tracking-widest border-b border-border/50 pb-2">Internal QR Controls</p>
+
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <h4 className="text-sm font-bold text-foreground">Internal QR Scale</h4>
+                              <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">{Math.round(qrScale * 100)}%</span>
+                            </div>
+                            <input type="range" min="0.5" max="1.5" step="0.05" value={qrScale} onChange={(e) => setQrScale(parseFloat(e.target.value))} className="w-full accent-primary hover:accent-primary/80 transition-all cursor-pointer h-2 bg-border rounded-lg appearance-none" />
+                            <p className="text-[9px] text-muted-foreground mt-1 text-left">Shrinks the QR Code inside</p>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↔</h4>
+                                <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetX > 0 ? `+${qrOffsetX}` : qrOffsetX}%</span>
+                              </div>
+                              <input type="range" min="-50" max="50" step="1" value={qrOffsetX} onChange={(e) => setQrOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↕</h4>
+                                <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetY > 0 ? `+${qrOffsetY}` : qrOffsetY}%</span>
+                              </div>
+                              <input type="range" min="-50" max="50" step="1" value={qrOffsetY} onChange={(e) => setQrOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Group 2: Frame / Shape Controls */}
+                        <div className="space-y-4 pt-4 border-t border-border/50">
+                          <p className="text-[10px] font-bold text-primary/80 uppercase tracking-widest border-b border-border/50 pb-2">Frame / Shape Controls</p>
+
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <h4 className="text-sm font-bold text-foreground">Frame Scale</h4>
+                              <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded-md">{Math.round(shapeScale * 100)}%</span>
+                            </div>
+                            <input type="range" min="0.5" max="1.5" step="0.05" value={shapeScale} onChange={(e) => setShapeScale(parseFloat(e.target.value))} className="w-full accent-primary hover:accent-primary/80 transition-all cursor-pointer h-2 bg-border rounded-lg appearance-none" />
+                            <p className="text-[9px] text-muted-foreground mt-1 text-left">Shrinks the entire shape boundary</p>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↔</h4>
+                                <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetX > 0 ? `+${shapeOffsetX}` : shapeOffsetX}%</span>
+                              </div>
+                              <input type="range" min="-50" max="50" step="1" value={shapeOffsetX} onChange={(e) => setShapeOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between items-center mb-2">
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↕</h4>
+                                <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetY > 0 ? `+${shapeOffsetY}` : shapeOffsetY}%</span>
+                              </div>
+                              <input type="range" min="-50" max="50" step="1" value={shapeOffsetY} onChange={(e) => setShapeOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="stickers" className="mt-6">
+                      <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Logo & Stickers</h4>
+                      <div className="space-y-6">
+                        <div>
+                          <p className="text-xs font-bold text-muted-foreground mb-2">Upload Custom Logo</p>
+                          <label className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/40 transition-colors cursor-pointer block">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  const url = URL.createObjectURL(e.target.files[0]);
+                                  setLogoFile(url);
+                                }
+                              }}
+                            />
+                            <Upload className="w-6 h-6 text-muted-foreground mx-auto mb-1" />
+                            <p className="text-xs font-bold text-muted-foreground">Drop Image Here</p>
+                          </label>
+                          {logoFile && (
+                            <button onClick={() => setLogoFile(undefined)} className="text-[10px] font-bold text-destructive hover:underline mt-2">
+                              Remove Logo
+                            </button>
+                          )}
+                        </div>
+                      </div>
                     </TabsContent>
 
                     <TabsContent value="colors" className="mt-6">
-                       <div className="space-y-6">
+                      <div className="space-y-6">
 
-                         {/* Foreground Color Mode Toggle */}
-                         <div>
-                           <h5 className="text-[10px] font-bold text-muted-foreground uppercase mb-3">QR Body Color</h5>
-                           {/* Mode selection buttons */}
-                           <div className="flex gap-2 mb-4 p-1 bg-accent/50 rounded-lg">
-                             <button
-                               onClick={() => setColorMode("single")}
-                               className={`flex-1 py-2 rounded-md text-xs font-bold transition-all ${
-                                 colorMode === "single"
-                                   ? "bg-background border border-border shadow-sm text-foreground"
-                                   : "text-muted-foreground hover:text-foreground"
-                               }`}
-                             >
-                               🎨 Single Color
-                             </button>
-                             <button
-                               onClick={() => setColorMode("gradient")}
-                               className={`flex-1 py-2 rounded-md text-xs font-bold transition-all ${
-                                 colorMode === "gradient"
-                                   ? "bg-background border border-border shadow-sm text-foreground"
-                                   : "text-muted-foreground hover:text-foreground"
-                               }`}
-                             >
-                               🌈 Gradient
-                             </button>
-                           </div>
+                        {/* Foreground Color Mode Toggle */}
+                        <div>
+                          <h5 className="text-[10px] font-bold text-muted-foreground uppercase mb-3">QR Body Color</h5>
+                          {/* Mode selection buttons */}
+                          <div className="flex gap-2 mb-4 p-1 bg-accent/50 rounded-lg">
+                            <button
+                              onClick={() => setColorMode("single")}
+                              className={`flex-1 py-2 rounded-md text-xs font-bold transition-all ${colorMode === "single"
+                                ? "bg-background border border-border shadow-sm text-foreground"
+                                : "text-muted-foreground hover:text-foreground"
+                                }`}
+                            >
+                              🎨 Single Color
+                            </button>
+                            <button
+                              onClick={() => setColorMode("gradient")}
+                              className={`flex-1 py-2 rounded-md text-xs font-bold transition-all ${colorMode === "gradient"
+                                ? "bg-background border border-border shadow-sm text-foreground"
+                                : "text-muted-foreground hover:text-foreground"
+                                }`}
+                            >
+                              🌈 Gradient
+                            </button>
+                          </div>
 
-                           {/* Single Color Mode */}
-                           {colorMode === "single" && (
-                             <div className="flex items-center gap-3 p-3 border border-border rounded-xl bg-background">
-                               <input
-                                 type="color"
-                                 value={fgColor}
-                                 onChange={(e) => setFgColor(e.target.value)}
-                                 className="w-10 h-10 rounded-lg cursor-pointer border-none"
-                               />
-                               <div>
-                                 <span className="text-xs font-bold block">{fgColor}</span>
-                                 <span className="text-[10px] text-muted-foreground">Solid QR Color</span>
-                               </div>
-                             </div>
-                           )}
+                          {/* Single Color Mode */}
+                          {colorMode === "single" && (
+                            <div className="flex items-center gap-3 p-3 border border-border rounded-xl bg-background">
+                              <input
+                                type="color"
+                                value={fgColor}
+                                onChange={(e) => setFgColor(e.target.value)}
+                                className="w-10 h-10 rounded-lg cursor-pointer border-none"
+                              />
+                              <div>
+                                <span className="text-xs font-bold block">{fgColor}</span>
+                                <span className="text-[10px] text-muted-foreground">Solid QR Color</span>
+                              </div>
+                            </div>
+                          )}
 
-                           {/* Gradient Mode */}
-                           {colorMode === "gradient" && (
-                             <div className="space-y-4">
-                               {/* Preset gradients */}
-                               <div>
-                                 <p className="text-[10px] font-bold text-muted-foreground mb-2 uppercase">Presets</p>
-                                 <div className="grid grid-cols-3 gap-2">
-                                   {gradientPresets.map((preset) => (
-                                     <button
-                                       key={preset.label}
-                                       onClick={() => { setGradientColor1(preset.c1); setGradientColor2(preset.c2); }}
-                                       className={`h-9 rounded-lg border-2 transition-all ${
-                                         gradientColor1 === preset.c1 && gradientColor2 === preset.c2
-                                           ? "border-primary ring-2 ring-primary/30"
-                                           : "border-transparent hover:border-foreground/20"
-                                       }`}
-                                       style={{ background: `linear-gradient(135deg, ${preset.c1}, ${preset.c2})` }}
-                                       title={preset.label}
-                                     />
-                                   ))}
-                                 </div>
-                               </div>
-                               {/* Custom gradient color pickers */}
-                               <div className="grid grid-cols-2 gap-3">
-                                 <div className="flex items-center gap-2 p-3 border border-border rounded-xl bg-background">
-                                   <input
-                                     type="color"
-                                     value={gradientColor1}
-                                     onChange={(e) => setGradientColor1(e.target.value)}
-                                     className="w-8 h-8 rounded cursor-pointer border-none shrink-0"
-                                   />
-                                   <div>
-                                     <span className="text-[10px] font-bold block">{gradientColor1}</span>
-                                     <span className="text-[10px] text-muted-foreground">Start</span>
-                                   </div>
-                                 </div>
-                                 <div className="flex items-center gap-2 p-3 border border-border rounded-xl bg-background">
-                                   <input
-                                     type="color"
-                                     value={gradientColor2}
-                                     onChange={(e) => setGradientColor2(e.target.value)}
-                                     className="w-8 h-8 rounded cursor-pointer border-none shrink-0"
-                                   />
-                                   <div>
-                                     <span className="text-[10px] font-bold block">{gradientColor2}</span>
-                                     <span className="text-[10px] text-muted-foreground">End</span>
-                                   </div>
-                                 </div>
-                               </div>
-                               {/* Angle slider */}
-                               <div>
-                                 <label className="text-[10px] font-bold text-muted-foreground uppercase block mb-1">
-                                   Angle: {gradientAngle}°
-                                 </label>
-                                 <input
-                                   type="range"
-                                   min="0"
-                                   max="360"
-                                   value={gradientAngle}
-                                   onChange={(e) => setGradientAngle(Number(e.target.value))}
-                                   className="w-full accent-primary"
-                                 />
-                               </div>
-                               {/* Live gradient preview bar */}
-                               <div
-                                 className="h-6 rounded-lg border border-border"
-                                 style={{ background: `linear-gradient(${gradientAngle}deg, ${gradientColor1}, ${gradientColor2})` }}
-                               />
-                             </div>
-                           )}
-                         </div>
+                          {/* Gradient Mode */}
+                          {colorMode === "gradient" && (
+                            <div className="space-y-4">
+                              {/* Preset gradients */}
+                              <div>
+                                <p className="text-[10px] font-bold text-muted-foreground mb-2 uppercase">Presets</p>
+                                <div className="grid grid-cols-3 gap-2">
+                                  {gradientPresets.map((preset) => (
+                                    <button
+                                      key={preset.label}
+                                      onClick={() => { setGradientColor1(preset.c1); setGradientColor2(preset.c2); }}
+                                      className={`h-9 rounded-lg border-2 transition-all ${gradientColor1 === preset.c1 && gradientColor2 === preset.c2
+                                        ? "border-primary ring-2 ring-primary/30"
+                                        : "border-transparent hover:border-foreground/20"
+                                        }`}
+                                      style={{ background: `linear-gradient(135deg, ${preset.c1}, ${preset.c2})` }}
+                                      title={preset.label}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                              {/* Custom gradient color pickers */}
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="flex items-center gap-2 p-3 border border-border rounded-xl bg-background">
+                                  <input
+                                    type="color"
+                                    value={gradientColor1}
+                                    onChange={(e) => setGradientColor1(e.target.value)}
+                                    className="w-8 h-8 rounded cursor-pointer border-none shrink-0"
+                                  />
+                                  <div>
+                                    <span className="text-[10px] font-bold block">{gradientColor1}</span>
+                                    <span className="text-[10px] text-muted-foreground">Start</span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2 p-3 border border-border rounded-xl bg-background">
+                                  <input
+                                    type="color"
+                                    value={gradientColor2}
+                                    onChange={(e) => setGradientColor2(e.target.value)}
+                                    className="w-8 h-8 rounded cursor-pointer border-none shrink-0"
+                                  />
+                                  <div>
+                                    <span className="text-[10px] font-bold block">{gradientColor2}</span>
+                                    <span className="text-[10px] text-muted-foreground">End</span>
+                                  </div>
+                                </div>
+                              </div>
+                              {/* Angle slider */}
+                              <div>
+                                <label className="text-[10px] font-bold text-muted-foreground uppercase block mb-1">
+                                  Angle: {gradientAngle}°
+                                </label>
+                                <input
+                                  type="range"
+                                  min="0"
+                                  max="360"
+                                  value={gradientAngle}
+                                  onChange={(e) => setGradientAngle(Number(e.target.value))}
+                                  className="w-full accent-primary"
+                                />
+                              </div>
+                              {/* Live gradient preview bar */}
+                              <div
+                                className="h-6 rounded-lg border border-border"
+                                style={{ background: `linear-gradient(${gradientAngle}deg, ${gradientColor1}, ${gradientColor2})` }}
+                              />
+                            </div>
+                          )}
+                        </div>
 
-                         {/* Background Color — always a single solid color */}
-                         <div>
-                           <h5 className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Background Color</h5>
-                           <div className="flex items-center gap-3 p-3 border border-border rounded-xl bg-background">
-                             <input
-                               type="color"
-                               value={bgColor}
-                               onChange={(e) => setBgColor(e.target.value)}
-                               className="w-10 h-10 rounded-lg cursor-pointer border-none"
-                             />
-                             <div>
-                               <span className="text-xs font-bold block">{bgColor}</span>
-                               <span className="text-[10px] text-muted-foreground">QR Background</span>
-                             </div>
-                           </div>
-                         </div>
+                        {/* Background Color — always a single solid color */}
+                        <div>
+                          <h5 className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Background Color</h5>
+                          <div className="flex items-center gap-3 p-3 border border-border rounded-xl bg-background">
+                            <input
+                              type="color"
+                              value={bgColor}
+                              onChange={(e) => setBgColor(e.target.value)}
+                              className="w-10 h-10 rounded-lg cursor-pointer border-none"
+                            />
+                            <div>
+                              <span className="text-xs font-bold block">{bgColor}</span>
+                              <span className="text-[10px] text-muted-foreground">QR Background</span>
+                            </div>
+                          </div>
+                        </div>
 
-                       </div>
+                      </div>
                     </TabsContent>
 
                     <TabsContent value="extra" className="mt-6">
-                       <div className="grid grid-cols-2 gap-8">
-                          <div>
-                            <h4 className="text-[10px] font-bold text-muted-foreground mb-3 uppercase tracking-wider">Frames</h4>
-                            <div className="grid grid-cols-2 gap-2">
-                              {frames.map((f) => (
-                                <button key={f} onClick={() => setSelectedFrame(f)}
-                                  className={`px-3 py-2 rounded-lg border text-[10px] font-bold transition-all ${selectedFrame === f ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:bg-accent"}`}>{f}</button>
-                              ))}
-                            </div>
+                      <div className="grid grid-cols-2 gap-8">
+                        <div>
+                          <h4 className="text-[10px] font-bold text-muted-foreground mb-3 uppercase tracking-wider">Frames</h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            {frames.map((f) => (
+                              <button key={f} onClick={() => setSelectedFrame(f)}
+                                className={`px-3 py-2 rounded-lg border text-[10px] font-bold transition-all ${selectedFrame === f ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:bg-accent"}`}>{f}</button>
+                            ))}
                           </div>
-                          <div>
-                            <h4 className="text-[10px] font-bold text-muted-foreground mb-3 uppercase tracking-wider">Correction</h4>
-                            <div className="grid grid-cols-2 gap-2">
-                              {corrections.map((c) => (
-                                <button key={c} onClick={() => setErrorLevel(c)}
-                                  className={`px-3 py-2 rounded-lg border text-[10px] font-bold transition-all ${errorLevel === c ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:bg-accent"}`}>{c}</button>
-                              ))}
-                            </div>
+                        </div>
+                        <div>
+                          <h4 className="text-[10px] font-bold text-muted-foreground mb-3 uppercase tracking-wider">Correction</h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            {corrections.map((c) => (
+                              <button key={c} onClick={() => setErrorLevel(c)}
+                                className={`px-3 py-2 rounded-lg border text-[10px] font-bold transition-all ${errorLevel === c ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:bg-accent"}`}>{c}</button>
+                            ))}
                           </div>
-                       </div>
+                        </div>
+                      </div>
                     </TabsContent>
                   </Tabs>
 
@@ -1843,26 +1835,26 @@ export default function Generator() {
                     {selectedFrame === "Scan Me" ? "📱 Scan Me" : selectedFrame === "Point Here" ? "👆 Point Here" : "🔗 Follow Us"}
                   </p>
                 )}
-                  {/* Hidden SVG clip-path definitions */}
-                  <svg width="0" height="0" style={{ position: 'absolute', overflow: 'hidden' }} aria-hidden="true">
-                    <defs>
-                      <clipPath id="qr-clip-diamond" clipPathUnits="objectBoundingBox">
-                        <polygon points="0.5,0 1,0.5 0.5,1 0,0.5" />
-                      </clipPath>
-                      <clipPath id="qr-clip-heart" clipPathUnits="objectBoundingBox">
-                        <path d="M0.5,0.80 C0.15,0.60 0.05,0.42 0.05,0.30 C0.05,0.17 0.14,0.08 0.26,0.08 C0.36,0.08 0.45,0.16 0.5,0.22 C0.55,0.16 0.64,0.08 0.74,0.08 C0.86,0.08 0.95,0.17 0.95,0.30 C0.95,0.42 0.85,0.60 0.5,0.80 Z" />
-                      </clipPath>
-                      <clipPath id="qr-clip-star" clipPathUnits="objectBoundingBox">
-                        <polygon points="0.5,0.05 0.61,0.35 0.95,0.35 0.68,0.57 0.79,0.91 0.5,0.70 0.21,0.91 0.32,0.57 0.05,0.35 0.39,0.35" />
-                      </clipPath>
-                      <clipPath id="qr-clip-pentagon" clipPathUnits="objectBoundingBox">
-                        <polygon points="0.5,0.05 0.95,0.38 0.78,0.95 0.22,0.95 0.05,0.38" />
-                      </clipPath>
-                      <clipPath id="qr-clip-hexagon" clipPathUnits="objectBoundingBox">
-                        <polygon points="0.5,0.05 0.93,0.275 0.93,0.725 0.5,0.95 0.07,0.725 0.07,0.275" />
-                      </clipPath>
-                    </defs>
-                  </svg>
+                {/* Hidden SVG clip-path definitions */}
+                <svg width="0" height="0" style={{ position: 'absolute', overflow: 'hidden' }} aria-hidden="true">
+                  <defs>
+                    <clipPath id="qr-clip-diamond" clipPathUnits="objectBoundingBox">
+                      <polygon points="0.5,0 1,0.5 0.5,1 0,0.5" />
+                    </clipPath>
+                    <clipPath id="qr-clip-heart" clipPathUnits="objectBoundingBox">
+                      <path d="M0.5,0.80 C0.15,0.60 0.05,0.42 0.05,0.30 C0.05,0.17 0.14,0.08 0.26,0.08 C0.36,0.08 0.45,0.16 0.5,0.22 C0.55,0.16 0.64,0.08 0.74,0.08 C0.86,0.08 0.95,0.17 0.95,0.30 C0.95,0.42 0.85,0.60 0.5,0.80 Z" />
+                    </clipPath>
+                    <clipPath id="qr-clip-star" clipPathUnits="objectBoundingBox">
+                      <polygon points="0.5,0.05 0.61,0.35 0.95,0.35 0.68,0.57 0.79,0.91 0.5,0.70 0.21,0.91 0.32,0.57 0.05,0.35 0.39,0.35" />
+                    </clipPath>
+                    <clipPath id="qr-clip-pentagon" clipPathUnits="objectBoundingBox">
+                      <polygon points="0.5,0.05 0.95,0.38 0.78,0.95 0.22,0.95 0.05,0.38" />
+                    </clipPath>
+                    <clipPath id="qr-clip-hexagon" clipPathUnits="objectBoundingBox">
+                      <polygon points="0.5,0.05 0.93,0.275 0.93,0.725 0.5,0.95 0.07,0.725 0.07,0.275" />
+                    </clipPath>
+                  </defs>
+                </svg>
 
                 <div className="mb-4 w-full flex items-center justify-center p-2 bg-white rounded-xl shadow-sm border border-border/50">
                   {/* ── QR Visual export target — Download & Share capture strictly this inner div ── */}
@@ -1872,139 +1864,142 @@ export default function Generator() {
                   >
                     {(() => {
                       const shapeDef = allShapes.find(s => s.id === selectedShape) || allShapes[0];
-                    const isSquare = selectedShape === "Square";
-                    const templateDef = preDesignTemplates.find(t => t.id === activeTemplate);
-                    
-                    // Unified Safe Zone Logic (MIS - Maximum Inscribed Square)
-                    const safeZone = shapeDef.safeZone || { cx: 0.5, cy: 0.5, size: 0.85 };
-                    
-                    const cBg = limits.customization !== 'none' ? bgColor : '#ffffff';
-                    const cFg = colorMode === "gradient" ? gradientColor1 : (limits.customization !== "none" ? fgColor : "#0f172a");
-                    const activeBgDot = bodyTypes.find(b => b.id === (limits.customization !== "none" ? bodyType : "square")) || bodyTypes[0];
-                    
-                    // Gap Infilling (Decorative Background Grid)
-                    const GRID_SIZE = 25; // Higher resolution for gap infilling
-                    const dummyGrid = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => Math.random() > 0.05 ? 1 : 0);
-                    const patternSize = 100 / GRID_SIZE;
+                      const isSquare = selectedShape === "Square";
+                      const templateDef = preDesignTemplates.find(t => t.id === activeTemplate);
 
-                    const actualSrc = solidProcessedMasks[selectedShape] || shapeDef?.src;
-                    const combinedMask = (shapeDef?.isPng && actualSrc && !isSquare) ? `url("${actualSrc}")` : undefined;
+                      // Unified Safe Zone Logic (MIS - Maximum Inscribed Square)
+                      const safeZone = shapeDef.safeZone || { cx: 0.5, cy: 0.5, size: 0.85 };
 
-                    const finalQrSize = safeZone.size * 0.82 * qrScale; 
+                      const cBg = limits.customization !== 'none' ? bgColor : '#ffffff';
+                      const cFg = colorMode === "gradient" ? gradientColor1 : (limits.customization !== "none" ? fgColor : "#0f172a");
+                      const activeBgDot = bodyTypes.find(b => b.id === (limits.customization !== "none" ? bodyType : "square")) || bodyTypes[0];
 
-                    const outerStyle: React.CSSProperties = {
-                      maskImage: combinedMask,
-                      maskSize: '100% 100%',
-                      maskPosition: 'center',
-                      maskRepeat: 'no-repeat',
-                      WebkitMaskImage: combinedMask,
-                      WebkitMaskSize: '100% 100%',
-                      WebkitMaskPosition: 'center',
-                      WebkitMaskRepeat: 'no-repeat',
-                      clipPath: shapeDef?.clip,
-                      borderRadius: shapeDef?.radius,
-                      overflow: 'hidden',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: cBg, // Always apply chosen BG to shape
-                      position: 'relative',
-                      width: '100%',
-                      height: '100%'
-                    };
+                      // Gap Infilling (Decorative Background Grid)
+                      const GRID_SIZE = 25; // Higher resolution for gap infilling
+                      const dummyGrid = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => Math.random() > 0.05 ? 1 : 0);
+                      const patternSize = 100 / GRID_SIZE;
 
-                    const qrPosStyle: React.CSSProperties = {
-                      position: 'absolute',
-                      left: `${(safeZone.cx - finalQrSize / 2) * 100 + qrOffsetX}%`,
-                      top:  `${(safeZone.cy - finalQrSize / 2) * 100 + qrOffsetY}%`,
-                      width: `${finalQrSize * 100}%`,
-                      height: `${finalQrSize * 100}%`,
-                      zIndex: 10,
-                      boxSizing: 'border-box',
-                    };
+                      const actualSrc = solidProcessedMasks[selectedShape] || shapeDef?.src;
+                      const combinedMask = (shapeDef?.isPng && actualSrc && !isSquare) ? `url("${actualSrc}")` : undefined;
 
-                    // The actual layered QR structure with mask, gap fill, and QR data
-                    const renderedQrContent = (
-                      <div style={{...outerStyle, transform: `translate(${shapeOffsetX}%, ${shapeOffsetY}%) scale(${shapeScale})`, transformOrigin: "center"}}>
-                        {shapeDef && !isSquare && (
-                          <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-                            <defs>
-                              <pattern id={`gap-fill-${activeBgDot?.id}`} width={`${patternSize}%`} height={`${patternSize}%`} patternUnits="userSpaceOnUse" viewBox="0 0 100 100">
-                                <g transform="scale(1.1)">
-                                  {activeBgDot?.preview(cFg)}
-                                </g>
-                              </pattern>
-                              <mask id="safe-zone-punch">
-                                <rect width="100%" height="100%" fill="white" />
-                                <rect
-                                  x={`${(safeZone.cx - safeZone.size / 2) * 100}%`}
-                                  y={`${(safeZone.cy - safeZone.size / 2) * 100}%`}
-                                  width={`${safeZone.size * 100}%`}
-                                  height={`${safeZone.size * 100}%`}
-                                  fill="black"
-                                />
-                              </mask>
-                            </defs>
-                            <rect width="100%" height="100%" fill={`url(#gap-fill-${activeBgDot?.id})`} mask="url(#safe-zone-punch)" />
-                          </svg>
-                        )}
-                        <div style={qrPosStyle}>
-                          <div ref={qrRef} className="w-full h-full" />
-                        </div>
-                      </div>
-                    );
+                      const finalQrSize = safeZone.size * 0.82 * qrScale;
 
-                    // ─── Template Mode (Styling Layer placed inside Template Boundaries) ───
-                    if (templateDef) {
-                      const wb = (templateDef as any).whitebox as { left: number; right: number; top: number; bottom: number };
+                      const outerStyle: React.CSSProperties = {
+                        maskImage: combinedMask,
+                        maskSize: '100% 100%',
+                        maskPosition: 'center',
+                        maskRepeat: 'no-repeat',
+                        WebkitMaskImage: combinedMask,
+                        WebkitMaskSize: '100% 100%',
+                        WebkitMaskPosition: 'center',
+                        WebkitMaskRepeat: 'no-repeat',
+                        clipPath: shapeDef?.clip,
+                        borderRadius: shapeDef?.radius,
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: cBg, // Always apply chosen BG to shape
+                        position: 'relative',
+                        width: '100%',
+                        height: '100%'
+                      };
 
-                      const hSpan = wb.right  - wb.left;
-                      const vSpan = wb.bottom - wb.top;
-                      const shapeContainerSide = Math.min(hSpan, vSpan) * 0.96; // 96% fit within white-box
+                      const qrPosStyle: React.CSSProperties = {
+                        position: 'absolute',
+                        left: `${(safeZone.cx - finalQrSize / 2) * 100 + qrOffsetX}%`,
+                        top: `${(safeZone.cy - finalQrSize / 2) * 100 + qrOffsetY}%`,
+                        width: `${finalQrSize * 100}%`,
+                        height: `${finalQrSize * 100}%`,
+                        zIndex: 10,
+                        boxSizing: 'border-box',
+                      };
 
-                      const wbCx  = (wb.left + wb.right)  / 2;
-                      const wbCy  = (wb.top  + wb.bottom) / 2;
-                      
-                      const shapeLeft = (wbCx - shapeContainerSide / 2) * 100;
-                      const shapeTop  = (wbCy - shapeContainerSide / 2) * 100;
-                      const shapeWidth = shapeContainerSide * 100;
-                      const shapeHeight = shapeContainerSide * 100;
-
-                      return (
-                        <div
-                          className="mx-auto relative shadow-lg"
-                          style={{
-                            width: '100%',
-                            maxWidth: '340px',
-                            aspectRatio: '440 / 535',
-                            backgroundImage: `url(${templateDef.src})`,
-                            backgroundSize: '100% 100%',
-                            backgroundRepeat: 'no-repeat',
-                          }}
-                        >
-                          <div
-                            style={{
-                              position: 'absolute',
-                              left: `${shapeLeft}%`,
-                              top: `${shapeTop}%`,
-                              width: `${shapeWidth}%`,
-                              height: `${shapeHeight}%`,
-                              zIndex: 10,
-                            }}
-                          >
-                            {renderedQrContent}
+                      // The actual layered QR structure with mask, gap fill, and QR data
+                      const renderedQrContent = (
+                        <div style={{ ...outerStyle, transform: `translate(${shapeOffsetX}%, ${shapeOffsetY}%) scale(${shapeScale})`, transformOrigin: "center" }}>
+                          {shapeDef && !isSquare && (
+                            <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+                              <defs>
+                                <pattern id={`gap-fill-${activeBgDot?.id}`} width={`${patternSize}%`} height={`${patternSize}%`} patternUnits="userSpaceOnUse" viewBox="0 0 100 100">
+                                  <g transform="scale(1.1)">
+                                    {activeBgDot?.preview(cFg)}
+                                  </g>
+                                </pattern>
+                                <mask id="safe-zone-punch">
+                                  <rect width="100%" height="100%" fill="white" />
+                                  <rect
+                                    x={`${(safeZone.cx - safeZone.size / 2) * 100}%`}
+                                    y={`${(safeZone.cy - safeZone.size / 2) * 100}%`}
+                                    width={`${safeZone.size * 100}%`}
+                                    height={`${safeZone.size * 100}%`}
+                                    fill="black"
+                                  />
+                                </mask>
+                              </defs>
+                              <rect width="100%" height="100%" fill={`url(#gap-fill-${activeBgDot?.id})`} mask="url(#safe-zone-punch)" />
+                            </svg>
+                          )}
+                          <div style={qrPosStyle}>
+                            <div ref={qrRef} className="w-full h-full" />
                           </div>
                         </div>
                       );
-                    }
 
-                    // ─── Normal / Shape Mode ────────────────────────────────────────────────
-                    return (
-                      <div className="max-w-[460px] mx-auto w-full aspect-square relative flex items-center justify-center">
-                        {renderedQrContent}
-                      </div>
-                    );
-                  })()}
+                      // ─── Template Mode (Styling Layer placed inside Template Boundaries) ───
+                      if (templateDef) {
+                        const wb = (templateDef as any).whitebox as { left: number; right: number; top: number; bottom: number };
+
+                        const hSpan = wb.right - wb.left;
+                        const vSpan = wb.bottom - wb.top;
+                        const shapeContainerSide = Math.min(hSpan, vSpan) * 0.96; // 96% fit within white-box
+
+                        const wbCx = (wb.left + wb.right) / 2;
+                        const wbCy = (wb.top + wb.bottom) / 2;
+
+                        const shapeLeft = (wbCx - shapeContainerSide / 2) * 100;
+                        const shapeTop = (wbCy - shapeContainerSide / 2) * 100;
+                        const shapeWidth = shapeContainerSide * 100;
+                        const shapeHeight = shapeContainerSide * 100;
+
+                        return (
+                          <div
+                            className="mx-auto relative shadow-lg"
+                            style={{
+                              width: '100%',
+                              maxWidth: '340px',
+                              aspectRatio: '440 / 535',
+                            }}
+                          >
+                            <div
+                              style={{
+                                position: 'absolute',
+                                left: `${shapeLeft}%`,
+                                top: `${shapeTop}%`,
+                                width: `${shapeWidth}%`,
+                                height: `${shapeHeight}%`,
+                                zIndex: 0,
+                              }}
+                            >
+                              {renderedQrContent}
+                            </div>
+                            <img
+                              src={templateDef.src}
+                              alt={templateDef.label}
+                              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                              style={{ zIndex: 10 }}
+                            />
+                          </div>
+                        );
+                      }
+
+                      // ─── Normal / Shape Mode ────────────────────────────────────────────────
+                      return (
+                        <div className="max-w-[460px] mx-auto w-full aspect-square relative flex items-center justify-center">
+                          {renderedQrContent}
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
                 <div className="w-full text-center">
