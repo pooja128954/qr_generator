@@ -406,23 +406,11 @@ export default function Generator() {
   // Instead of encoding the target URL directly (static), 
   // we encode a redirection link (dynamic) that hits our tracking component.
   const currentTrackingId = editId || trackingIdRef.current;
-  // Use a 'visual salt' so the QR dots change as the user types (Live Preview)
-  const visualHash = inputValue ? btoa(unescape(encodeURIComponent(inputValue.slice(-10)))).slice(0, 8) : "default";
+  // Use a 'visual salt' so the QR dots change rapidly as the user types (Live Preview feedback)
+  const visualHash = inputValue ? btoa(unescape(encodeURIComponent(inputValue.slice(-15)))).slice(0, 10).replace(/=/g, '') : "start";
+  const trackingUrl = `${window.location.origin}/r/${currentTrackingId}?v=${visualHash}`;
 
-  // Add fallback preview encoding so the Live Preview scans instantly without DB save
-  let previewParams = "";
-  try {
-    if (inputValue) {
-      const b64 = btoa(unescape(encodeURIComponent(inputValue)));
-      previewParams = `&prev=${encodeURIComponent(b64)}&type=${activeType}`;
-    }
-  } catch (e) {
-    // ignore encoding errors for unsupported text during typing
-  }
-
-  const trackingUrl = `${window.location.origin}/r/${currentTrackingId}?v=${visualHash}${previewParams}`;
-
-  // This value is purely for internal formatting/native behavior fallbacks
+  // Use the raw tracking URL (small payload = version 3 or 4 QR = very large dots = instantly scannable by phones)
   let qrValue = trackingUrl;
 
   // Content for the QR code if it were static (optional, but we use redirect now)
@@ -592,21 +580,17 @@ export default function Generator() {
       }
     };
 
-    // We override ALL eye frames and balls for perfect alignment and centering
-    // supported or not by library
-    const hideEyeFrame = true; // safeEyeFrameType === "hexagon-frame" || safeEyeFrameType === "pentagon-frame";
-    const hideEyeBall = true;   // safeEyeBallType === "diamond" || safeEyeBallType === "star";
-
+    // We do NOT override the libraries native transparent blocks, we just recolor them to match our shapes
     qrCodeInstance.current.update({
       data: qrValue,
       dotsOptions,
-      cornersSquareOptions: { color: "transparent", type: eyeFrameLibType },
-      cornersDotOptions: { color: "transparent", type: eyeBallLibType },
+      cornersSquareOptions: { color: eyeColor, type: eyeFrameLibType },
+      cornersDotOptions: { color: eyeColor, type: eyeBallLibType },
       backgroundOptions: { color: "transparent" },
-      margin: 0, // Removed padding to keep eye frames aligned and satisfy scannability
+      margin: 0, 
       qrOptions: { errorCorrectionLevel: safeEcLevel.charAt(0) as ErrorCorrectionLevel },
       image: safeLogo,
-      imageOptions: { margin: 10, imageSize: 0.25 } // Reduced logo size to 25% for 30% recovery headroom
+      imageOptions: { margin: 10, imageSize: 0.25 }
     });
 
     forceSvgFill();
@@ -629,6 +613,15 @@ export default function Generator() {
       if (!overlayGroup) {
         overlayGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
         overlayGroup.setAttribute("id", "custom-overlay-layer");
+        // HIDE THE ORIGINAL EYES IF WE REQUIRE A VERY COMPLEX SVG POLYGON OVERRIDE
+        if (limits.customization !== "none" && (safeEyeFrameType === "hexagon-frame" || safeEyeFrameType === "pentagon-frame" || safeEyeBallType === "diamond" || safeEyeBallType === "star")) {
+             const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
+             style.innerHTML = `
+                rect[rx="${eyeFrameLibType === 'extra-rounded' ? '14' : '0'}"], 
+                rect[rx="${eyeBallLibType === 'dot' ? '14' : '0'}"] { opacity: 0 !important; }
+             `;
+             overlayGroup.appendChild(style);
+        }
         svg.appendChild(overlayGroup);
       }
       overlayGroup.innerHTML = "";
