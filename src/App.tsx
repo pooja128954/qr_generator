@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Generator from "./pages/Generator.tsx";
@@ -15,6 +16,8 @@ import Dashboard from "./pages/Dashboard.tsx";
 import MyCodes from "./pages/MyCodes.tsx";
 import Analytics from "./pages/Analytics.tsx";
 import Solutions from "./pages/Solutions.tsx";
+import AdminLogin from "./pages/admin/AdminLogin.tsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.tsx";
 
 const queryClient = new QueryClient();
 
@@ -23,7 +26,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -35,6 +38,9 @@ const App = () => (
             <Route path="/dashboard/codes" element={<ProtectedRoute><MyCodes /></ProtectedRoute>} />
             <Route path="/dashboard/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
             <Route path="/dashboard/profile" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            {/* Admin Routes */}
+            <Route path="/dteqraadmin" element={<AdminLogin />} />
+            <Route path="/dteqraadmin/dashboard" element={<AdminProtectedRoute><AdminDashboard /></AdminProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
