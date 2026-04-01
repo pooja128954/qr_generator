@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import QRCodeStyling, { DotType, CornerSquareType, ErrorCorrectionLevel } from "qr-code-styling";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -93,7 +93,7 @@ const allShapes: ShapeDef[] = [
 
 const corrections = ["L (7%)", "M (15%)", "Q (25%)", "H (30%)"];
 
-// ─── Body Type (dot style) ────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ Body Type (dot style) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const bodyTypes: Array<{ id: string; label: string; dotType: string; preview: (c: string) => React.ReactNode }> = [
   { id: "square", label: "Square", dotType: "square", preview: (c) => <rect x="20" y="20" width="60" height="60" fill={c} /> },
   { id: "dots", label: "Small Dots", dotType: "dots", preview: (c) => <>{[22, 50, 78].map(x => [22, 50, 78].map(y => <circle key={`${x}${y}`} cx={x} cy={y} r="9" fill={c} />))}</> },
@@ -105,7 +105,7 @@ const bodyTypes: Array<{ id: string; label: string; dotType: string; preview: (c
   { id: "hexagon", label: "Hexagon", dotType: "extra-rounded", preview: (c) => <polygon points="50,5 91,27 91,73 50,95 9,73 9,27" fill={c} /> },
 ];
 
-// ─── Eye Frame Type (cornersSquare style) ────────────────────────────────
+// ΓöÇΓöÇΓöÇ Eye Frame Type (cornersSquare style) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const eyeFrameTypes: Array<{ id: string; label: string; type: string; preview: (c: string) => React.ReactNode }> = [
   { id: "square", label: "Square", type: "square", preview: (c) => <rect x="15" y="15" width="70" height="70" strokeWidth="10" stroke={c} fill="none" /> },
   { id: "extra-rounded", label: "Rounded", type: "extra-rounded", preview: (c) => <rect x="15" y="15" width="70" height="70" rx="24" strokeWidth="10" stroke={c} fill="none" /> },
@@ -114,7 +114,7 @@ const eyeFrameTypes: Array<{ id: string; label: string; type: string; preview: (
   { id: "pentagon-frame", label: "Pentagon", type: "square", preview: (c) => <polygon points="50,8 92,38 76,90 24,90 8,38" strokeWidth="10" stroke={c} fill="none" /> },
 ];
 
-// ─── Eye Ball Type (cornersDot style) ───────────────────────────────────
+// ΓöÇΓöÇΓöÇ Eye Ball Type (cornersDot style) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const eyeBallTypes: Array<{ id: string; label: string; type: string; preview: (c: string) => React.ReactNode }> = [
   { id: "square", label: "Square", type: "square", preview: (c) => <rect x="25" y="25" width="50" height="50" fill={c} /> },
   { id: "dot", label: "Circle", type: "dot", preview: (c) => <circle cx="50" cy="50" r="28" fill={c} /> },
@@ -218,12 +218,12 @@ export default function Generator() {
   const [gradientAngle, setGradientAngle] = useState(45);
 
   const gradientPresets = [
-    { label: "Violet → Pink", c1: "#6366f1", c2: "#ec4899" },
-    { label: "Blue → Cyan", c1: "#3b82f6", c2: "#06b6d4" },
-    { label: "Orange → Red", c1: "#f97316", c2: "#ef4444" },
-    { label: "Green → Teal", c1: "#22c55e", c2: "#14b8a6" },
-    { label: "Gold → Amber", c1: "#eab308", c2: "#f97316" },
-    { label: "Purple → Blue", c1: "#a855f7", c2: "#3b82f6" },
+    { label: "Violet ΓåÆ Pink", c1: "#6366f1", c2: "#ec4899" },
+    { label: "Blue ΓåÆ Cyan", c1: "#3b82f6", c2: "#06b6d4" },
+    { label: "Orange ΓåÆ Red", c1: "#f97316", c2: "#ef4444" },
+    { label: "Green ΓåÆ Teal", c1: "#22c55e", c2: "#14b8a6" },
+    { label: "Gold ΓåÆ Amber", c1: "#eab308", c2: "#f97316" },
+    { label: "Purple ΓåÆ Blue", c1: "#a855f7", c2: "#3b82f6" },
   ];
 
   // WiFi State
@@ -353,7 +353,7 @@ export default function Generator() {
 
   const qrRef = useRef<HTMLDivElement>(null);
   const previewCaptureRef = useRef<HTMLDivElement>(null);
-  // Ref wrapping only the QR visual — used by Download & Share for pixel-perfect output
+  // Ref wrapping only the QR visual ΓÇö used by Download & Share for pixel-perfect output
   const qrExportRef = useRef<HTMLDivElement>(null);
   const qrCodeInstance = useRef<QRCodeStyling>(new QRCodeStyling({
     width: 1000,
@@ -402,28 +402,20 @@ export default function Generator() {
     convertToBase64().then(setBase64Logo);
   }, [logoFile]);
 
-  // ─── Dynamic QR Tracking Logic ───
+  // ΓöÇΓöÇΓöÇ Dynamic QR Tracking Logic ΓöÇΓöÇΓöÇ
   // Instead of encoding the target URL directly (static), 
   // we encode a redirection link (dynamic) that hits our tracking component.
   const currentTrackingId = editId || trackingIdRef.current;
   // Use a 'visual salt' so the QR dots change as the user types (Live Preview)
   const visualHash = inputValue ? btoa(unescape(encodeURIComponent(inputValue.slice(-10)))).slice(0, 8) : "default";
-
-  // Add fallback preview encoding so the Live Preview scans instantly without DB save
-  let previewParams = "";
-  try {
-    if (inputValue) {
-      const b64 = btoa(unescape(encodeURIComponent(inputValue)));
-      previewParams = `&prev=${encodeURIComponent(b64)}&type=${activeType}`;
-    }
-  } catch (e) {
-    // ignore encoding errors for unsupported text during typing
-  }
-
-  const trackingUrl = `${window.location.origin}/r/${currentTrackingId}?v=${visualHash}${previewParams}`;
+  const trackingUrl = `${window.location.origin}/r/${currentTrackingId}?v=${visualHash}`;
 
   // This value is purely for internal formatting/native behavior fallbacks
-  
+  let qrValue = trackingUrl;
+
+  // Content for the QR code if it were static (optional, but we use redirect now)
+  const qrContent = inputValue;
+
   const getPlaceholder = () => {
     switch (activeType) {
       case "url": return "https://example.com";
@@ -436,14 +428,14 @@ export default function Generator() {
       case "resume": return "Upload your Resume (PDF)";
       case "menu": return "Upload your Menu (PDF/Image)";
       case "maps": return "Enter location address or coordinates";
-      case "wifi": return "WIFI:T:nopass;S:NetworkName;;";
-      case "contact": return "BEGIN:VCARD\\nVERSION:3.0\\nFN:John Doe\\nTEL:+123456789\\nEND:VCARD";
-      default: return "https://scanovax.com";
+      case "payments": return "Enter UPI ID or payment link";
+      case "review": return "Enter Google Review page URL";
+      case "meet": return "Enter Google Meet link";
+      case "presentation": return "Enter Google Slides or Canva link";
+      default: return "Enter content...";
     }
   };
-  // Bind QR value to dynamic tracking URL so scan counts and lead forms work!
-  let qrValue = trackingUrl;
-  const qrContent = inputValue;
+
   // Sync complex inputs to inputValue
   useEffect(() => {
     if (activeType === "wifi") {
@@ -477,27 +469,6 @@ export default function Generator() {
           if (matched) setErrorLevel(matched);
         }
         setLeadCaptureEnabled(!!(existing as any).lead_capture_enabled);
-        
-        // Restore styling & patterns
-        if ((existing as any).body_type) setBodyType((existing as any).body_type);
-        if ((existing as any).eye_frame_type) setEyeFrameType((existing as any).eye_frame_type);
-        if ((existing as any).eye_ball_type) setEyeBallType((existing as any).eye_ball_type);
-        if ((existing as any).color_mode) setColorMode((existing as any).color_mode as any);
-        if ((existing as any).gradient_color1) setGradientColor1((existing as any).gradient_color1);
-        if ((existing as any).gradient_color2) setGradientColor2((existing as any).gradient_color2);
-        if ((existing as any).gradient_angle !== null) setGradientAngle(Number((existing as any).gradient_angle));
-
-        // Restore transformations
-        if ((existing as any).qr_scale !== null) setQrScale(Number((existing as any).qr_scale));
-        if ((existing as any).shape_scale !== null) setShapeScale(Number((existing as any).shape_scale));
-        if ((existing as any).qr_offset_x !== null) setQrOffsetX(Number((existing as any).qr_offset_x));
-        if ((existing as any).qr_offset_y !== null) setQrOffsetY(Number((existing as any).qr_offset_y));
-        if ((existing as any).shape_offset_x !== null) setShapeOffsetX(Number((existing as any).shape_offset_x));
-        if ((existing as any).shape_offset_y !== null) setShapeOffsetY(Number((existing as any).shape_offset_y));
-        
-        // Restore template
-        if ((existing as any).active_template) setActiveTemplate((existing as any).active_template);
-
         trackingIdRef.current = existing.id as any;
       }
     }
@@ -576,12 +547,6 @@ export default function Generator() {
     const eyeFrameDef = eyeFrameTypes.find(e => e.id === safeEyeFrameType);
     const eyeFrameLibType = (eyeFrameDef?.type ?? "square") as any;
 
-    const isCustomEyeFrame = ["hexagon-frame", "pentagon-frame"].includes(safeEyeFrameType);
-    const isCustomEyeBall = ["diamond", "star"].includes(safeEyeBallType);
-    
-    // When EITHER the frame or ball is custom, override BOTH manually to prevent visual coordinate drift
-    const forceCustomEyes = isCustomEyeFrame || isCustomEyeBall;
-
     // Force SVG to fill its container after every update.
     const forceSvgFill = () => {
       const svg = qrRef.current?.querySelector("svg");
@@ -594,16 +559,21 @@ export default function Generator() {
       }
     };
 
+    // We override ALL eye frames and balls for perfect alignment and centering
+    // supported or not by library
+    const hideEyeFrame = true; // safeEyeFrameType === "hexagon-frame" || safeEyeFrameType === "pentagon-frame";
+    const hideEyeBall = true;   // safeEyeBallType === "diamond" || safeEyeBallType === "star";
+
     qrCodeInstance.current.update({
       data: qrValue,
       dotsOptions,
-      cornersSquareOptions: { color: forceCustomEyes ? "transparent" : eyeColor, type: eyeFrameLibType },
-      cornersDotOptions: { color: forceCustomEyes ? "transparent" : eyeColor, type: eyeBallLibType },
+      cornersSquareOptions: { color: "transparent", type: eyeFrameLibType },
+      cornersDotOptions: { color: "transparent", type: eyeBallLibType },
       backgroundOptions: { color: "transparent" },
-      margin: 15, // PROPER QUIET ZONE added for scannability
+      margin: 0, // Removed padding to keep eye frames aligned and satisfy scannability
       qrOptions: { errorCorrectionLevel: safeEcLevel.charAt(0) as ErrorCorrectionLevel },
       image: safeLogo,
-      imageOptions: { margin: 8, imageSize: 0.24, hideBackgroundDots: true } // Protect logo space
+      imageOptions: { margin: 10, imageSize: 0.25 } // Reduced logo size to 25% for 30% recovery headroom
     });
 
     forceSvgFill();
@@ -659,77 +629,72 @@ export default function Generator() {
         { x: 0, y: size - eyeSize }
       ];
 
-      if (forceCustomEyes) {
-        // Draw Custom Eye Frames
-        corners.forEach(corner => {
-          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          const cx = corner.x + eyeSize / 2;
-          const cy = corner.y + eyeSize / 2;
-          const r_out = eyeSize / 2;
-          const r_in = (eyeSize - (mod * 2)) / 2;
-          let d = "";
+      // Draw Standardized Eye Frames (7x7 module grid)
+      corners.forEach(corner => {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        const cx = corner.x + eyeSize / 2;
+        const cy = corner.y + eyeSize / 2;
+        const r_out = eyeSize / 2;
+        const r_in = (eyeSize - (mod * 2)) / 2;
+        let d = "";
 
-          switch (safeEyeFrameType) {
-            case "hexagon-frame":
-              const getHex = (r: number) => Array.from({ length: 6 }, (_, i) => ({ x: cx + r * Math.cos(i * Math.PI / 3 - Math.PI / 2), y: cy + r * Math.sin(i * Math.PI / 3 - Math.PI / 2) }));
-              const pOut = getHex(r_out), pIn = getHex(r_in).reverse();
-              d = `M${pOut[0].x},${pOut[0].y} ${pOut.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z M${pIn[0].x},${pIn[0].y} ${pIn.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z`;
-              break;
-            case "pentagon-frame":
-              const getPent = (r: number) => Array.from({ length: 5 }, (_, i) => ({ x: cx + r * Math.cos(i * 2 * Math.PI / 5 - Math.PI / 2), y: cy + r * Math.sin(i * 2 * Math.PI / 5 - Math.PI / 2) }));
-              const pentO = getPent(r_out), pentI = getPent(r_in).reverse();
-              d = `M${pentO[0].x},${pentO[0].y} ${pentO.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z M${pentI[0].x},${pentI[0].y} ${pentI.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z`;
-              break;
-            case "extra-rounded":
-              const rad = eyeSize * 0.3;
-              d = `M${corner.x + rad},${corner.y} L${corner.x + eyeSize - rad},${corner.y} Q${corner.x + eyeSize},${corner.y} ${corner.x + eyeSize},${corner.y + rad} L${corner.x + eyeSize},${corner.y + eyeSize - rad} Q${corner.x + eyeSize},${corner.y + eyeSize} ${corner.x + eyeSize - rad},${corner.y + eyeSize} L${corner.x + rad},${corner.y + eyeSize} Q${corner.x},${corner.y + eyeSize} ${corner.x},${corner.y + eyeSize - rad} L${corner.x},${corner.y + rad} Q${corner.x},${corner.y} ${corner.x + rad},${corner.y} Z M${corner.x + rad},${corner.y + mod} Q${corner.x + mod},${corner.y + mod} ${corner.x + mod},${corner.y + rad} L${corner.x + mod},${corner.y + eyeSize - rad} Q${corner.x + mod},${corner.y + eyeSize - mod} ${corner.x + rad},${corner.y + eyeSize - mod} L${corner.x + eyeSize - rad},${corner.y + eyeSize - mod} Q${corner.x + eyeSize - mod},${corner.y + eyeSize - mod} ${corner.x + eyeSize - mod},${corner.y + eyeSize - rad} L${corner.x + eyeSize - mod},${corner.y + rad} Q${corner.x + eyeSize - mod},${corner.y + mod} ${corner.x + eyeSize - rad},${corner.y + mod} Z`;
-              break;
-            case "dot":
-              d = `M${cx},${corner.y} A${r_out},${r_out} 0 1,1 ${cx},${corner.y + eyeSize} A${r_out},${r_out} 0 1,1 ${cx},${corner.y} Z M${cx},${corner.y + mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y + eyeSize - mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y + mod} Z`;
-              break;
-            case "square":
-            default:
-              d = `M${corner.x},${corner.y} h${eyeSize} v${eyeSize} h-${eyeSize} Z M${corner.x + mod},${corner.y + mod} v${eyeSize - 2 * mod} h${eyeSize - 2 * mod} v-${eyeSize - 2 * mod} Z`;
-              break;
-          }
+        switch (safeEyeFrameType) {
+          case "extra-rounded":
+            const rad = eyeSize * 0.3;
+            d = `M${corner.x + rad},${corner.y} L${corner.x + eyeSize - rad},${corner.y} Q${corner.x + eyeSize},${corner.y} ${corner.x + eyeSize},${corner.y + rad} L${corner.x + eyeSize},${corner.y + eyeSize - rad} Q${corner.x + eyeSize},${corner.y + eyeSize} ${corner.x + eyeSize - rad},${corner.y + eyeSize} L${corner.x + rad},${corner.y + eyeSize} Q${corner.x},${corner.y + eyeSize} ${corner.x},${corner.y + eyeSize - rad} L${corner.x},${corner.y + rad} Q${corner.x},${corner.y} ${corner.x + rad},${corner.y} Z 
+                 M${corner.x + rad},${corner.y + mod} Q${corner.x + mod},${corner.y + mod} ${corner.x + mod},${corner.y + rad} L${corner.x + mod},${corner.y + eyeSize - rad} Q${corner.x + mod},${corner.y + eyeSize - mod} ${corner.x + rad},${corner.y + eyeSize - mod} L${corner.x + eyeSize - rad},${corner.y + eyeSize - mod} Q${corner.x + eyeSize - mod},${corner.y + eyeSize - mod} ${corner.x + eyeSize - mod},${corner.y + eyeSize - rad} L${corner.x + eyeSize - mod},${corner.y + rad} Q${corner.x + eyeSize - mod},${corner.y + mod} ${corner.x + eyeSize - rad},${corner.y + mod} Z`;
+            break;
+          case "dot":
+            d = `M${cx},${corner.y} A${r_out},${r_out} 0 1,1 ${cx},${corner.y + eyeSize} A${r_out},${r_out} 0 1,1 ${cx},${corner.y} Z
+                 M${cx},${corner.y + mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y + eyeSize - mod} A${r_in},${r_in} 0 1,0 ${cx},${corner.y + mod} Z`;
+            break;
+          case "hexagon-frame":
+            const getHex = (r: number) => Array.from({ length: 6 }, (_, i) => ({ x: cx + r * Math.cos(i * Math.PI / 3 - Math.PI / 2), y: cy + r * Math.sin(i * Math.PI / 3 - Math.PI / 2) }));
+            const pOut = getHex(r_out), pIn = getHex(r_in).reverse();
+            d = `M${pOut[0].x},${pOut[0].y} ${pOut.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z M${pIn[0].x},${pIn[0].y} ${pIn.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z`;
+            break;
+          case "pentagon-frame":
+            const getPent = (r: number) => Array.from({ length: 5 }, (_, i) => ({ x: cx + r * Math.cos(i * 2 * Math.PI / 5 - Math.PI / 2), y: cy + r * Math.sin(i * 2 * Math.PI / 5 - Math.PI / 2) }));
+            const pentO = getPent(r_out), pentI = getPent(r_in).reverse();
+            d = `M${pentO[0].x},${pentO[0].y} ${pentO.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z M${pentI[0].x},${pentI[0].y} ${pentI.slice(1).map(p => `L${p.x},${p.y}`).join(' ')} Z`;
+            break;
+          case "square":
+          default:
+            d = `M${corner.x},${corner.y} h${eyeSize} v${eyeSize} h-${eyeSize} Z M${corner.x + mod},${corner.y + mod} v${eyeSize - 2 * mod} h${eyeSize - 2 * mod} v-${eyeSize - 2 * mod} Z`;
+            break;
+        }
 
-          path.setAttribute("d", d.replace(/\s+/g, " "));
-          path.setAttribute("fill", shapeFill);
-          path.setAttribute("fill-rule", "evenodd");
-          overlayGroup?.appendChild(path);
-        });
+        path.setAttribute("d", d.replace(/\s+/g, " "));
+        path.setAttribute("fill", shapeFill);
+        path.setAttribute("fill-rule", "evenodd");
+        overlayGroup?.appendChild(path);
+      });
 
-        // Draw Custom Eye Balls
-        const ballSize = mod * 3;
-        corners.forEach(corner => {
-          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          
-          let yOffset = 0;
-          if (safeEyeFrameType === "pentagon-frame") {
-            yOffset = eyeSize * 0.045; // Visually center the eyeball inside asymmetric pentagon
-          }
+      // Draw Standardized Eye Balls (3x3 module grid centered)
+      const ballSize = mod * 3;
+      corners.forEach(corner => {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        const bcx = corner.x + eyeSize / 2;
+        const bcy = corner.y + eyeSize / 2;
+        const br = ballSize / 2;
+        let bd = "";
 
-          const bcx = corner.x + eyeSize / 2;
-          const bcy = corner.y + eyeSize / 2 + yOffset;
-          const br = ballSize / 2;
-          let bd = "";
+        switch (safeEyeBallType) {
+          case "dot": bd = `M${bcx},${bcy - br} A${br},${br} 0 1,1 ${bcx},${bcy + br} A${br},${br} 0 1,1 ${bcx},${bcy - br} Z`; break;
+          case "diamond": bd = `M${bcx},${bcy - br} L${bcx + br},${bcy} L${bcx},${bcy + br} L${bcx - br},${bcy} Z`; break;
+          case "star":
+            const p = []; for (let i = 0; i < 10; i++) { const ang = i * Math.PI / 5 - Math.PI / 2; const r = i % 2 ? br * 0.4 : br; p.push(`${bcx + r * Math.cos(ang)},${bcy + r * Math.sin(ang)}`); }
+            bd = `M${p.join(" L")} Z`; break;
+          case "square":
+          default: bd = `M${bcx - br},${bcy - br} h${ballSize} v${ballSize} h-${ballSize} Z`; break;
+        }
+        path.setAttribute("d", bd);
+        path.setAttribute("fill", shapeFill);
+        overlayGroup?.appendChild(path);
+      });
 
-          switch (safeEyeBallType) {
-            case "dot": bd = `M${bcx},${bcy - br} A${br},${br} 0 1,1 ${bcx},${bcy + br} A${br},${br} 0 1,1 ${bcx},${bcy - br} Z`; break;
-            case "diamond": bd = `M${bcx},${bcy - br} L${bcx + br},${bcy} L${bcx},${bcy + br} L${bcx - br},${bcy} Z`; break;
-            case "star":
-              const p = []; for (let i = 0; i < 10; i++) { const ang = i * Math.PI / 5 - Math.PI / 2; const r = i % 2 ? br * 0.4 : br; p.push(`${bcx + r * Math.cos(ang)},${bcy + r * Math.sin(ang)}`); }
-              bd = `M${p.join(" L")} Z`; break;
-            case "square":
-            default: bd = `M${bcx - br},${bcy - br} h${ballSize} v${ballSize} h-${ballSize} Z`; break;
-          }
-          path.setAttribute("d", bd);
-          path.setAttribute("fill", shapeFill);
-          overlayGroup?.appendChild(path);
-        });
-      }
-
-      // Draw Custom Body Dots if selected
+      // CORE FIX: Take over Body Module drawing if custom shape is selected
+      const isCustomBody = ["heart", "star5", "four-star", "pentagon", "hexagon"].includes(safeBodyType);
       if (isCustomBody) {
         for (let r = 0; r < count; r++) {
           for (let c = 0; c < count; c++) {
@@ -774,7 +739,6 @@ export default function Generator() {
 
     const t = setTimeout(injectCustomShapes, 50);
     return () => clearTimeout(t);
-
   }, [qrValue, fgColor, bgColor, selectedShape, ecLevel, colorMode, gradientColor1, gradientColor2, gradientAngle, bodyType, eyeFrameType, eyeBallType, limits.customization, limits.logoUpload, logoFile, base64Logo, qrRef.current, activeTemplate]);
 
 
@@ -823,22 +787,6 @@ export default function Generator() {
       shape: limits.customization !== "none" ? selectedShape : "Square",
       logo_url: (limits.logoUpload && finalLogoUrl?.startsWith("http")) ? finalLogoUrl : null,
       lead_capture_enabled: leadCaptureEnabled,
-      // Advanced styling
-      body_type: bodyType,
-      eye_frame_type: eyeFrameType,
-      eye_ball_type: eyeBallType,
-      color_mode: colorMode,
-      gradient_color1: gradientColor1,
-      gradient_color2: gradientColor2,
-      gradient_angle: gradientAngle,
-      // Transformations
-      qr_scale: qrScale,
-      shape_scale: shapeScale,
-      qr_offset_x: qrOffsetX,
-      qr_offset_y: qrOffsetY,
-      shape_offset_x: shapeOffsetX,
-      shape_offset_y: shapeOffsetY,
-      active_template: activeTemplate,
     };
 
     if (editId) {
@@ -858,7 +806,7 @@ export default function Generator() {
 
   const handleUpgrade = () => navigate("/#pricing");
 
-  // ─── Shared capture helper: single source of truth for download & share ────────
+  // ΓöÇΓöÇΓöÇ Shared capture helper: single source of truth for download & share ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   // Captures the QR visual (shape + template + colors + logo) as displayed in preview.
   const captureQrImage = async (pixelRatio = 4): Promise<string> => {
     const target = qrExportRef.current || previewCaptureRef.current;
@@ -929,8 +877,8 @@ export default function Generator() {
     }
   };
 
-  // ─── Share — uses the SAME capture as Download for full consistency ──────────
-  // Shape masks, template overlays, colors, logo — all preserved.
+  // ΓöÇΓöÇΓöÇ Share ΓÇö uses the SAME capture as Download for full consistency ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // Shape masks, template overlays, colors, logo ΓÇö all preserved.
   const handleShare = async (platform: "whatsapp" | "facebook" | "instagram" | "youtube", subType?: string) => {
     const url = encodeURIComponent(qrValue);
     const text = encodeURIComponent("Check out my new QR Code!");
@@ -962,7 +910,7 @@ export default function Generator() {
       }
     }
 
-    // 2. Platform fallbacks — download the full preview image, then open platform
+    // 2. Platform fallbacks ΓÇö download the full preview image, then open platform
     const triggerDownload = () => {
       const a = document.createElement('a');
       a.download = `${qrName || 'qr-code'}.png`;
@@ -1179,8 +1127,7 @@ export default function Generator() {
                       type="password"
                       value={wifiPassword}
                       onChange={(e) => setWifiPassword(e.target.value)}
-                      placeholder="••••••••"
-                      autoComplete="off"
+                      placeholder="ΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇó"
                       className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
                     />
                   </div>
@@ -1306,32 +1253,22 @@ export default function Generator() {
 
                   <Tabs defaultValue="dot-style" className="w-full mt-4">
                     <TabsList className="grid grid-cols-3 w-full bg-accent/50 p-1 mb-1">
-                      <TabsTrigger value="dot-style" className="text-xs font-bold flex items-center gap-1">
-                        Shapes {limits.customization === 'none' && <Lock className="w-3 h-3" />}
-                      </TabsTrigger>
-                      <TabsTrigger value="shapes" className="text-xs font-bold flex items-center gap-1">
-                        QR Frame {limits.customization === 'none' && <Lock className="w-3 h-3" />}
-                      </TabsTrigger>
-                      <TabsTrigger value="colors" className="text-xs font-bold flex items-center gap-1">
-                        Colors {limits.customization === 'none' && <Lock className="w-3 h-3" />}
-                      </TabsTrigger>
+                      <TabsTrigger value="dot-style" className="text-xs font-bold">Shapes</TabsTrigger>
+                      <TabsTrigger value="shapes" className="text-xs font-bold">QR Frame</TabsTrigger>
+                      <TabsTrigger value="colors" className="text-xs font-bold">Colors</TabsTrigger>
                     </TabsList>
                     <TabsList className="grid grid-cols-3 w-full bg-accent/50 p-1">
-                      <TabsTrigger value="stickers" className="text-xs font-bold flex items-center gap-1">
-                        Logo Upload {!limits.logoUpload && <Lock className="w-3 h-3" />}
-                      </TabsTrigger>
-                      <TabsTrigger value="pre-designed" className="text-xs font-bold flex items-center gap-1">
-                        Pre-designed {limits.customization !== 'full' && <Lock className="w-3 h-3" />}
-                      </TabsTrigger>
+                      <TabsTrigger value="stickers" className="text-xs font-bold">Stickers</TabsTrigger>
+                      <TabsTrigger value="pre-designed" className="text-xs font-bold">Pre-designed</TabsTrigger>
                       <TabsTrigger value="extra" className="text-xs font-bold">Extra</TabsTrigger>
                     </TabsList>
 
-                    {/* ── NEW: Shapes tab with 3 sub-controls ── */}
-                    <TabsContent value="dot-style" className="mt-4 space-y-6 relative">
+                    {/* ΓöÇΓöÇ NEW: Shapes tab with 3 sub-controls ΓöÇΓöÇ */}
+                    <TabsContent value="dot-style" className="mt-4 space-y-6">
 
                       {/* 1. Body Type */}
                       <div>
-                        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🔹 Body Type <span className="normal-case font-normal">(QR dot pattern)</span></h4>
+                        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">≡ƒö╣ Body Type <span className="normal-case font-normal">(QR dot pattern)</span></h4>
                         <div className="grid grid-cols-4 gap-2">
                           {bodyTypes.map((b) => {
                             const sel = bodyType === b.id;
@@ -1355,7 +1292,7 @@ export default function Generator() {
 
                       {/* 2. Eye Frame Type */}
                       <div>
-                        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🔹 Eye Frame <span className="normal-case font-normal">(corner squares)</span></h4>
+                        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">≡ƒö╣ Eye Frame <span className="normal-case font-normal">(corner squares)</span></h4>
                         <div className="grid grid-cols-4 gap-2">
                           {eyeFrameTypes.map((ef) => {
                             const sel = eyeFrameType === ef.id;
@@ -1379,7 +1316,7 @@ export default function Generator() {
 
                       {/* 3. Eye Ball Type */}
                       <div>
-                        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">🔹 Eye Ball <span className="normal-case font-normal">(inner corner dot)</span></h4>
+                        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">≡ƒö╣ Eye Ball <span className="normal-case font-normal">(inner corner dot)</span></h4>
                         <div className="grid grid-cols-4 gap-2">
                           {eyeBallTypes.map((eb) => {
                             const sel = eyeBallType === eb.id;
@@ -1401,18 +1338,7 @@ export default function Generator() {
                         </div>
                       </div>
 
-                      <p className="text-[10px] text-muted-foreground text-center">Each control is independent — changes update the live preview instantly.</p>
-
-                      {limits.customization === 'none' && (
-                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
-                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
-                          <p className="font-bold text-sm mb-1">Shapes Locked</p>
-                          <p className="text-xs text-muted-foreground mb-4">Custom QR dot patterns are available on Premium and above.</p>
-                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
-                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
-                          </button>
-                        </div>
-                      )}
+                      <p className="text-[10px] text-muted-foreground text-center">Each control is independent ΓÇö changes update the live preview instantly.</p>
                     </TabsContent>
 
                     <TabsContent value="extra" className="mt-6">
@@ -1457,8 +1383,8 @@ export default function Generator() {
                       </div>
                     </TabsContent>
 
-                    {/* ── Existing: QR Frame (outline shape) ── */}
-                    <TabsContent value="shapes" className="mt-6 relative">
+                    {/* ΓöÇΓöÇ Existing: QR Frame (outline shape) ΓöÇΓöÇ */}
+                    <TabsContent value="shapes" className="mt-6">
                       <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">QR Outline Shape</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         {allShapes.map((s) => {
@@ -1508,7 +1434,7 @@ export default function Generator() {
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↔</h4>
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move Γåö</h4>
                                 <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetX > 0 ? `+${qrOffsetX}` : qrOffsetX}%</span>
                               </div>
                               <input type="range" min="-50" max="50" step="1" value={qrOffsetX} onChange={(e) => setQrOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
@@ -1516,7 +1442,7 @@ export default function Generator() {
 
                             <div>
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↕</h4>
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move Γåò</h4>
                                 <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetY > 0 ? `+${qrOffsetY}` : qrOffsetY}%</span>
                               </div>
                               <input type="range" min="-50" max="50" step="1" value={qrOffsetY} onChange={(e) => setQrOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
@@ -1540,7 +1466,7 @@ export default function Generator() {
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↔</h4>
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move Γåö</h4>
                                 <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetX > 0 ? `+${shapeOffsetX}` : shapeOffsetX}%</span>
                               </div>
                               <input type="range" min="-50" max="50" step="1" value={shapeOffsetX} onChange={(e) => setShapeOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
@@ -1548,7 +1474,7 @@ export default function Generator() {
 
                             <div>
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↕</h4>
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move Γåò</h4>
                                 <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetY > 0 ? `+${shapeOffsetY}` : shapeOffsetY}%</span>
                               </div>
                               <input type="range" min="-50" max="50" step="1" value={shapeOffsetY} onChange={(e) => setShapeOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
@@ -1556,25 +1482,14 @@ export default function Generator() {
                           </div>
                         </div>
                       </div>
-
-                      {limits.customization === 'none' && (
-                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
-                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
-                          <p className="font-bold text-sm mb-1">QR Frames Locked</p>
-                          <p className="text-xs text-muted-foreground mb-4">Custom QR frame shapes are available on Premium and above.</p>
-                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
-                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
-                          </button>
-                        </div>
-                      )}
                     </TabsContent>
 
-                    <TabsContent value="pre-designed" className="mt-6 relative">
+                    <TabsContent value="pre-designed" className="mt-6">
                       <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Visual Templates</h4>
                       {activeTemplate && (
                         <div className="mb-3 flex items-center gap-2 p-2.5 bg-primary/5 border border-primary/20 rounded-lg">
                           <span className="text-xs font-semibold text-primary flex-1">
-                            ✅ Template active: <span className="font-bold">{preDesignTemplates.find(t => t.id === activeTemplate)?.label}</span>
+                            Γ£à Template active: <span className="font-bold">{preDesignTemplates.find(t => t.id === activeTemplate)?.label}</span>
                           </span>
                           <button
                             onClick={() => { setActiveTemplate(null); toast.success("Template removed!"); }}
@@ -1629,7 +1544,7 @@ export default function Generator() {
                           </div>
                         ))}
                       </div>
-                      <p className="text-[10px] text-muted-foreground mt-3 text-center">Click a template to apply. Click again or press ✕ to deselect.</p>
+                      <p className="text-[10px] text-muted-foreground mt-3 text-center">Click a template to apply. Click again or press Γ£ò to deselect.</p>
 
                       {/* QR Visual Transform Controls for Templates */}
                       <div className="mt-8 bg-accent/30 border border-border p-5 rounded-2xl shadow-sm space-y-6">
@@ -1649,7 +1564,7 @@ export default function Generator() {
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↔</h4>
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move Γåö</h4>
                                 <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetX > 0 ? `+${qrOffsetX}` : qrOffsetX}%</span>
                               </div>
                               <input type="range" min="-50" max="50" step="1" value={qrOffsetX} onChange={(e) => setQrOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
@@ -1657,7 +1572,7 @@ export default function Generator() {
 
                             <div>
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move ↕</h4>
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Internal QR Move Γåò</h4>
                                 <span className="text-[10px] font-bold text-muted-foreground">{qrOffsetY > 0 ? `+${qrOffsetY}` : qrOffsetY}%</span>
                               </div>
                               <input type="range" min="-50" max="50" step="1" value={qrOffsetY} onChange={(e) => setQrOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
@@ -1681,7 +1596,7 @@ export default function Generator() {
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↔</h4>
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move Γåö</h4>
                                 <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetX > 0 ? `+${shapeOffsetX}` : shapeOffsetX}%</span>
                               </div>
                               <input type="range" min="-50" max="50" step="1" value={shapeOffsetX} onChange={(e) => setShapeOffsetX(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
@@ -1689,7 +1604,7 @@ export default function Generator() {
 
                             <div>
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move ↕</h4>
+                                <h4 className="text-[11px] font-bold text-muted-foreground uppercase text-left">Frame Move Γåò</h4>
                                 <span className="text-[10px] font-bold text-muted-foreground">{shapeOffsetY > 0 ? `+${shapeOffsetY}` : shapeOffsetY}%</span>
                               </div>
                               <input type="range" min="-50" max="50" step="1" value={shapeOffsetY} onChange={(e) => setShapeOffsetY(parseInt(e.target.value))} className="w-full accent-primary h-1.5 bg-border rounded-lg appearance-none cursor-pointer" />
@@ -1697,21 +1612,10 @@ export default function Generator() {
                           </div>
                         </div>
                       </div>
-
-                      {limits.customization !== 'full' && (
-                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
-                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
-                          <p className="font-bold text-sm mb-1">Pre-designed Templates Locked</p>
-                          <p className="text-xs text-muted-foreground mb-4">Visual templates are exclusively available on the Elegant plan.</p>
-                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
-                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
-                          </button>
-                        </div>
-                      )}
                     </TabsContent>
 
-                    <TabsContent value="stickers" className="mt-6 relative">
-                      <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Logo Upload</h4>
+                    <TabsContent value="stickers" className="mt-6">
+                      <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Logo & Stickers</h4>
                       <div className="space-y-6">
                         <div>
                           <p className="text-xs font-bold text-muted-foreground mb-2">Upload Custom Logo</p>
@@ -1737,20 +1641,9 @@ export default function Generator() {
                           )}
                         </div>
                       </div>
-
-                      {!limits.logoUpload && (
-                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
-                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
-                          <p className="font-bold text-sm mb-1">Logo Upload Locked</p>
-                          <p className="text-xs text-muted-foreground mb-4">Upload your custom logo on Premium and Elegant plans.</p>
-                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
-                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
-                          </button>
-                        </div>
-                      )}
                     </TabsContent>
 
-                    <TabsContent value="colors" className="mt-6 relative">
+                    <TabsContent value="colors" className="mt-6">
                       <div className="space-y-6">
 
                         {/* Foreground Color Mode Toggle */}
@@ -1765,7 +1658,7 @@ export default function Generator() {
                                 : "text-muted-foreground hover:text-foreground"
                                 }`}
                             >
-                              🎨 Single Color
+                              ≡ƒÄ¿ Single Color
                             </button>
                             <button
                               onClick={() => setColorMode("gradient")}
@@ -1774,7 +1667,7 @@ export default function Generator() {
                                 : "text-muted-foreground hover:text-foreground"
                                 }`}
                             >
-                              🌈 Gradient
+                              ≡ƒîê Gradient
                             </button>
                           </div>
 
@@ -1845,7 +1738,7 @@ export default function Generator() {
                               {/* Angle slider */}
                               <div>
                                 <label className="text-[10px] font-bold text-muted-foreground uppercase block mb-1">
-                                  Angle: {gradientAngle}°
+                                  Angle: {gradientAngle}┬░
                                 </label>
                                 <input
                                   type="range"
@@ -1865,7 +1758,7 @@ export default function Generator() {
                           )}
                         </div>
 
-                        {/* Background Color — always a single solid color */}
+                        {/* Background Color ΓÇö always a single solid color */}
                         <div>
                           <h5 className="text-[10px] font-bold text-muted-foreground uppercase mb-2">Background Color</h5>
                           <div className="flex items-center gap-3 p-3 border border-border rounded-xl bg-background">
@@ -1883,17 +1776,6 @@ export default function Generator() {
                         </div>
 
                       </div>
-
-                      {limits.customization === 'none' && (
-                        <div className="absolute inset-0 z-20 bg-background/85 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center">
-                          <Lock className="w-7 h-7 text-muted-foreground mb-3" />
-                          <p className="font-bold text-sm mb-1">Color Customization Locked</p>
-                          <p className="text-xs text-muted-foreground mb-4">Custom QR colors and gradients are available on Premium and above.</p>
-                          <button onClick={handleUpgrade} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition-opacity flex items-center gap-2">
-                            <ArrowRight className="w-3.5 h-3.5" /> Upgrade Plan
-                          </button>
-                        </div>
-                      )}
                     </TabsContent>
 
                     <TabsContent value="extra" className="mt-6">
@@ -1950,7 +1832,7 @@ export default function Generator() {
               >
                 {selectedFrame !== "None" && !activeTemplate && (
                   <p className="text-xs font-medium mb-3" style={{ color: limits.customization !== "none" ? fgColor : "#0f172a" }}>
-                    {selectedFrame === "Scan Me" ? "📱 Scan Me" : selectedFrame === "Point Here" ? "👆 Point Here" : "🔗 Follow Us"}
+                    {selectedFrame === "Scan Me" ? "≡ƒô▒ Scan Me" : selectedFrame === "Point Here" ? "≡ƒæå Point Here" : "≡ƒöù Follow Us"}
                   </p>
                 )}
                 {/* Hidden SVG clip-path definitions */}
@@ -1975,7 +1857,7 @@ export default function Generator() {
                 </svg>
 
                 <div className="mb-4 w-full flex items-center justify-center p-2 bg-white rounded-xl shadow-sm border border-border/50">
-                  {/* ── QR Visual export target — Download & Share capture strictly this inner div ── */}
+                  {/* ΓöÇΓöÇ QR Visual export target ΓÇö Download & Share capture strictly this inner div ΓöÇΓöÇ */}
                   <div
                     ref={qrExportRef}
                     className="w-full relative flex items-center justify-center"
@@ -2064,7 +1946,7 @@ export default function Generator() {
                         </div>
                       );
 
-                      // ─── Template Mode (Styling Layer placed inside Template Boundaries) ───
+                      // ΓöÇΓöÇΓöÇ Template Mode (Styling Layer placed inside Template Boundaries) ΓöÇΓöÇΓöÇ
                       if (templateDef) {
                         const wb = (templateDef as any).whitebox as { left: number; right: number; top: number; bottom: number };
 
@@ -2111,7 +1993,7 @@ export default function Generator() {
                         );
                       }
 
-                      // ─── Normal / Shape Mode ────────────────────────────────────────────────
+                      // ΓöÇΓöÇΓöÇ Normal / Shape Mode ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
                       return (
                         <div className="max-w-[460px] mx-auto w-full aspect-square relative flex items-center justify-center">
                           {renderedQrContent}
@@ -2215,7 +2097,7 @@ export default function Generator() {
                   {isCreating ? (
                     <span className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                   ) : <Save className="w-4 h-4" />}
-                  {editId ? (isCreating ? "Updating…" : "Update QR Code") : (isLimitReached ? "Limit Reached" : isCreating ? "Saving…" : "Save QR Code")}
+                  {editId ? (isCreating ? "UpdatingΓÇª" : "Update QR Code") : (isLimitReached ? "Limit Reached" : isCreating ? "SavingΓÇª" : "Save QR Code")}
                 </button>
               </div>
             </div>
