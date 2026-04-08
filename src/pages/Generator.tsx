@@ -47,7 +47,6 @@ const qrTypes = [
   { id: "pdf", label: "PDF to QR", icon: FileText },
   { id: "image", label: "Image", icon: ImageIcon },
   { id: "maps", label: "Google Maps", icon: MapPin },
-  { id: "wifi", label: "WiFi", icon: Wifi },
   { id: "email", label: "Email", icon: Mail },
   { id: "social", label: "Social Media", icon: Share2 },
   { id: "app", label: "App Download", icon: Smartphone },
@@ -159,6 +158,78 @@ const preDesignTemplates = [
     whitebox: { left: 0.08, right: 0.92, top: 0.24, bottom: 0.88 },
     safeZone: { cx: 0.5, cy: 0.57, size: 0.78 },
     config: { fgColor: '#ef4444', bodyType: 'extra-rounded', eyeFrameType: 'pentagon-frame', eyeBallType: 'dot', selectedShape: 'House', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'cartoon', src: '/pre_design/cartoon.png', label: 'Cartoon',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#0f172a', bodyType: 'square', eyeFrameType: 'square', eyeBallType: 'square', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'lens_frame', src: '/pre_design/lens_frame.png', label: 'Lens Frame',
+    whitebox: { left: 0.1, right: 0.9, top: 0.2, bottom: 0.8 },
+    safeZone: { cx: 0.5, cy: 0.5, size: 0.8 },
+    config: { fgColor: '#3b82f6', bodyType: 'dots', eyeFrameType: 'dot', eyeBallType: 'dot', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_for_pdf', src: '/pre_design/scan_for_pdf.png', label: 'PDF Scan',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#ef4444', bodyType: 'square', eyeFrameType: 'square', eyeBallType: 'square', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_heart', src: '/pre_design/scan_heart.png', label: 'Heart Scan',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#ec4899', bodyType: 'heart', eyeFrameType: 'extra-rounded', eyeBallType: 'dot', selectedShape: 'Heart', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_here', src: '/pre_design/scan_here.png', label: 'Scan Here',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#0f172a', bodyType: 'rounded', eyeFrameType: 'extra-rounded', eyeBallType: 'square', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_here2', src: '/pre_design/scan_here2.png', label: 'Scan Here 2',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#3b82f6', bodyType: 'rounded', eyeFrameType: 'extra-rounded', eyeBallType: 'square', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_me1', src: '/pre_design/scan_me1.png', label: 'Scan Me 1',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#0f172a', bodyType: 'rounded', eyeFrameType: 'square', eyeBallType: 'dot', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_me2', src: '/pre_design/scan_me2.png', label: 'Scan Me 2',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#f97316', bodyType: 'dots', eyeFrameType: 'dot', eyeBallType: 'star', selectedShape: 'Circle', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_me3', src: '/pre_design/scan_me3.png', label: 'Scan Me 3',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#22c55e', bodyType: 'rounded', eyeFrameType: 'extra-rounded', eyeBallType: 'dot', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_me4', src: '/pre_design/scan_me4.png', label: 'Scan Me 4',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#a855f7', bodyType: 'hexagon', eyeFrameType: 'hexagon-frame', eyeBallType: 'dot', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_me5', src: '/pre_design/scan_me5.png', label: 'Scan Me 5',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#ef4444', bodyType: 'star5', eyeFrameType: 'dot', eyeBallType: 'star', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
+  },
+  {
+    id: 'scan_me6', src: '/pre_design/scan_me6.png', label: 'Scan Me 6',
+    whitebox: { left: 0.1, right: 0.9, top: 0.25, bottom: 0.85 },
+    safeZone: { cx: 0.5, cy: 0.55, size: 0.75 },
+    config: { fgColor: '#14b8a6', bodyType: 'square', eyeFrameType: 'extra-rounded', eyeBallType: 'square', selectedShape: 'Square', colorMode: 'single', selectedFrame: 'None' }
   }
 ];
 
@@ -189,7 +260,7 @@ function LockedOverlay({ title, onUpgrade }: { title: string; onUpgrade: () => v
 export default function Generator() {
   const [activeType, setActiveType] = useState("url");
   const [qrName, setQrName] = useState("");
-  const [inputValue, setInputValue] = useState("https://scanovax.com");
+  const [inputValue, setInputValue] = useState("https://scanqr.com");
 
   const [fgColor, setFgColor] = useState("#0f172a");
   const [bgColor, setBgColor] = useState("#ffffff");
@@ -359,7 +430,7 @@ export default function Generator() {
     width: 1000,
     height: 1000,
     type: "svg",
-    data: "https://scanovax.com",
+    data: "https://scanqr.com",
     margin: 10,
     imageOptions: {
       crossOrigin: "anonymous",
@@ -438,7 +509,7 @@ export default function Generator() {
       case "maps": return "Enter location address or coordinates";
       case "wifi": return "WIFI:T:nopass;S:NetworkName;;";
       case "contact": return "BEGIN:VCARD\\nVERSION:3.0\\nFN:John Doe\\nTEL:+123456789\\nEND:VCARD";
-      default: return "https://scanovax.com";
+      default: return "https://scanqr.com";
     }
   };
   // Bind QR value to dynamic tracking URL so scan counts and lead forms work!
@@ -953,12 +1024,11 @@ export default function Generator() {
     // 1. Try native Web Share API (shares the full preview image)
     const file = new File([blob], `${qrName || 'qr-code'}.png`, { type: 'image/png' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({ title: 'ScanovaX QR Code', text: 'Here is my QR Code!', files: [file] });
+      if (navigator.share) {
+        await navigator.share({ title: 'ScanQr QR Code', text: 'Here is my QR Code!', files: [file] });
+      } else {
         toast.success(`Shared successfully via your device!`);
         return;
-      } catch (err: any) {
-        console.log("Web Share API closed or failed", err);
       }
     }
 

@@ -67,7 +67,7 @@ export default function AdminLayout({
           {!collapsed && (
             <div className="overflow-hidden">
               <span className="font-bold text-sm tracking-tight text-foreground">
-                ScanovaX
+                ScanQr
               </span>
               <span className="block text-[10px] text-primary font-semibold tracking-widest uppercase">
                 Admin
@@ -139,7 +139,7 @@ export default function AdminLayout({
               {navItems.find((n) => n.id === activeSection)?.label || "Admin"}
             </h2>
             <p className="text-[11px] text-muted-foreground">
-              ScanovaX Administration Panel
+              ScanQr Administration Panel
             </p>
           </div>
           <div className="flex items-center gap-2">

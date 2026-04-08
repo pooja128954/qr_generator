@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       const plan: PlanType = "trial";
       
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -81,6 +81,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           },
         },
       });
+      if (data.user) {
+        const trialEndDate = new Date();
+        trialEndDate.setDate(trialEndDate.getDate() + 3);
+        // @ts-ignore
+        await supabase.from('profiles').update({
+          plan: 'trial',
+          trial_start_date: new Date().toISOString(),
+          trial_end_date: trialEndDate.toISOString(),
+        }).eq('id', data.user.id);
+      }
       setLoading(false);
       if (error) {
         toast.error(error.message);

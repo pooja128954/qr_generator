@@ -30,7 +30,7 @@ function HeroSection() {
           className="max-w-2xl"
         >
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.1] mb-6">
-            ScanovaX
+            ScanQr
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-10 max-w-xl mx-auto">
             Create Smart QR Codes with Powerful Insights. Track every scan, customize every pixel, deploy in seconds.
@@ -346,7 +346,7 @@ function CTASection() {
             Ready to Deploy Smart Routing?
           </h2>
           <p className="text-muted-foreground mb-8">
-            Join thousands of teams using ScanovaX to bridge physical and digital experiences.
+            Join thousands of teams using ScanQr to bridge physical and digital experiences.
           </p>
           <Link
             to={ctaDest}

@@ -76,7 +76,7 @@ export default function AdminLogin() {
             Admin Portal
           </h1>
           <p className="text-muted-foreground text-sm mt-1.5">
-            ScanovaX Administration Console
+            ScanQr Administration Console
           </p>
         </div>
 

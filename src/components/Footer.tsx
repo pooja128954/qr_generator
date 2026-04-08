@@ -10,7 +10,7 @@ export default function Footer() {
             <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
               <QrCode className="w-4 h-4 text-primary-foreground" />
             </div>
-            ScanovaX
+            ScanQr
           </Link>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Precision routing for the physical world. High-performance QR codes with integrated telemetry.
@@ -50,7 +50,7 @@ export default function Footer() {
 
       <div className="container py-6 border-t border-border">
         <p className="text-xs text-muted-foreground">
-          © 2026 ScanovaX. All rights reserved.
+          © 2026 ScanQr. All rights reserved.
         </p>
       </div>
     </footer>

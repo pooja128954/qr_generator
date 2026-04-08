@@ -38,7 +38,7 @@ export default function Login() {
               <QrCode className="w-6 h-6 text-primary-foreground" />
             </div>
             <h1 className="text-2xl font-semibold mb-1">Welcome back</h1>
-            <p className="text-sm text-muted-foreground">Sign in to your ScanovaX account</p>
+            <p className="text-sm text-muted-foreground">Sign in to your ScanQr account</p>
           </div>
 
           {error && (

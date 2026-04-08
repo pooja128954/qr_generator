@@ -119,7 +119,7 @@ function WhyChooseUs() {
           transition={{ duration: 0.5, ease }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-semibold text-[#1e3a8a]">Why Choose ScanovaX?</h2>
+          <h2 className="text-3xl font-semibold text-[#1e3a8a]">Why Choose ScanQr?</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">

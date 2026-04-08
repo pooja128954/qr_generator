@@ -44,7 +44,7 @@ function AppSidebar() {
           <QrCode className="w-5 h-5 text-primary-foreground" />
         </div>
         {!collapsed && (
-          <span className="font-semibold text-lg tracking-tight">ScanovaX</span>
+          <span className="font-semibold text-lg tracking-tight">ScanQr</span>
         )}
       </div>
 
